@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../components/api_service.dart';
 import '../components/weather_model.dart';
+import '../components/weather_model_new.dart';
 
 class Test extends StatefulWidget {
   const Test({super.key});
@@ -27,8 +28,9 @@ class _TestState extends State<Test> {
 //şuan bizim için önemli olan yukarıdaki fonksiyonun ve model sınıfının çalışıp çalışmadığı
   @override
   Widget build(BuildContext context) {
-    debugPrint("Build içerisinde çalışan kısım: ${_userModel!.elevation}");
-    return Container();
+    debugPrint(
+        "Build içerisinde çalışan kısım: ${_userModel!.daily!.temperature2MMax}");
+    return Container(child: Text("${_userModel!.elevation}"));
   }
 }
 

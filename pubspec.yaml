@@ -21,6 +21,8 @@ dependencies:
   dotted_line: ^3.2.2
   expandable: ^5.0.1
   http: ^1.1.0
+  geocoding: ^2.1.0
+  geocode: ^1.0.3
 
 dev_dependencies:
   flutter_test:
