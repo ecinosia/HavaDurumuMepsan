@@ -14,7 +14,7 @@ class MapPage extends StatefulWidget {
   State<MapPage> createState() => _MapPageState();
 }
 
-//  AIzaSyAbE8q2NHmCpzi-Ta7NS-yk_xKQXUixyf0
+//
 
 class _MapPageState extends State<MapPage> {
   Future<loc.LocationData?> _currentLocation() async {
