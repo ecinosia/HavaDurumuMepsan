@@ -1,7 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:geocoding/geocoding.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:google_fonts/google_fonts.dart';
-
+import 'package:location/location.dart' as loc;
+import 'package:syncfusion_flutter_maps/maps.dart';
 import 'homepage.dart';
 
 class MapPage extends StatefulWidget {
@@ -11,7 +14,111 @@ class MapPage extends StatefulWidget {
   State<MapPage> createState() => _MapPageState();
 }
 
+//  AIzaSyAbE8q2NHmCpzi-Ta7NS-yk_xKQXUixyf0
+
 class _MapPageState extends State<MapPage> {
+  Future<loc.LocationData?> _currentLocation() async {
+    bool serviceEnabled;
+    loc.PermissionStatus permissionGranted;
+
+    loc.Location location = loc.Location();
+
+    serviceEnabled = await location.serviceEnabled();
+    if (!serviceEnabled) {
+      serviceEnabled = await location.requestService();
+      if (!serviceEnabled) {
+        return null;
+      }
+    }
+
+    permissionGranted = await location.hasPermission();
+    if (permissionGranted == loc.PermissionStatus.denied) {
+      permissionGranted = await location.requestPermission();
+      if (permissionGranted != loc.PermissionStatus.granted) {
+        return null;
+      }
+    }
+    return await location.getLocation();
+  }
+
+  late MapZoomPanBehavior? _mapZoomPanBehavior;
+
+  @override
+  void initState() {
+    _mapZoomPanBehavior =
+        MapZoomPanBehavior(); //..focalLatLng = MapLatLng(0, 0)
+    super.initState();
+  }
+
+// Update focal point and zoom
+  void _handleTap(MapLatLng tapPoint) {
+    _mapZoomPanBehavior!.focalLatLng = tapPoint;
+    _mapZoomPanBehavior!.zoomLevel = 12;
+  }
+
+// Zoom in/out
+  void _handlePinch(ScaleUpdateDetails details) {
+    _mapZoomPanBehavior!.zoomLevel *= details.scale;
+  }
+
+// Pan
+  void _handlePan(DragUpdateDetails details) {
+    if (_mapZoomPanBehavior?.focalLatLng != null) {
+      final focal = _mapZoomPanBehavior?.focalLatLng!;
+      final deltaLat = details.delta.dy;
+      final deltaLng = details.delta.dx;
+
+      final newLat = focal!.latitude + deltaLat;
+      final newLng = focal.longitude + deltaLng;
+
+      _mapZoomPanBehavior?.focalLatLng = MapLatLng(newLat, newLng);
+    }
+  }
+
+  final List<MapLatLng> _markerLocations = [
+    const MapLatLng(39.9334, 32.8597),
+    const MapLatLng(37.1674, 38.7955),
+    const MapLatLng(40.9862, 37.8797),
+  ];
+
+  Future<Position> _getCurrentLocation() async {
+    bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
+    if (!serviceEnabled) {
+      return Future.error("Konum servisleri kapalı!");
+    }
+
+    LocationPermission permission = await Geolocator.checkPermission();
+    if (permission == LocationPermission.denied) {
+      permission = await Geolocator.requestPermission();
+      if (permission == LocationPermission.denied) {
+        return Future.error("Konum izni reddedildi!");
+      }
+    }
+
+    if (permission == LocationPermission.deniedForever) {
+      return Future.error(
+          "Konum servisleri kalıcı olarak reddedildi. Konum bilgisi alınamıyor!");
+    }
+    return await Geolocator.getCurrentPosition();
+  }
+
+  String _city = "";
+  Future<String> getCityNameMap(double lat, double long) async {
+    List<Placemark> placemarks = await placemarkFromCoordinates(lat, long);
+
+    if (placemarks.isNotEmpty) {
+      Placemark placemark = placemarks.first;
+
+      debugPrint('Placemark: $placemark');
+
+      setState(() {
+        _city = placemark.administrativeArea ?? 'City not available';
+        debugPrint(_city);
+      });
+    }
+    return _city;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -66,6 +173,56 @@ class _MapPageState extends State<MapPage> {
             },
           )
         ],
+      ),
+      body: FutureBuilder<loc.LocationData?>(
+        future: _currentLocation(),
+        builder: (BuildContext context, AsyncSnapshot<dynamic> snapchat) {
+          if (snapchat.hasData) {
+            final loc.LocationData currentLocation = snapchat.data;
+            /*getCityNameMap(
+                currentLocation.latitude!, currentLocation.longitude!);*/
+            debugPrint(currentLocation.toString());
+            debugPrint("CityNameMap: $_city");
+
+            _markerLocations.insert(
+                0,
+                MapLatLng(
+                    currentLocation.latitude!, currentLocation.longitude!));
+            return SfMaps(
+              layers: [
+                MapTileLayer(
+                  zoomPanBehavior: _mapZoomPanBehavior,
+                  initialFocalLatLng: MapLatLng(
+                      currentLocation.latitude!, currentLocation.longitude!),
+                  initialZoomLevel: 7,
+                  initialMarkersCount: _markerLocations.length,
+                  urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+                  markerBuilder: (BuildContext context, int index) {
+                    final markerLoc = _markerLocations[index];
+                    return MapMarker(
+                      latitude: markerLoc.latitude,
+                      longitude: markerLoc.longitude,
+                      size: const Size(50, 85),
+                      child: Column(
+                        children: [
+                          Text(
+                            _city.toString() ?? "HATA",
+                            style: TextStyle(color: Colors.amber, fontSize: 38),
+                          ),
+                          Icon(
+                            Icons.location_on,
+                            color: Colors.red[800],
+                          ),
+                        ],
+                      ),
+                    );
+                  },
+                ),
+              ],
+            );
+          }
+          return const Center(child: CircularProgressIndicator());
+        },
       ),
     );
   }

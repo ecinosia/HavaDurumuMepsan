@@ -1,77 +1,169 @@
-import 'package:flutter/material.dart';
+import "package:flutter/material.dart";
+import "package:geocoding/geocoding.dart";
+import "package:geolocator/geolocator.dart";
 
-import '../components/api_service.dart';
-import '../components/weather_model.dart';
-import '../components/weather_model_new.dart';
-
-class Test extends StatefulWidget {
-  const Test({super.key});
+class CoordTest extends StatefulWidget {
+  const CoordTest({super.key});
 
   @override
-  State<Test> createState() => _TestState();
+  State<CoordTest> createState() => _CoordTestState();
 }
 
-//final weatherTest = weatherTestFromJson(jsonString);
+class _CoordTestState extends State<CoordTest> {
+  double? latitude;
+  double? longitude;
+  String? locationMessage;
 
-class _TestState extends State<Test> {
-  late WeatherTest? _userModel;
-  @override
-  void initState() {
-    super.initState();
-    _getData();
+  Future<Position> _getCurrentLocation() async {
+    bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
+    if (!serviceEnabled) {
+      return Future.error("Konum servisleri kapalı!");
+    }
+
+    LocationPermission permission = await Geolocator.checkPermission();
+    if (permission == LocationPermission.denied) {
+      permission = await Geolocator.requestPermission();
+      if (permission == LocationPermission.denied) {
+        return Future.error("Konum izni reddedildi!");
+      }
+    }
+
+    if (permission == LocationPermission.deniedForever) {
+      return Future.error(
+          "Konum servisleri kalıcı olarak reddedildi. Konum bilgisi alınamıyor!");
+    }
+    return await Geolocator.getCurrentPosition();
   }
 
-  void _getData() async {
-    _userModel = (await ApiService().getWeatherForTargetCoord());
+  String _city = "";
+  String _additionalInfo = "";
+  Future<bool> getCurrentLocationCoord() async {
+    try {
+      Position position = await _getCurrentLocation();
+      if (position != null) {
+        longitude = position.longitude;
+        latitude = position.latitude;
+        debugPrint("Lokasyon Verileri: $longitude , $latitude");
+        setState(() {});
+        List<Placemark> placemarks =
+            await placemarkFromCoordinates(latitude!, longitude!);
+
+        if (placemarks.isNotEmpty) {
+          Placemark placemark = placemarks.first;
+
+          print('Placemark: $placemark');
+
+          setState(() {
+            _city = placemark.administrativeArea ?? 'City not available';
+            _additionalInfo = placemark.subLocality ?? '';
+          });
+        }
+        return true;
+      } else {
+        debugPrint("boş veri");
+        throw ("Lokasyon Verileri boş geldi");
+      }
+    } catch (e) {
+      debugPrint("catch içinde hata");
+      throw ("Lokasyon Çekerken Hata : ${e.toString()}");
+    }
   }
 
-//şuan bizim için önemli olan yukarıdaki fonksiyonun ve model sınıfının çalışıp çalışmadığı
   @override
   Widget build(BuildContext context) {
-    debugPrint(
-        "Build içerisinde çalışan kısım: ${_userModel!.daily!.temperature2MMax}");
-    return Container(child: Text("${_userModel!.elevation}"));
+    return Center(
+      child: Column(
+        children: [
+          TextButton(
+            onPressed: () async {
+              if (await getCurrentLocationCoord()) {
+                locationMessage =
+                    "Latitude: ${latitude.toString()}, Longitude: ${longitude.toString()}, City: $_city";
+                debugPrint("OutlinedButton from Homepage : $locationMessage");
+                setState(() {
+                  locationMessage =
+                      "Latitude: ${latitude.toString()}, Longitude: ${longitude.toString()}, City: $_city";
+                  debugPrint("OutlinedButton from Homepage : $locationMessage");
+                });
+              } else {
+                debugPrint("hata buton0");
+                setState(() {
+                  debugPrint("hata buton1");
+                  locationMessage = "Lokasyon verileri Hatalı";
+                  debugPrint("hata buton");
+                });
+              }
+            },
+            child: Text(
+              "Konum Göster",
+              style: TextStyle(fontSize: 40, color: Colors.white),
+            ),
+          ),
+          Text(locationMessage ?? "Hata Var")
+        ],
+      ),
+    );
   }
 }
+//   import 'package:flutter/material.dart';
+//   import 'package:geocoding/geocoding.dart';
+//   import 'package:geolocator/geolocator.dart';
 
+//   class DenemeCord extends StatefulWidget {
+//     @override
+//     _DenemeCordState createState() => _DenemeCordState();
+//   }
 
-// Scaffold(
-//       appBar: AppBar(
-//         title: const Text('REST API Example'),
-//       ),
-//       body: _userModel == null 
-//           ? const Center(
-//               child: CircularProgressIndicator(),
-//             )
-//           : ListView.builder(
-//               itemCount: _userModel!.daily!.temperature2MMax!.length,
-//               itemBuilder: (context, index) {
-//                 return Card(
-//                   child: Column(
-//                     children: [
-//                       Row(
-//                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-//                         children: [
-//                           Text(_userModel!.daily!.temperature2MMax![index].timezone!),
-//                           Text(_userModel![index]
-//                               .daily!
-//                               .temperature2MMax
-//                               .toString()),
-//                         ],
-//                       ),
-//                       const SizedBox(
-//                         height: 20.0,
-//                       ),
-//                       Row(
-//                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-//                         children: [
-//                           Text(_userModel![index].latitude.toString()),
-//                           Text(_userModel![index].longitude.toString()),
-//                         ],
-//                       ),
-//                     ],
-//                   ),
-//                 );
-//               },
-//             ),
-//     );
+//   class _DenemeCordState extends State<DenemeCord> {
+//     String _city = '';
+//     String _additionalInfo = '';
+
+//    @override
+//    void initState() {
+//      super.initState();
+//      _getUserLocation();
+//    }
+
+//  void _getUserLocation() async {
+//    Position position = await Geolocator.getCurrentPosition();
+//    double latitude = position.latitude;
+//    double longitude = position.longitude;
+
+//    print('Latitude: $latitude, Longitude: $longitude');
+
+//    List<Placemark> placemarks =
+//        await placemarkFromCoordinates(latitude, longitude);
+
+//    if (placemarks.isNotEmpty) {
+//      Placemark placemark = placemarks.first;
+
+//      print('Placemark: $placemark');
+
+//      setState(() {
+//        _city = placemark.locality ?? 'City not available';
+//        _additionalInfo = placemark.subLocality ?? '';
+//      });
+//    }
+//  }
+
+//    @override
+//    Widget build(BuildContext context) {
+//      return MaterialApp(
+//        home: Scaffold(
+//          appBar: AppBar(
+//            title: Text('Get User Location'),
+//          ),
+//          body: Center(
+//            child: Column(
+//              mainAxisAlignment: MainAxisAlignment.center,
+//              children: [
+//                Text('City: $_city'),
+//                SizedBox(height: 16),
+//                Text('Additional Info: $_additionalInfo'),
+//              ],
+//            ),
+//          ),
+//        ),
+//      );
+//    }
+//  }

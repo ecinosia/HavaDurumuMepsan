@@ -3,6 +3,7 @@ import 'dart:core';
 import 'package:expandable/expandable.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
@@ -18,110 +19,192 @@ class HomePage extends StatefulWidget {
   State<HomePage> createState() => _HomePageState();
 }
 
-List<Color> getGradientColors(condition) {
-  if (condition == "gunesli") {
-    return [
-      const Color.fromRGBO(253, 200, 48, 1),
-      const Color.fromRGBO(243, 115, 53, 1)
-    ];
-  } else if (condition == "bulutlu") {
-    return [
-      const Color.fromRGBO(149, 184, 204, 1),
-      const Color.fromRGBO(219, 212, 180, 1),
-      const Color.fromRGBO(122, 161, 210, 1),
-    ];
-  } else if (condition == "yagmurlu") {
-    return [
-      const Color.fromRGBO(75, 108, 183, 1),
-      const Color.fromRGBO(24, 40, 72, 1),
-    ];
-  } else if (condition == "saganakyagmurlu") {
-    return [
-      const Color.fromRGBO(20, 30, 48, 1),
-      const Color.fromRGBO(36, 59, 85, 1),
-    ];
-  } else if (condition == "karli") {
-    return [
-      const Color.fromRGBO(48, 67, 82, 1),
-      const Color.fromRGBO(215, 210, 204, 1),
-    ];
-  } else if (condition == "saganakkarli") {
-    return [
-      const Color.fromRGBO(21, 28, 35, 1),
-      const Color.fromRGBO(215, 210, 204, 1),
-    ];
-  } else if (condition == "ruzgarli") {
-    return [
-      const Color.fromRGBO(135, 206, 235, 1),
-      const Color.fromRGBO(100, 149, 237, 1),
-      const Color.fromRGBO(79, 98, 142, 1),
-      const Color.fromRGBO(61, 91, 124, 1),
-    ];
-  } else if (condition == "gokgurultulu") {
-    return [
-      const Color.fromRGBO(183, 195, 208, 1),
-      const Color.fromRGBO(137, 152, 170, 1),
-      const Color.fromRGBO(91, 115, 151, 1),
-      const Color.fromRGBO(68, 60, 132, 1),
-    ];
-  } else {
-    return [Colors.grey, Colors.black];
-  }
-}
-
-var colors = getGradientColors(weatherCondition);
-
-String getGifAsset(String condition) {
-  if (condition == "gunesli") {
-    return "assets/gifs/gunesli.gif";
-  } else if (condition == "bulutlu") {
-    return "assets/gifs/parcalibulutlu.gif";
-  } else if (condition == "yagmurlu") {
-    return "assets/gifs/yagmurlu.gif";
-  } else if (condition == "saganakyagmurlu") {
-    return "assets/gifs/saganakyagmur.gif";
-  } else if (condition == "karli") {
-    return "assets/gifs/karli.gif";
-  } else if (condition == "saganakkarli") {
-    return "assets/gifs/saganakkarli.gif";
-  } else if (condition == "ruzgarli") {
-    return "assets/gifs/ruzgarli.gif";
-  } else if (condition == "gokgurultulu") {
-    return "assets/gifs/gokgurultulu.gif";
-  } else {
-    return "assets/gifs/default.png";
-  }
-}
-
-String asset = getGifAsset(weatherCondition);
-
-String getWeatherCondition(String condition) {
-  if (condition == "gunesli") {
-    return "Güneşli";
-  } else if (condition == "bulutlu") {
-    return "Bulutlu";
-  } else if (condition == "yagmurlu") {
-    return "Yağmurlu";
-  } else if (condition == "saganakyagmurlu") {
-    return "Sağanak Yağmurlu";
-  } else if (condition == "karli") {
-    return "Karlı";
-  } else if (condition == "saganakkarli") {
-    return "Sağanak Kar Yağışlı";
-  } else if (condition == "ruzgarli") {
-    return "Rüzgarlı";
-  } else if (condition == "gokgurultulu") {
-    return "Gök Gürültülü";
-  } else {
-    return "Açık";
-  }
-}
-
-String weatherConditionProper = getWeatherCondition(weatherCondition);
-
-var weatherCondition = "bulutlu";
-
 class _HomePageState extends State<HomePage> {
+  @override
+  void initState() {
+    super.initState();
+    getData();
+  }
+
+  // ignore: no_leading_underscores_for_local_identifiers
+  // Future<Position> _getCurrentLocation() async {
+  //   bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
+  //   if (!serviceEnabled) {
+  //     return Future.error("Konum servisleri kapalı!");
+  //   }
+
+  //   LocationPermission permission = await Geolocator.checkPermission();
+  //   if (permission == LocationPermission.denied) {
+  //     permission = await Geolocator.requestPermission();
+  //     if (permission == LocationPermission.denied) {
+  //       return Future.error("Konum izni reddedildi!");
+  //     }
+  //   }
+
+  //   if (permission == LocationPermission.deniedForever) {
+  //     return Future.error(
+  //         "Konum servisleri kalıcı olarak reddedildi. Konum bilgisi alınamıyor!");
+  //   }
+  //   return await Geolocator.getCurrentPosition(); // biraz karışmış
+  // }
+
+  // String _city = "";
+  // // ignore: unused_element
+  // Future<bool> getCurrentLocationCoord() async {
+  //   try {
+  //     Position position = await _getCurrentLocation();
+  //     // ignore: unnecessary_null_comparison
+  //     if (position != null) {
+  //       longitude = position.longitude;
+  //       latitude = position.latitude;
+  //       debugPrint("Lokasyon Verileri: $longitude , $latitude");
+  //       setState(() {});
+  //       List<Placemark> placemarks =
+  //           await placemarkFromCoordinates(latitude!, longitude!);
+
+  //       if (placemarks.isNotEmpty) {
+  //         Placemark placemark = placemarks.first;
+
+  //         print('Placemark: $placemark');
+
+  //         setState(() {
+  //           _city = placemark.administrativeArea ?? 'City not available';
+  //         });
+  //       }
+  //       return true;
+  //     } else {
+  //       debugPrint("boş veri");
+  //       throw ("Lokasyon Verileri boş geldi");
+  //     }
+  //   } catch (e) {
+  //     debugPrint("catch içinde hata");
+  //     throw ("Lokasyon Çekerken Hata : ${e.toString()}");
+  //   }
+  // }
+
+  // Future<void> initiliazeLocation() async {
+  //   if (await getCurrentLocationCoord()) {
+  //     locationMessage =
+  //         "Latitude: ${latitude.toString()}, Longitude: ${longitude.toString()}, City: $_city";
+  //     debugPrint("initlocaliton func1 : $locationMessage");
+  //     setState(() {
+  //       locationMessage =
+  //           "Latitude: ${latitude.toString()}, Longitude: ${longitude.toString()}, City: $_city";
+  //       debugPrint("initlocaliton func2 : $locationMessage");
+  //     });
+  //   } else {
+  //     debugPrint("hata buton0");
+  //     setState(() {
+  //       debugPrint("hata buton1");
+  //       locationMessage = "Lokasyon verileri Hatalı";
+  //       debugPrint("hata buton");
+  //     });
+  //   }
+  // }
+
+  // void _getData(String lati, String longi) async {
+  //   debugPrint("_getData func: Lat: $lati, Long: $longi");
+  //   _userModel = (await ApiService().getWeatherForTargetCoord(lati, longi));
+  //   debugPrint("_getData func2: Lat: $lati, Long: $longi");
+  // }
+
+  String _cityName = "";
+  String? locationMessage;
+  bool positionBool = false;
+
+  Future<Map<String, double?>> getWeatherForTargetLoc() async {
+    double? latitude;
+    double? longitude;
+    bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
+    if (!serviceEnabled) {
+      return Future.error("Konum servisleri kapalı!");
+    }
+
+    LocationPermission permission = await Geolocator.checkPermission();
+    if (permission == LocationPermission.denied) {
+      permission = await Geolocator.requestPermission();
+      if (permission == LocationPermission.denied) {
+        return Future.error("Konum izni reddedildi.");
+      }
+    }
+
+    if (permission == LocationPermission.deniedForever) {
+      return Future.error(
+          "Konum servisleri kalıcı olarak reddedildi. Konum alınamıyor.");
+    }
+    try {
+      Position position = await Geolocator.getCurrentPosition();
+      if (position != null) {
+        longitude = position.longitude;
+        latitude = position.latitude;
+        positionBool == true;
+        setState(() {});
+      } else {
+        throw ("Lokasyon verileri boş geldi!");
+      }
+    } catch (e) {
+      throw ("Lokasyon çekerken hata: ${e.toString()}");
+    }
+
+    List<Placemark> placemarks =
+        await placemarkFromCoordinates(latitude!, longitude!);
+
+    if (placemarks.isNotEmpty) {
+      Placemark placemark = placemarks.first;
+      setState(() {
+        _cityName = placemark.administrativeArea ?? "Şehir bulunamadı!";
+      });
+    }
+
+    if (positionBool) {
+      locationMessage =
+          "Latitude: ${latitude.toString()}, Longitude: ${longitude.toString()}, City: $_cityName";
+      setState(() {
+        locationMessage =
+            "Latitude: ${latitude.toString()}, Longitude: ${longitude.toString()}, City: $_cityName";
+      });
+    }
+    Map<String, double?> locationData = {
+      'latitude': latitude,
+      'longitude': longitude
+    };
+    return locationData;
+  }
+
+  late WeatherTest? _userModel;
+  int? weatherCodeCurrent;
+  List<int>? isDayHourly;
+  List<int>? weatherCodeHourly;
+
+  void getData() async {
+    try {
+      Map<String, double?> locationData = await getWeatherForTargetLoc();
+
+      double? latitude = locationData['latitude'];
+      double? longitude = locationData['longitude'];
+
+      WeatherTest userModel = await ApiService()
+          .getWeatherForTargetCoord(latitude.toString(), longitude.toString());
+
+      setState(() {
+        _userModel = userModel;
+        weatherCodeCurrent = userModel.currentWeather?.weathercode;
+        isDayHourly = userModel.hourly?.isDay;
+        weatherCodeHourly = userModel.hourly?.weathercode;
+      });
+    } catch (error) {
+      print('Error occurred: $error');
+    }
+
+    // getWeatherForTargetLoc().then((locationData) async {
+    //   double? latitude = locationData['latitude'];
+    //   double? longitude = locationData['longitude'];
+
+    //   _userModel = (await ApiService()
+    //       .getWeatherForTargetCoord(latitude.toString(), longitude.toString()));
+    // });
+  }
+
   DateTime now = DateTime.now();
   late int formattedHour = now.hour;
 
@@ -193,22 +276,6 @@ class _HomePageState extends State<HomePage> {
 
     return nextIndexDays;
   }
-
-  late WeatherTest? _userModel;
-  @override
-  void initState() {
-    super.initState();
-    _getData();
-  }
-
-  void _getData() async {
-    _userModel = (await ApiService().getWeatherForTargetCoord());
-  }
-
-  late double? latitude;
-  late double? longitude;
-  //String? currentAddress;
-  String? locationMessage;
 
   @override
   Widget build(BuildContext context) {
@@ -317,44 +384,266 @@ class _HomePageState extends State<HomePage> {
 
     var brightness = MediaQuery.of(context).platformBrightness;
 
-    // ignore: no_leading_underscores_for_local_identifiers
-    Future<Position> _getCurrentLocation() async {
-      bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
-      if (!serviceEnabled) {
-        return Future.error("Konum servisleri kapalı!");
-      }
+    final weatherCodeMap = {
+      0: "Güneşli",
+      1: "Çoğunlukla Açıklı",
+      2: "Parçalı Bulutlu",
+      3: "Kapalı",
+      45: "Sisli",
+      51: "Hafif Yağmurlu",
+      53: "Hafif Yağmurlu",
+      55: "Hafif Yağmurlu",
+      56: "Hafif Yağmurlu",
+      57: "Hafif Yağmurlu",
+      61: "Yağmurlu",
+      63: "Yağmurlu",
+      65: "Yağmurlu",
+      66: "Yağmurlu",
+      67: "Yağmurlu",
+      71: "Karlı",
+      73: "Karlı",
+      75: "Karlı",
+      77: "Karlı",
+      80: "Sağanak Yağmurlu",
+      81: "Sağanak Yağmurlu",
+      82: "Sağanak Yağmurlu",
+      85: "Sağanak Karlı",
+      86: "Sağanak Karlı",
+      95: "Gök Gürültülü",
+      96: "Gök Gürültülü",
+      99: "Gök Gürültülü",
+    };
 
-      LocationPermission permission = await Geolocator.checkPermission();
-      if (permission == LocationPermission.denied) {
-        permission = await Geolocator.requestPermission();
-        if (permission == LocationPermission.denied) {
-          return Future.error("Konum izni reddedildi!");
-        }
-      }
+    final weatherGifMap = {
+      0: "assets/gifs/gunesli.gif",
+      1: "assets/gifs/gunesli.gif",
+      2: "assets/gifs/parcalibulutlu.gif",
+      3: "assets/gifs/parcalibulutlu.gif",
+      45: "assets/gifs/sisli.gif",
+      51: "assets/gifs/yagmurlu.gif",
+      53: "assets/gifs/yagmurlu.gif",
+      55: "assets/gifs/yagmurlu.gif",
+      56: "assets/gifs/yagmurlu.gif",
+      57: "assets/gifs/yagmurlu.gif",
+      61: "assets/gifs/yagmurlu.gif",
+      63: "assets/gifs/yagmurlu.gif",
+      65: "assets/gifs/yagmurlu.gif",
+      66: "assets/gifs/yagmurlu.gif",
+      67: "assets/gifs/yagmurlu.gif",
+      71: "assets/gifs/karli.gif",
+      73: "assets/gifs/karli.gif",
+      75: "assets/gifs/karli.gif",
+      77: "assets/gifs/karli.gif",
+      80: "assets/gifs/saganakyagmur.gif",
+      81: "assets/gifs/saganakyagmur.gif",
+      82: "assets/gifs/saganakyagmur.gif",
+      85: "assets/gifs/saganakkarli.gif",
+      86: "assets/gifs/saganakkarli.gif",
+      95: "assets/gifs/gokgurultulu.gif",
+      96: "assets/gifs/gokgurultulu.gif",
+      99: "assets/gifs/gokgurultulu.gif",
+    };
 
-      if (permission == LocationPermission.deniedForever) {
-        return Future.error(
-            "Konum servisleri kalıcı olarak reddedildi. Konum bilgisi alınamıyor!");
-      }
-      return await Geolocator.getCurrentPosition(); // biraz karışmış
-    }
+    final weatherColorMap = {
+      0: [
+        const Color.fromRGBO(253, 200, 48, 1),
+        const Color.fromRGBO(243, 115, 53, 1)
+      ],
+      1: [
+        const Color.fromRGBO(253, 200, 48, 1),
+        const Color.fromRGBO(243, 115, 53, 1)
+      ],
+      2: [
+        const Color.fromRGBO(149, 184, 204, 1),
+        const Color.fromRGBO(219, 212, 180, 1),
+        const Color.fromRGBO(122, 161, 210, 1),
+      ],
+      3: [
+        const Color.fromRGBO(149, 184, 204, 1),
+        const Color.fromRGBO(219, 212, 180, 1),
+        const Color.fromRGBO(122, 161, 210, 1),
+      ],
+      45: [
+        const Color.fromRGBO(20, 30, 48, 1),
+        const Color.fromRGBO(36, 59, 85, 1),
+      ],
+      51: [
+        const Color.fromRGBO(75, 108, 183, 1),
+        const Color.fromRGBO(24, 40, 72, 1),
+      ],
+      53: [
+        const Color.fromRGBO(75, 108, 183, 1),
+        const Color.fromRGBO(24, 40, 72, 1),
+      ],
+      55: [
+        const Color.fromRGBO(75, 108, 183, 1),
+        const Color.fromRGBO(24, 40, 72, 1),
+      ],
+      56: [
+        const Color.fromRGBO(75, 108, 183, 1),
+        const Color.fromRGBO(24, 40, 72, 1),
+      ],
+      57: [
+        const Color.fromRGBO(75, 108, 183, 1),
+        const Color.fromRGBO(24, 40, 72, 1),
+      ],
+      61: [
+        const Color.fromRGBO(75, 108, 183, 1),
+        const Color.fromRGBO(24, 40, 72, 1),
+      ],
+      63: [
+        const Color.fromRGBO(75, 108, 183, 1),
+        const Color.fromRGBO(24, 40, 72, 1),
+      ],
+      65: [
+        const Color.fromRGBO(75, 108, 183, 1),
+        const Color.fromRGBO(24, 40, 72, 1),
+      ],
+      66: [
+        const Color.fromRGBO(75, 108, 183, 1),
+        const Color.fromRGBO(24, 40, 72, 1),
+      ],
+      67: [
+        const Color.fromRGBO(75, 108, 183, 1),
+        const Color.fromRGBO(24, 40, 72, 1),
+      ],
+      71: [
+        const Color.fromRGBO(48, 67, 82, 1),
+        const Color.fromRGBO(215, 210, 204, 1),
+      ],
+      73: [
+        const Color.fromRGBO(48, 67, 82, 1),
+        const Color.fromRGBO(215, 210, 204, 1),
+      ],
+      75: [
+        const Color.fromRGBO(48, 67, 82, 1),
+        const Color.fromRGBO(215, 210, 204, 1),
+      ],
+      77: [
+        const Color.fromRGBO(48, 67, 82, 1),
+        const Color.fromRGBO(215, 210, 204, 1),
+      ],
+      80: [
+        const Color.fromRGBO(20, 30, 48, 1),
+        const Color.fromRGBO(36, 59, 85, 1),
+      ],
+      81: [
+        const Color.fromRGBO(20, 30, 48, 1),
+        const Color.fromRGBO(36, 59, 85, 1),
+      ],
+      82: [
+        const Color.fromRGBO(20, 30, 48, 1),
+        const Color.fromRGBO(36, 59, 85, 1),
+      ],
+      85: [
+        const Color.fromRGBO(21, 28, 35, 1),
+        const Color.fromRGBO(215, 210, 204, 1),
+      ],
+      86: [
+        const Color.fromRGBO(21, 28, 35, 1),
+        const Color.fromRGBO(215, 210, 204, 1),
+      ],
+      95: [
+        const Color.fromRGBO(183, 195, 208, 1),
+        const Color.fromRGBO(137, 152, 170, 1),
+        const Color.fromRGBO(91, 115, 151, 1),
+        const Color.fromRGBO(68, 60, 132, 1),
+      ],
+      96: [
+        const Color.fromRGBO(183, 195, 208, 1),
+        const Color.fromRGBO(137, 152, 170, 1),
+        const Color.fromRGBO(91, 115, 151, 1),
+        const Color.fromRGBO(68, 60, 132, 1),
+      ],
+      99: [
+        const Color.fromRGBO(183, 195, 208, 1),
+        const Color.fromRGBO(137, 152, 170, 1),
+        const Color.fromRGBO(91, 115, 151, 1),
+        const Color.fromRGBO(68, 60, 132, 1),
+      ],
+    };
 
-    Future<bool> getCurrentLocationCoord() async {
-      try {
-        Position position = await _getCurrentLocation();
-        if (!position.latitude.isNaN && !position.longitude.isNaN) {
-          longitude = position.longitude;
-          latitude = position.latitude;
-          debugPrint("Lokasyon Verileri: $longitude , $latitude");
-          setState(() {});
-          return true;
+    // late List<int> weatherCodeHourly = _userModel!.hourly!.weathercode!;
+    // ignore: unused_local_variable
+    late List<int> weatherCodeDaily = _userModel!.daily!.weathercode!;
+
+    List<Color>? colors = weatherColorMap[weatherCodeCurrent];
+
+    // List<int> isDayHourly = _userModel!.hourly!.isDay!;
+
+    String getWeatherGif(int index) {
+      int currentWeatherCode = weatherCodeHourly![index];
+
+      if (isDayHourly![index] == 1) {
+        // Day time
+        return weatherGifMap[currentWeatherCode]!;
+      } else {
+        // Night time
+        if (currentWeatherCode == 0 ||
+            currentWeatherCode == 1 ||
+            currentWeatherCode == 2 ||
+            currentWeatherCode == 3 ||
+            currentWeatherCode == 45) {
+          // Clear night
+          return "assets/gifs/ay.gif";
         } else {
-          throw ("Lokasyon Verileri boş geldi");
+          // Rain/snow etc
+          return weatherGifMap[currentWeatherCode]!;
         }
-      } catch (e) {
-        throw ("Lokasyon Çekerken Hata : ${e.toString()}");
       }
     }
+
+    // ignore: unused_element
+    List<Color>? getWeatherColor(int index) {
+      int currentWeatherCode = weatherCodeHourly![index];
+
+      if (isDayHourly![index] == 1) {
+        // Day time
+        return colors = weatherColorMap[weatherCodeCurrent];
+      } else {
+        // Night time
+        if (currentWeatherCode == 0 ||
+            currentWeatherCode == 1 ||
+            currentWeatherCode == 2 ||
+            currentWeatherCode == 3 ||
+            currentWeatherCode == 45) {
+          // Clear night
+          return colors = [
+            const Color.fromRGBO(0, 0, 0, 255),
+            const Color.fromRGBO(67, 67, 67, 255)
+          ];
+        } else {
+          // Rain/snow etc
+          return colors = weatherColorMap[weatherCodeCurrent];
+        }
+      }
+    }
+
+    String currentHourWeatherGif = getWeatherGif(currentIndex);
+    String hour1WeatherGif = getWeatherGif(nextIndex1);
+    String hour2WeatherGif = getWeatherGif(nextIndex2);
+    String hour3WeatherGif = getWeatherGif(nextIndex3);
+    String hour4WeatherGif = getWeatherGif(nextIndex4);
+    String hour5WeatherGif = getWeatherGif(nextIndex5);
+    String hour6WeatherGif = getWeatherGif(nextIndex6);
+    String hour7WeatherGif = getWeatherGif(nextIndex7);
+    String hour8WeatherGif = getWeatherGif(nextIndex8);
+    String hour9WeatherGif = getWeatherGif(nextIndex9);
+    String hour10WeatherGif = getWeatherGif(nextIndex10);
+    String hour11WeatherGif = getWeatherGif(nextIndex11);
+    String hour12WeatherGif = getWeatherGif(nextIndex12);
+    String hour13WeatherGif = getWeatherGif(nextIndex13);
+    String hour14WeatherGif = getWeatherGif(nextIndex14);
+    String hour15WeatherGif = getWeatherGif(nextIndex15);
+    String hour16WeatherGif = getWeatherGif(nextIndex16);
+    String hour17WeatherGif = getWeatherGif(nextIndex17);
+    String hour18WeatherGif = getWeatherGif(nextIndex18);
+    String hour19WeatherGif = getWeatherGif(nextIndex19);
+    String hour20WeatherGif = getWeatherGif(nextIndex20);
+    String hour21WeatherGif = getWeatherGif(nextIndex21);
+    String hour22WeatherGif = getWeatherGif(nextIndex22);
+    String hour23WeatherGif = getWeatherGif(nextIndex23);
+    String hour24WeatherGif = getWeatherGif(nextIndex24);
 
     return Scaffold(
       body: Container(
@@ -364,7 +653,7 @@ class _HomePageState extends State<HomePage> {
           gradient: LinearGradient(
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
-            colors: colors,
+            colors: colors!,
           ),
         ),
         child: SingleChildScrollView(
@@ -375,40 +664,41 @@ class _HomePageState extends State<HomePage> {
               ),
 
               // Column(
-              //   mainAxisAlignment: MainAxisAlignment.center,
               //   children: [
-              //     OutlinedButton(
-              //         child: const Text("Konum"),
-              //         onPressed: () async {
-              //           if (await getCurrentLocationCoord()) {
-              //             setState(() {
-              //               locationMessage =
-              //                   "Latitude: ${latitude.toString()}, Longitude: ${longitude.toString()}";
-              //               debugPrint(
-              //                   "OutlinedButton from Homepage : $locationMessage");
-              //             });
-              //           } else {
-              //             setState(() {
-              //               locationMessage = "Lokasyon verileri Hatalı";
-              //             });
-
-              //             debugPrint(latitude.toString());
-              //           }
-              //         }),
-              //     const SizedBox(height: 20), // Adding some spacing
-              //     Text(
-              //       locationMessage == null
-              //           ? "Veriler Yükleniyor..."
-              //           : locationMessage!,
-              //       textAlign: TextAlign.center,
-              //       style: const TextStyle(fontSize: 40),
-              //     ),
-
+              //     //  TextButton(
+              //     //    onPressed: () async {
+              //     //      if (await getData()) {
+              //     //        locationMessage =
+              //     //            "Latitude: ${latitude.toString()}, Longitude: ${longitude.toString()}, City: $_city";
+              //     //        debugPrint(
+              //     //            "OutlinedButton from Homepage : $locationMessage");
+              //     //        setState(() {
+              //     //          locationMessage =
+              //     //              "Latitude: ${latitude.toString()}, Longitude: ${longitude.toString()}, City: $_city";
+              //     //          debugPrint(
+              //     //              "OutlinedButton from Homepage : $locationMessage");
+              //     //        });
+              //     //      } else {
+              //     //        debugPrint("hata buton0");
+              //     //        setState(() {
+              //     //          debugPrint("hata buton1");
+              //     //          locationMessage = "Lokasyon verileri Hatalı";
+              //     //          debugPrint("hata buton");
+              //     //        });
+              //     //      }
+              //     //    },
+              //     //    child: Text(
+              //     //      "Konum Göster",
+              //     //      style: TextStyle(fontSize: 40, color: Colors.white),
+              //     //    ),
+              //     //  ),
+              //     Text(_cityName)
               //   ],
               // ),
+
               //City Name
               Text(
-                "Konya",
+                _cityName ?? "boş",
                 textAlign: TextAlign.center,
                 style: GoogleFonts.oswald(
                   color: Colors.white,
@@ -417,7 +707,7 @@ class _HomePageState extends State<HomePage> {
               ),
               //Degree
               Text(
-                "${_userModel!.currentWeather!.temperature}°C",
+                "${_userModel!.currentWeather!.temperature!.round()}°C",
                 textAlign: TextAlign.center,
                 style: GoogleFonts.oswald(
                   color: Colors.white,
@@ -426,7 +716,7 @@ class _HomePageState extends State<HomePage> {
               ),
               //Weather Status
               Text(
-                weatherConditionProper,
+                weatherCodeMap[weatherCodeCurrent]!,
                 textAlign: TextAlign.center,
                 style: GoogleFonts.oswald(
                   color: Colors.white,
@@ -435,7 +725,7 @@ class _HomePageState extends State<HomePage> {
               ),
               //Apperant Temperature
               Text(
-                "Hissedilen Sıcaklık: ${_userModel!.hourly!.apparentTemperature![currentIndex]}°C",
+                "Hissedilen Sıcaklık: ${_userModel!.hourly!.apparentTemperature![currentIndex].round()}°C",
                 textAlign: TextAlign.center,
                 style: GoogleFonts.oswald(
                   color: Colors.white,
@@ -447,7 +737,7 @@ class _HomePageState extends State<HomePage> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
-                    "En Düşük: ${_userModel!.daily!.temperature2MMin![0]}°C",
+                    "En Düşük: ${_userModel!.daily!.temperature2MMin![currentIndex].round()}°C",
                     textAlign: TextAlign.center,
                     style: GoogleFonts.oswald(
                       color: Colors.white,
@@ -458,7 +748,7 @@ class _HomePageState extends State<HomePage> {
                     width: 13,
                   ),
                   Text(
-                    "En Yüksek: ${_userModel!.daily!.temperature2MMax![0]}°C",
+                    "En Yüksek: ${_userModel!.daily!.temperature2MMax![currentIndex].round()}°C",
                     textAlign: TextAlign.center,
                     style: GoogleFonts.oswald(
                       color: Colors.white,
@@ -500,9 +790,9 @@ class _HomePageState extends State<HomePage> {
                                             fontWeight: FontWeight.w300,
                                           ),
                                         ),
-                                        Image.asset(asset),
+                                        Image.asset(currentHourWeatherGif),
                                         Text(
-                                          "${_userModel!.hourly!.temperature2M![currentIndex]}°C",
+                                          "${_userModel!.hourly!.temperature2M![currentIndex].round()}°C",
                                           style: GoogleFonts.oswald(
                                             fontSize: 20,
                                             fontWeight: FontWeight.w300,
@@ -522,9 +812,9 @@ class _HomePageState extends State<HomePage> {
                                               fontWeight: FontWeight.w300,
                                             ),
                                           ),
-                                          Image.asset(asset),
+                                          Image.asset(currentHourWeatherGif),
                                           Text(
-                                            "${_userModel!.hourly!.temperature2M![0]}°C",
+                                            "${_userModel!.hourly!.temperature2M![currentIndex].round()}°C",
                                             style: GoogleFonts.oswald(
                                               fontSize: 20,
                                               fontWeight: FontWeight.w300,
@@ -567,7 +857,7 @@ class _HomePageState extends State<HomePage> {
                                                       ),
                                                     ),
                                                     Text(
-                                                      "${_userModel!.hourly!.apparentTemperature![currentIndex]}°C",
+                                                      "${_userModel!.hourly!.apparentTemperature![currentIndex].round()}°C",
                                                       style: GoogleFonts.oswald(
                                                         fontSize: 14,
                                                         fontWeight:
@@ -680,9 +970,9 @@ class _HomePageState extends State<HomePage> {
                                               fontWeight: FontWeight.w300,
                                             ),
                                           ),
-                                          Image.asset(asset),
+                                          Image.asset(hour1WeatherGif),
                                           Text(
-                                            "${_userModel!.hourly!.temperature2M![nextIndex1]}°C",
+                                            "${_userModel!.hourly!.temperature2M![nextIndex1].round()}°C",
                                             style: GoogleFonts.oswald(
                                               fontSize: 20,
                                               fontWeight: FontWeight.w300,
@@ -702,9 +992,9 @@ class _HomePageState extends State<HomePage> {
                                                 fontWeight: FontWeight.w300,
                                               ),
                                             ),
-                                            Image.asset(asset),
+                                            Image.asset(hour1WeatherGif),
                                             Text(
-                                              "${_userModel!.hourly!.temperature2M![nextIndex1]}°C",
+                                              "${_userModel!.hourly!.temperature2M![nextIndex1].round()}°C",
                                               style: GoogleFonts.oswald(
                                                 fontSize: 20,
                                                 fontWeight: FontWeight.w300,
@@ -749,7 +1039,7 @@ class _HomePageState extends State<HomePage> {
                                                         ),
                                                       ),
                                                       Text(
-                                                        "${_userModel!.hourly!.apparentTemperature![nextIndex1]}°C",
+                                                        "${_userModel!.hourly!.apparentTemperature![nextIndex1].round()}°C",
                                                         style:
                                                             GoogleFonts.oswald(
                                                           fontSize: 14,
@@ -866,9 +1156,9 @@ class _HomePageState extends State<HomePage> {
                                               fontSize: 20,
                                             ),
                                           ),
-                                          Image.asset(asset),
+                                          Image.asset(hour2WeatherGif),
                                           Text(
-                                            " ${_userModel!.hourly!.temperature2M![nextIndex2]}°C",
+                                            " ${_userModel!.hourly!.temperature2M![nextIndex2].round()}°C",
                                             style: GoogleFonts.oswald(
                                               fontWeight: FontWeight.w300,
                                               fontSize: 20,
@@ -888,9 +1178,9 @@ class _HomePageState extends State<HomePage> {
                                                 fontWeight: FontWeight.w300,
                                               ),
                                             ),
-                                            Image.asset(asset),
+                                            Image.asset(hour2WeatherGif),
                                             Text(
-                                              "${_userModel!.hourly!.temperature2M![nextIndex2]}°C",
+                                              "${_userModel!.hourly!.temperature2M![nextIndex2].round()}°C",
                                               style: GoogleFonts.oswald(
                                                 fontSize: 20,
                                                 fontWeight: FontWeight.w300,
@@ -935,7 +1225,7 @@ class _HomePageState extends State<HomePage> {
                                                         ),
                                                       ),
                                                       Text(
-                                                        "${_userModel!.hourly!.apparentTemperature![nextIndex2]}°C",
+                                                        "${_userModel!.hourly!.apparentTemperature![nextIndex2].round()}°C",
                                                         style:
                                                             GoogleFonts.oswald(
                                                           fontSize: 14,
@@ -1052,9 +1342,9 @@ class _HomePageState extends State<HomePage> {
                                             fontSize: 20,
                                           ),
                                         ),
-                                        Image.asset(asset),
+                                        Image.asset(hour3WeatherGif),
                                         Text(
-                                          " ${_userModel!.hourly!.temperature2M![nextIndex3]}°C",
+                                          " ${_userModel!.hourly!.temperature2M![nextIndex3].round()}°C",
                                           style: GoogleFonts.oswald(
                                             fontWeight: FontWeight.w300,
                                             fontSize: 20,
@@ -1074,9 +1364,9 @@ class _HomePageState extends State<HomePage> {
                                               fontWeight: FontWeight.w300,
                                             ),
                                           ),
-                                          Image.asset(asset),
+                                          Image.asset(hour3WeatherGif),
                                           Text(
-                                            "${_userModel!.hourly!.temperature2M![nextIndex3]}°C",
+                                            "${_userModel!.hourly!.temperature2M![nextIndex3].round()}°C",
                                             style: GoogleFonts.oswald(
                                               fontSize: 20,
                                               fontWeight: FontWeight.w300,
@@ -1119,7 +1409,7 @@ class _HomePageState extends State<HomePage> {
                                                       ),
                                                     ),
                                                     Text(
-                                                      "${_userModel!.hourly!.apparentTemperature![nextIndex3]}°C",
+                                                      "${_userModel!.hourly!.apparentTemperature![nextIndex3].round()}°C",
                                                       style: GoogleFonts.oswald(
                                                         fontSize: 14,
                                                         fontWeight:
@@ -1232,9 +1522,9 @@ class _HomePageState extends State<HomePage> {
                                             fontSize: 20,
                                           ),
                                         ),
-                                        Image.asset(asset),
+                                        Image.asset(hour4WeatherGif),
                                         Text(
-                                          "${_userModel!.hourly!.temperature2M![nextIndex4]}°C",
+                                          "${_userModel!.hourly!.temperature2M![nextIndex4].round()}°C",
                                           style: GoogleFonts.oswald(
                                             fontWeight: FontWeight.w300,
                                             fontSize: 20,
@@ -1254,9 +1544,9 @@ class _HomePageState extends State<HomePage> {
                                               fontWeight: FontWeight.w300,
                                             ),
                                           ),
-                                          Image.asset(asset),
+                                          Image.asset(hour4WeatherGif),
                                           Text(
-                                            "${_userModel!.hourly!.temperature2M![nextIndex4]}°C",
+                                            "${_userModel!.hourly!.temperature2M![nextIndex4].round()}°C",
                                             style: GoogleFonts.oswald(
                                               fontSize: 20,
                                               fontWeight: FontWeight.w300,
@@ -1299,7 +1589,7 @@ class _HomePageState extends State<HomePage> {
                                                       ),
                                                     ),
                                                     Text(
-                                                      "${_userModel!.hourly!.apparentTemperature![nextIndex4]}°C",
+                                                      "${_userModel!.hourly!.apparentTemperature![nextIndex4].round()}°C",
                                                       style: GoogleFonts.oswald(
                                                         fontSize: 14,
                                                         fontWeight:
@@ -1412,9 +1702,9 @@ class _HomePageState extends State<HomePage> {
                                             fontSize: 20,
                                           ),
                                         ),
-                                        Image.asset(asset),
+                                        Image.asset(hour5WeatherGif),
                                         Text(
-                                          "${_userModel!.hourly!.temperature2M![nextIndex5]}°C",
+                                          "${_userModel!.hourly!.temperature2M![nextIndex5].round()}°C",
                                           style: GoogleFonts.oswald(
                                             fontWeight: FontWeight.w300,
                                             fontSize: 20,
@@ -1434,9 +1724,9 @@ class _HomePageState extends State<HomePage> {
                                               fontWeight: FontWeight.w300,
                                             ),
                                           ),
-                                          Image.asset(asset),
+                                          Image.asset(hour5WeatherGif),
                                           Text(
-                                            "${_userModel!.hourly!.temperature2M![nextIndex5]}°C",
+                                            "${_userModel!.hourly!.temperature2M![nextIndex5].round()}°C",
                                             style: GoogleFonts.oswald(
                                               fontSize: 20,
                                               fontWeight: FontWeight.w300,
@@ -1479,7 +1769,7 @@ class _HomePageState extends State<HomePage> {
                                                       ),
                                                     ),
                                                     Text(
-                                                      "${_userModel!.hourly!.apparentTemperature![nextIndex5]}°C",
+                                                      "${_userModel!.hourly!.apparentTemperature![nextIndex5].round()}°C",
                                                       style: GoogleFonts.oswald(
                                                         fontSize: 14,
                                                         fontWeight:
@@ -1592,9 +1882,9 @@ class _HomePageState extends State<HomePage> {
                                             fontSize: 20,
                                           ),
                                         ),
-                                        Image.asset(asset),
+                                        Image.asset(hour6WeatherGif),
                                         Text(
-                                          "${_userModel!.hourly!.temperature2M![nextIndex6]}°C",
+                                          "${_userModel!.hourly!.temperature2M![nextIndex6].round()}°C",
                                           style: GoogleFonts.oswald(
                                             fontWeight: FontWeight.w300,
                                             fontSize: 20,
@@ -1614,9 +1904,9 @@ class _HomePageState extends State<HomePage> {
                                               fontWeight: FontWeight.w300,
                                             ),
                                           ),
-                                          Image.asset(asset),
+                                          Image.asset(hour6WeatherGif),
                                           Text(
-                                            "${_userModel!.hourly!.temperature2M![nextIndex6]}°C",
+                                            "${_userModel!.hourly!.temperature2M![nextIndex6].round()}°C",
                                             style: GoogleFonts.oswald(
                                               fontSize: 20,
                                               fontWeight: FontWeight.w300,
@@ -1659,7 +1949,7 @@ class _HomePageState extends State<HomePage> {
                                                       ),
                                                     ),
                                                     Text(
-                                                      "${_userModel!.hourly!.apparentTemperature![nextIndex6]}°C",
+                                                      "${_userModel!.hourly!.apparentTemperature![nextIndex6].round()}°C",
                                                       style: GoogleFonts.oswald(
                                                         fontSize: 14,
                                                         fontWeight:
@@ -1772,9 +2062,9 @@ class _HomePageState extends State<HomePage> {
                                             fontSize: 20,
                                           ),
                                         ),
-                                        Image.asset(asset),
+                                        Image.asset(hour7WeatherGif),
                                         Text(
-                                          "${_userModel!.hourly!.temperature2M![nextIndex7]}°C",
+                                          "${_userModel!.hourly!.temperature2M![nextIndex7].round()}°C",
                                           style: GoogleFonts.oswald(
                                             fontWeight: FontWeight.w300,
                                             fontSize: 20,
@@ -1794,9 +2084,9 @@ class _HomePageState extends State<HomePage> {
                                               fontWeight: FontWeight.w300,
                                             ),
                                           ),
-                                          Image.asset(asset),
+                                          Image.asset(hour7WeatherGif),
                                           Text(
-                                            "${_userModel!.hourly!.temperature2M![nextIndex7]}°C",
+                                            "${_userModel!.hourly!.temperature2M![nextIndex7].round()}°C",
                                             style: GoogleFonts.oswald(
                                               fontSize: 20,
                                               fontWeight: FontWeight.w300,
@@ -1839,7 +2129,7 @@ class _HomePageState extends State<HomePage> {
                                                       ),
                                                     ),
                                                     Text(
-                                                      "${_userModel!.hourly!.apparentTemperature![nextIndex7]}°C",
+                                                      "${_userModel!.hourly!.apparentTemperature![nextIndex7].round()}°C",
                                                       style: GoogleFonts.oswald(
                                                         fontSize: 14,
                                                         fontWeight:
@@ -1952,9 +2242,9 @@ class _HomePageState extends State<HomePage> {
                                             fontSize: 20,
                                           ),
                                         ),
-                                        Image.asset(asset),
+                                        Image.asset(hour8WeatherGif),
                                         Text(
-                                          "${_userModel!.hourly!.temperature2M![nextIndex8]}°C",
+                                          "${_userModel!.hourly!.temperature2M![nextIndex8].round()}°C",
                                           style: GoogleFonts.oswald(
                                             fontWeight: FontWeight.w300,
                                             fontSize: 20,
@@ -1974,9 +2264,9 @@ class _HomePageState extends State<HomePage> {
                                               fontWeight: FontWeight.w300,
                                             ),
                                           ),
-                                          Image.asset(asset),
+                                          Image.asset(hour8WeatherGif),
                                           Text(
-                                            "${_userModel!.hourly!.temperature2M![nextIndex8]}°C",
+                                            "${_userModel!.hourly!.temperature2M![nextIndex8].round()}°C",
                                             style: GoogleFonts.oswald(
                                               fontSize: 20,
                                               fontWeight: FontWeight.w300,
@@ -2019,7 +2309,7 @@ class _HomePageState extends State<HomePage> {
                                                       ),
                                                     ),
                                                     Text(
-                                                      "${_userModel!.hourly!.apparentTemperature![nextIndex8]}°C",
+                                                      "${_userModel!.hourly!.apparentTemperature![nextIndex8].round()}°C",
                                                       style: GoogleFonts.oswald(
                                                         fontSize: 14,
                                                         fontWeight:
@@ -2132,9 +2422,9 @@ class _HomePageState extends State<HomePage> {
                                             fontSize: 20,
                                           ),
                                         ),
-                                        Image.asset(asset),
+                                        Image.asset(hour9WeatherGif),
                                         Text(
-                                          "${_userModel!.hourly!.temperature2M![nextIndex9]}°C",
+                                          "${_userModel!.hourly!.temperature2M![nextIndex9].round()}°C",
                                           style: GoogleFonts.oswald(
                                             fontWeight: FontWeight.w300,
                                             fontSize: 20,
@@ -2154,9 +2444,9 @@ class _HomePageState extends State<HomePage> {
                                               fontWeight: FontWeight.w300,
                                             ),
                                           ),
-                                          Image.asset(asset),
+                                          Image.asset(hour9WeatherGif),
                                           Text(
-                                            "${_userModel!.hourly!.temperature2M![nextIndex9]}°C",
+                                            "${_userModel!.hourly!.temperature2M![nextIndex9].round()}°C",
                                             style: GoogleFonts.oswald(
                                               fontSize: 20,
                                               fontWeight: FontWeight.w300,
@@ -2199,7 +2489,7 @@ class _HomePageState extends State<HomePage> {
                                                       ),
                                                     ),
                                                     Text(
-                                                      "${_userModel!.hourly!.apparentTemperature![nextIndex9]}°C",
+                                                      "${_userModel!.hourly!.apparentTemperature![nextIndex9].round()}°C",
                                                       style: GoogleFonts.oswald(
                                                         fontSize: 14,
                                                         fontWeight:
@@ -2312,9 +2602,9 @@ class _HomePageState extends State<HomePage> {
                                             fontSize: 20,
                                           ),
                                         ),
-                                        Image.asset(asset),
+                                        Image.asset(hour10WeatherGif),
                                         Text(
-                                          "${_userModel!.hourly!.temperature2M![nextIndex10]}°C",
+                                          "${_userModel!.hourly!.temperature2M![nextIndex10].round()}°C",
                                           style: GoogleFonts.oswald(
                                             fontWeight: FontWeight.w300,
                                             fontSize: 20,
@@ -2334,9 +2624,9 @@ class _HomePageState extends State<HomePage> {
                                               fontWeight: FontWeight.w300,
                                             ),
                                           ),
-                                          Image.asset(asset),
+                                          Image.asset(hour10WeatherGif),
                                           Text(
-                                            "${_userModel!.hourly!.temperature2M![nextIndex10]}°C",
+                                            "${_userModel!.hourly!.temperature2M![nextIndex10].round()}°C",
                                             style: GoogleFonts.oswald(
                                               fontSize: 20,
                                               fontWeight: FontWeight.w300,
@@ -2379,7 +2669,7 @@ class _HomePageState extends State<HomePage> {
                                                       ),
                                                     ),
                                                     Text(
-                                                      "${_userModel!.hourly!.apparentTemperature![nextIndex10]}°C",
+                                                      "${_userModel!.hourly!.apparentTemperature![nextIndex10].round()}°C",
                                                       style: GoogleFonts.oswald(
                                                         fontSize: 14,
                                                         fontWeight:
@@ -2492,9 +2782,9 @@ class _HomePageState extends State<HomePage> {
                                             fontSize: 20,
                                           ),
                                         ),
-                                        Image.asset(asset),
+                                        Image.asset(hour11WeatherGif),
                                         Text(
-                                          "${_userModel!.hourly!.temperature2M![nextIndex11]}°C",
+                                          "${_userModel!.hourly!.temperature2M![nextIndex11].round()}°C",
                                           style: GoogleFonts.oswald(
                                             fontWeight: FontWeight.w300,
                                             fontSize: 20,
@@ -2514,9 +2804,9 @@ class _HomePageState extends State<HomePage> {
                                               fontWeight: FontWeight.w300,
                                             ),
                                           ),
-                                          Image.asset(asset),
+                                          Image.asset(hour11WeatherGif),
                                           Text(
-                                            "${_userModel!.hourly!.temperature2M![nextIndex11]}°C",
+                                            "${_userModel!.hourly!.temperature2M![nextIndex11].round()}°C",
                                             style: GoogleFonts.oswald(
                                               fontSize: 20,
                                               fontWeight: FontWeight.w300,
@@ -2559,7 +2849,7 @@ class _HomePageState extends State<HomePage> {
                                                       ),
                                                     ),
                                                     Text(
-                                                      "${_userModel!.hourly!.apparentTemperature![nextIndex11]}°C",
+                                                      "${_userModel!.hourly!.apparentTemperature![nextIndex11].round()}°C",
                                                       style: GoogleFonts.oswald(
                                                         fontSize: 14,
                                                         fontWeight:
@@ -2672,9 +2962,9 @@ class _HomePageState extends State<HomePage> {
                                             fontSize: 20,
                                           ),
                                         ),
-                                        Image.asset(asset),
+                                        Image.asset(hour12WeatherGif),
                                         Text(
-                                          "${_userModel!.hourly!.temperature2M![nextIndex12]}°C",
+                                          "${_userModel!.hourly!.temperature2M![nextIndex12].round()}°C",
                                           style: GoogleFonts.oswald(
                                             fontWeight: FontWeight.w300,
                                             fontSize: 20,
@@ -2694,9 +2984,9 @@ class _HomePageState extends State<HomePage> {
                                               fontWeight: FontWeight.w300,
                                             ),
                                           ),
-                                          Image.asset(asset),
+                                          Image.asset(hour12WeatherGif),
                                           Text(
-                                            "${_userModel!.hourly!.temperature2M![nextIndex12]}°C",
+                                            "${_userModel!.hourly!.temperature2M![nextIndex12].round()}°C",
                                             style: GoogleFonts.oswald(
                                               fontSize: 20,
                                               fontWeight: FontWeight.w300,
@@ -2739,7 +3029,7 @@ class _HomePageState extends State<HomePage> {
                                                       ),
                                                     ),
                                                     Text(
-                                                      "${_userModel!.hourly!.apparentTemperature![nextIndex12]}°C",
+                                                      "${_userModel!.hourly!.apparentTemperature![nextIndex12].round()}°C",
                                                       style: GoogleFonts.oswald(
                                                         fontSize: 14,
                                                         fontWeight:
@@ -2852,9 +3142,9 @@ class _HomePageState extends State<HomePage> {
                                             fontSize: 20,
                                           ),
                                         ),
-                                        Image.asset(asset),
+                                        Image.asset(hour13WeatherGif),
                                         Text(
-                                          "${_userModel!.hourly!.temperature2M![nextIndex13]}°C",
+                                          "${_userModel!.hourly!.temperature2M![nextIndex13].round()}°C",
                                           style: GoogleFonts.oswald(
                                             fontWeight: FontWeight.w300,
                                             fontSize: 20,
@@ -2874,9 +3164,9 @@ class _HomePageState extends State<HomePage> {
                                               fontWeight: FontWeight.w300,
                                             ),
                                           ),
-                                          Image.asset(asset),
+                                          Image.asset(hour13WeatherGif),
                                           Text(
-                                            "${_userModel!.hourly!.temperature2M![nextIndex13]}°C",
+                                            "${_userModel!.hourly!.temperature2M![nextIndex13].round()}°C",
                                             style: GoogleFonts.oswald(
                                               fontSize: 20,
                                               fontWeight: FontWeight.w300,
@@ -2919,7 +3209,7 @@ class _HomePageState extends State<HomePage> {
                                                       ),
                                                     ),
                                                     Text(
-                                                      "${_userModel!.hourly!.apparentTemperature![nextIndex13]}°C",
+                                                      "${_userModel!.hourly!.apparentTemperature![nextIndex13].round()}°C",
                                                       style: GoogleFonts.oswald(
                                                         fontSize: 14,
                                                         fontWeight:
@@ -3032,9 +3322,9 @@ class _HomePageState extends State<HomePage> {
                                             fontSize: 20,
                                           ),
                                         ),
-                                        Image.asset(asset),
+                                        Image.asset(hour14WeatherGif),
                                         Text(
-                                          "${_userModel!.hourly!.temperature2M![nextIndex14]}°C",
+                                          "${_userModel!.hourly!.temperature2M![nextIndex14].round()}°C",
                                           style: GoogleFonts.oswald(
                                             fontWeight: FontWeight.w300,
                                             fontSize: 20,
@@ -3054,9 +3344,9 @@ class _HomePageState extends State<HomePage> {
                                               fontWeight: FontWeight.w300,
                                             ),
                                           ),
-                                          Image.asset(asset),
+                                          Image.asset(hour14WeatherGif),
                                           Text(
-                                            "${_userModel!.hourly!.temperature2M![nextIndex14]}°C",
+                                            "${_userModel!.hourly!.temperature2M![nextIndex14].round()}°C",
                                             style: GoogleFonts.oswald(
                                               fontSize: 20,
                                               fontWeight: FontWeight.w300,
@@ -3099,7 +3389,7 @@ class _HomePageState extends State<HomePage> {
                                                       ),
                                                     ),
                                                     Text(
-                                                      "${_userModel!.hourly!.apparentTemperature![nextIndex14]}°C",
+                                                      "${_userModel!.hourly!.apparentTemperature![nextIndex14].round()}°C",
                                                       style: GoogleFonts.oswald(
                                                         fontSize: 14,
                                                         fontWeight:
@@ -3212,9 +3502,9 @@ class _HomePageState extends State<HomePage> {
                                             fontSize: 20,
                                           ),
                                         ),
-                                        Image.asset(asset),
+                                        Image.asset(hour15WeatherGif),
                                         Text(
-                                          "${_userModel!.hourly!.temperature2M![nextIndex15]}°C",
+                                          "${_userModel!.hourly!.temperature2M![nextIndex15].round()}°C",
                                           style: GoogleFonts.oswald(
                                             fontWeight: FontWeight.w300,
                                             fontSize: 20,
@@ -3234,9 +3524,9 @@ class _HomePageState extends State<HomePage> {
                                               fontWeight: FontWeight.w300,
                                             ),
                                           ),
-                                          Image.asset(asset),
+                                          Image.asset(hour15WeatherGif),
                                           Text(
-                                            "${_userModel!.hourly!.temperature2M![nextIndex15]}°C",
+                                            "${_userModel!.hourly!.temperature2M![nextIndex15].round()}°C",
                                             style: GoogleFonts.oswald(
                                               fontSize: 20,
                                               fontWeight: FontWeight.w300,
@@ -3279,7 +3569,7 @@ class _HomePageState extends State<HomePage> {
                                                       ),
                                                     ),
                                                     Text(
-                                                      "${_userModel!.hourly!.apparentTemperature![nextIndex15]}°C",
+                                                      "${_userModel!.hourly!.apparentTemperature![nextIndex15].round()}°C",
                                                       style: GoogleFonts.oswald(
                                                         fontSize: 14,
                                                         fontWeight:
@@ -3392,9 +3682,9 @@ class _HomePageState extends State<HomePage> {
                                             fontSize: 20,
                                           ),
                                         ),
-                                        Image.asset(asset),
+                                        Image.asset(hour16WeatherGif),
                                         Text(
-                                          "${_userModel!.hourly!.temperature2M![nextIndex16]}°C",
+                                          "${_userModel!.hourly!.temperature2M![nextIndex16].round()}°C",
                                           style: GoogleFonts.oswald(
                                             fontWeight: FontWeight.w300,
                                             fontSize: 20,
@@ -3414,9 +3704,9 @@ class _HomePageState extends State<HomePage> {
                                               fontWeight: FontWeight.w300,
                                             ),
                                           ),
-                                          Image.asset(asset),
+                                          Image.asset(hour16WeatherGif),
                                           Text(
-                                            "${_userModel!.hourly!.temperature2M![nextIndex16]}°C",
+                                            "${_userModel!.hourly!.temperature2M![nextIndex16].round()}°C",
                                             style: GoogleFonts.oswald(
                                               fontSize: 20,
                                               fontWeight: FontWeight.w300,
@@ -3459,7 +3749,7 @@ class _HomePageState extends State<HomePage> {
                                                       ),
                                                     ),
                                                     Text(
-                                                      "${_userModel!.hourly!.apparentTemperature![nextIndex16]}°C",
+                                                      "${_userModel!.hourly!.apparentTemperature![nextIndex16].round()}°C",
                                                       style: GoogleFonts.oswald(
                                                         fontSize: 14,
                                                         fontWeight:
@@ -3572,9 +3862,9 @@ class _HomePageState extends State<HomePage> {
                                             fontSize: 20,
                                           ),
                                         ),
-                                        Image.asset(asset),
+                                        Image.asset(hour17WeatherGif),
                                         Text(
-                                          "${_userModel!.hourly!.temperature2M![nextIndex17]}°C",
+                                          "${_userModel!.hourly!.temperature2M![nextIndex17].round()}°C",
                                           style: GoogleFonts.oswald(
                                             fontWeight: FontWeight.w300,
                                             fontSize: 20,
@@ -3594,9 +3884,9 @@ class _HomePageState extends State<HomePage> {
                                               fontWeight: FontWeight.w300,
                                             ),
                                           ),
-                                          Image.asset(asset),
+                                          Image.asset(hour17WeatherGif),
                                           Text(
-                                            "${_userModel!.hourly!.temperature2M![nextIndex17]}°C",
+                                            "${_userModel!.hourly!.temperature2M![nextIndex17].round()}°C",
                                             style: GoogleFonts.oswald(
                                               fontSize: 20,
                                               fontWeight: FontWeight.w300,
@@ -3639,7 +3929,7 @@ class _HomePageState extends State<HomePage> {
                                                       ),
                                                     ),
                                                     Text(
-                                                      "${_userModel!.hourly!.apparentTemperature![nextIndex17]}°C",
+                                                      "${_userModel!.hourly!.apparentTemperature![nextIndex17].round()}°C",
                                                       style: GoogleFonts.oswald(
                                                         fontSize: 14,
                                                         fontWeight:
@@ -3752,9 +4042,9 @@ class _HomePageState extends State<HomePage> {
                                             fontSize: 20,
                                           ),
                                         ),
-                                        Image.asset(asset),
+                                        Image.asset(hour18WeatherGif),
                                         Text(
-                                          "${_userModel!.hourly!.temperature2M![nextIndex18]}°C",
+                                          "${_userModel!.hourly!.temperature2M![nextIndex18].round()}°C",
                                           style: GoogleFonts.oswald(
                                             fontWeight: FontWeight.w300,
                                             fontSize: 20,
@@ -3774,9 +4064,9 @@ class _HomePageState extends State<HomePage> {
                                               fontWeight: FontWeight.w300,
                                             ),
                                           ),
-                                          Image.asset(asset),
+                                          Image.asset(hour18WeatherGif),
                                           Text(
-                                            "${_userModel!.hourly!.temperature2M![nextIndex18]}°C",
+                                            "${_userModel!.hourly!.temperature2M![nextIndex18].round()}°C",
                                             style: GoogleFonts.oswald(
                                               fontSize: 20,
                                               fontWeight: FontWeight.w300,
@@ -3819,7 +4109,7 @@ class _HomePageState extends State<HomePage> {
                                                       ),
                                                     ),
                                                     Text(
-                                                      "${_userModel!.hourly!.apparentTemperature![nextIndex18]}°C",
+                                                      "${_userModel!.hourly!.apparentTemperature![nextIndex18].round()}°C",
                                                       style: GoogleFonts.oswald(
                                                         fontSize: 14,
                                                         fontWeight:
@@ -3932,9 +4222,9 @@ class _HomePageState extends State<HomePage> {
                                             fontSize: 20,
                                           ),
                                         ),
-                                        Image.asset(asset),
+                                        Image.asset(hour19WeatherGif),
                                         Text(
-                                          "${_userModel!.hourly!.temperature2M![nextIndex19]}°C",
+                                          "${_userModel!.hourly!.temperature2M![nextIndex19].round()}°C",
                                           style: GoogleFonts.oswald(
                                             fontWeight: FontWeight.w300,
                                             fontSize: 20,
@@ -3954,9 +4244,9 @@ class _HomePageState extends State<HomePage> {
                                               fontWeight: FontWeight.w300,
                                             ),
                                           ),
-                                          Image.asset(asset),
+                                          Image.asset(hour19WeatherGif),
                                           Text(
-                                            "${_userModel!.hourly!.temperature2M![nextIndex19]}°C",
+                                            "${_userModel!.hourly!.temperature2M![nextIndex19].round()}°C",
                                             style: GoogleFonts.oswald(
                                               fontSize: 20,
                                               fontWeight: FontWeight.w300,
@@ -3999,7 +4289,7 @@ class _HomePageState extends State<HomePage> {
                                                       ),
                                                     ),
                                                     Text(
-                                                      "${_userModel!.hourly!.apparentTemperature![nextIndex19]}°C",
+                                                      "${_userModel!.hourly!.apparentTemperature![nextIndex19].round()}°C",
                                                       style: GoogleFonts.oswald(
                                                         fontSize: 14,
                                                         fontWeight:
@@ -4112,9 +4402,9 @@ class _HomePageState extends State<HomePage> {
                                             fontSize: 20,
                                           ),
                                         ),
-                                        Image.asset(asset),
+                                        Image.asset(hour20WeatherGif),
                                         Text(
-                                          "${_userModel!.hourly!.temperature2M![nextIndex20]}°C",
+                                          "${_userModel!.hourly!.temperature2M![nextIndex20].round()}°C",
                                           style: GoogleFonts.oswald(
                                             fontWeight: FontWeight.w300,
                                             fontSize: 20,
@@ -4134,9 +4424,9 @@ class _HomePageState extends State<HomePage> {
                                               fontWeight: FontWeight.w300,
                                             ),
                                           ),
-                                          Image.asset(asset),
+                                          Image.asset(hour20WeatherGif),
                                           Text(
-                                            "${_userModel!.hourly!.temperature2M![nextIndex20]}°C",
+                                            "${_userModel!.hourly!.temperature2M![nextIndex20].round()}°C",
                                             style: GoogleFonts.oswald(
                                               fontSize: 20,
                                               fontWeight: FontWeight.w300,
@@ -4179,7 +4469,7 @@ class _HomePageState extends State<HomePage> {
                                                       ),
                                                     ),
                                                     Text(
-                                                      "${_userModel!.hourly!.apparentTemperature![nextIndex20]}°C",
+                                                      "${_userModel!.hourly!.apparentTemperature![nextIndex20].round()}°C",
                                                       style: GoogleFonts.oswald(
                                                         fontSize: 14,
                                                         fontWeight:
@@ -4292,9 +4582,9 @@ class _HomePageState extends State<HomePage> {
                                             fontSize: 20,
                                           ),
                                         ),
-                                        Image.asset(asset),
+                                        Image.asset(hour21WeatherGif),
                                         Text(
-                                          "${_userModel!.hourly!.temperature2M![nextIndex21]}°C",
+                                          "${_userModel!.hourly!.temperature2M![nextIndex21].round()}°C",
                                           style: GoogleFonts.oswald(
                                             fontWeight: FontWeight.w300,
                                             fontSize: 20,
@@ -4314,9 +4604,9 @@ class _HomePageState extends State<HomePage> {
                                               fontWeight: FontWeight.w300,
                                             ),
                                           ),
-                                          Image.asset(asset),
+                                          Image.asset(hour21WeatherGif),
                                           Text(
-                                            "${_userModel!.hourly!.temperature2M![nextIndex21]}°C",
+                                            "${_userModel!.hourly!.temperature2M![nextIndex21].round()}°C",
                                             style: GoogleFonts.oswald(
                                               fontSize: 20,
                                               fontWeight: FontWeight.w300,
@@ -4359,7 +4649,7 @@ class _HomePageState extends State<HomePage> {
                                                       ),
                                                     ),
                                                     Text(
-                                                      "${_userModel!.hourly!.apparentTemperature![nextIndex21]}°C",
+                                                      "${_userModel!.hourly!.apparentTemperature![nextIndex21].round()}°C",
                                                       style: GoogleFonts.oswald(
                                                         fontSize: 14,
                                                         fontWeight:
@@ -4472,9 +4762,9 @@ class _HomePageState extends State<HomePage> {
                                             fontSize: 20,
                                           ),
                                         ),
-                                        Image.asset(asset),
+                                        Image.asset(hour22WeatherGif),
                                         Text(
-                                          "${_userModel!.hourly!.temperature2M![nextIndex22]}°C",
+                                          "${_userModel!.hourly!.temperature2M![nextIndex22].round()}°C",
                                           style: GoogleFonts.oswald(
                                             fontWeight: FontWeight.w300,
                                             fontSize: 20,
@@ -4494,9 +4784,9 @@ class _HomePageState extends State<HomePage> {
                                               fontWeight: FontWeight.w300,
                                             ),
                                           ),
-                                          Image.asset(asset),
+                                          Image.asset(hour22WeatherGif),
                                           Text(
-                                            "${_userModel!.hourly!.temperature2M![nextIndex22]}°C",
+                                            "${_userModel!.hourly!.temperature2M![nextIndex22].round()}°C",
                                             style: GoogleFonts.oswald(
                                               fontSize: 20,
                                               fontWeight: FontWeight.w300,
@@ -4539,7 +4829,7 @@ class _HomePageState extends State<HomePage> {
                                                       ),
                                                     ),
                                                     Text(
-                                                      "${_userModel!.hourly!.apparentTemperature![nextIndex22]}°C",
+                                                      "${_userModel!.hourly!.apparentTemperature![nextIndex22].round()}°C",
                                                       style: GoogleFonts.oswald(
                                                         fontSize: 14,
                                                         fontWeight:
@@ -4652,9 +4942,9 @@ class _HomePageState extends State<HomePage> {
                                             fontSize: 20,
                                           ),
                                         ),
-                                        Image.asset(asset),
+                                        Image.asset(hour23WeatherGif),
                                         Text(
-                                          "${_userModel!.hourly!.temperature2M![nextIndex23]}°C",
+                                          "${_userModel!.hourly!.temperature2M![nextIndex23].round()}°C",
                                           style: GoogleFonts.oswald(
                                             fontWeight: FontWeight.w300,
                                             fontSize: 20,
@@ -4674,9 +4964,9 @@ class _HomePageState extends State<HomePage> {
                                               fontWeight: FontWeight.w300,
                                             ),
                                           ),
-                                          Image.asset(asset),
+                                          Image.asset(hour23WeatherGif),
                                           Text(
-                                            "${_userModel!.hourly!.temperature2M![nextIndex23]}°C",
+                                            "${_userModel!.hourly!.temperature2M![nextIndex23].round()}°C",
                                             style: GoogleFonts.oswald(
                                               fontSize: 20,
                                               fontWeight: FontWeight.w300,
@@ -4719,7 +5009,7 @@ class _HomePageState extends State<HomePage> {
                                                       ),
                                                     ),
                                                     Text(
-                                                      "${_userModel!.hourly!.apparentTemperature![nextIndex23]}°C",
+                                                      "${_userModel!.hourly!.apparentTemperature![nextIndex23].round()}°C",
                                                       style: GoogleFonts.oswald(
                                                         fontSize: 14,
                                                         fontWeight:
@@ -4832,9 +5122,9 @@ class _HomePageState extends State<HomePage> {
                                             fontSize: 20,
                                           ),
                                         ),
-                                        Image.asset(asset),
+                                        Image.asset(hour24WeatherGif),
                                         Text(
-                                          "${_userModel!.hourly!.temperature2M![nextIndex24]}°C",
+                                          "${_userModel!.hourly!.temperature2M![nextIndex24].round()}°C",
                                           style: GoogleFonts.oswald(
                                             fontWeight: FontWeight.w300,
                                             fontSize: 20,
@@ -4854,9 +5144,9 @@ class _HomePageState extends State<HomePage> {
                                               fontWeight: FontWeight.w300,
                                             ),
                                           ),
-                                          Image.asset(asset),
+                                          Image.asset(hour24WeatherGif),
                                           Text(
-                                            "${_userModel!.hourly!.temperature2M![nextIndex24]}°C",
+                                            "${_userModel!.hourly!.temperature2M![nextIndex24].round()}°C",
                                             style: GoogleFonts.oswald(
                                               fontSize: 20,
                                               fontWeight: FontWeight.w300,
@@ -4899,7 +5189,7 @@ class _HomePageState extends State<HomePage> {
                                                       ),
                                                     ),
                                                     Text(
-                                                      "${_userModel!.hourly!.apparentTemperature![nextIndex24]}°C",
+                                                      "${_userModel!.hourly!.apparentTemperature![nextIndex24].round()}°C",
                                                       style: GoogleFonts.oswald(
                                                         fontSize: 14,
                                                         fontWeight:
@@ -5036,7 +5326,8 @@ class _HomePageState extends State<HomePage> {
                                             ),
                                           ),
                                         ),
-                                        Image.asset(asset),
+                                        Image.asset(weatherGifMap[_userModel!
+                                            .currentWeather!.weathercode]!),
                                         Expanded(
                                           child: Text(
                                             "${_userModel!.daily!.temperature2MMin![weekdayIndex].round()}°C",
@@ -5103,7 +5394,8 @@ class _HomePageState extends State<HomePage> {
                                               ),
                                             ),
                                           ),
-                                          Image.asset(asset),
+                                          Image.asset(weatherGifMap[_userModel!
+                                              .currentWeather!.weathercode]!),
                                           Expanded(
                                             child: Text(
                                               "${_userModel!.daily!.temperature2MMin![weekdayIndex].round()}°C",
@@ -5362,7 +5654,8 @@ class _HomePageState extends State<HomePage> {
                                             ),
                                           ),
                                         ),
-                                        Image.asset(asset),
+                                        Image.asset(weatherGifMap[_userModel!
+                                            .currentWeather!.weathercode]!),
                                         Expanded(
                                           child: Text(
                                             "${_userModel!.daily!.temperature2MMin![nextDayIndex1].round()}°C",
@@ -5429,7 +5722,8 @@ class _HomePageState extends State<HomePage> {
                                               ),
                                             ),
                                           ),
-                                          Image.asset(asset),
+                                          Image.asset(weatherGifMap[_userModel!
+                                              .currentWeather!.weathercode]!),
                                           Expanded(
                                             child: Text(
                                               "${_userModel!.daily!.temperature2MMin![nextDayIndex1].round()}°C",
@@ -5688,7 +5982,8 @@ class _HomePageState extends State<HomePage> {
                                             ),
                                           ),
                                         ),
-                                        Image.asset(asset),
+                                        Image.asset(weatherGifMap[_userModel!
+                                            .currentWeather!.weathercode]!),
                                         Expanded(
                                           child: Text(
                                             "${_userModel!.daily!.temperature2MMin![nextDayIndex2].round()}°C",
@@ -5755,7 +6050,8 @@ class _HomePageState extends State<HomePage> {
                                               ),
                                             ),
                                           ),
-                                          Image.asset(asset),
+                                          Image.asset(weatherGifMap[_userModel!
+                                              .currentWeather!.weathercode]!),
                                           Expanded(
                                             child: Text(
                                               "${_userModel!.daily!.temperature2MMin![nextDayIndex2].round()}°C",
@@ -6014,7 +6310,8 @@ class _HomePageState extends State<HomePage> {
                                             ),
                                           ),
                                         ),
-                                        Image.asset(asset),
+                                        Image.asset(weatherGifMap[_userModel!
+                                            .currentWeather!.weathercode]!),
                                         Expanded(
                                           child: Text(
                                             "${_userModel!.daily!.temperature2MMin![nextDayIndex3].round()}°C",
@@ -6081,7 +6378,8 @@ class _HomePageState extends State<HomePage> {
                                               ),
                                             ),
                                           ),
-                                          Image.asset(asset),
+                                          Image.asset(weatherGifMap[_userModel!
+                                              .currentWeather!.weathercode]!),
                                           Expanded(
                                             child: Text(
                                               "${_userModel!.daily!.temperature2MMin![nextDayIndex3].round()}°C",
@@ -6340,7 +6638,8 @@ class _HomePageState extends State<HomePage> {
                                             ),
                                           ),
                                         ),
-                                        Image.asset(asset),
+                                        Image.asset(weatherGifMap[_userModel!
+                                            .currentWeather!.weathercode]!),
                                         Expanded(
                                           child: Text(
                                             "${_userModel!.daily!.temperature2MMin![nextDayIndex4].round()}°C",
@@ -6407,7 +6706,8 @@ class _HomePageState extends State<HomePage> {
                                               ),
                                             ),
                                           ),
-                                          Image.asset(asset),
+                                          Image.asset(weatherGifMap[_userModel!
+                                              .currentWeather!.weathercode]!),
                                           Expanded(
                                             child: Text(
                                               "${_userModel!.daily!.temperature2MMin![nextDayIndex4].round()}°C",
@@ -6666,7 +6966,8 @@ class _HomePageState extends State<HomePage> {
                                             ),
                                           ),
                                         ),
-                                        Image.asset(asset),
+                                        Image.asset(weatherGifMap[_userModel!
+                                            .currentWeather!.weathercode]!),
                                         Expanded(
                                           child: Text(
                                             "${_userModel!.daily!.temperature2MMin![nextDayIndex5].round()}°C",
@@ -6733,7 +7034,8 @@ class _HomePageState extends State<HomePage> {
                                               ),
                                             ),
                                           ),
-                                          Image.asset(asset),
+                                          Image.asset(weatherGifMap[_userModel!
+                                              .currentWeather!.weathercode]!),
                                           Expanded(
                                             child: Text(
                                               "${_userModel!.daily!.temperature2MMin![nextDayIndex5].round()}°C",
@@ -6992,7 +7294,8 @@ class _HomePageState extends State<HomePage> {
                                             ),
                                           ),
                                         ),
-                                        Image.asset(asset),
+                                        Image.asset(weatherGifMap[_userModel!
+                                            .currentWeather!.weathercode]!),
                                         Expanded(
                                           child: Text(
                                             "${_userModel!.daily!.temperature2MMin![nextDayIndex6].round()}°C",
@@ -7059,7 +7362,8 @@ class _HomePageState extends State<HomePage> {
                                               ),
                                             ),
                                           ),
-                                          Image.asset(asset),
+                                          Image.asset(weatherGifMap[_userModel!
+                                              .currentWeather!.weathercode]!),
                                           Expanded(
                                             child: Text(
                                               "${_userModel!.daily!.temperature2MMin![nextDayIndex6].round()}°C",
@@ -7318,7 +7622,8 @@ class _HomePageState extends State<HomePage> {
                                             ),
                                           ),
                                         ),
-                                        Image.asset(asset),
+                                        Image.asset(weatherGifMap[_userModel!
+                                            .currentWeather!.weathercode]!),
                                         Expanded(
                                           child: Text(
                                             "${_userModel!.daily!.temperature2MMin![nextDayIndex7].round()}°C",
@@ -7385,7 +7690,8 @@ class _HomePageState extends State<HomePage> {
                                               ),
                                             ),
                                           ),
-                                          Image.asset(asset),
+                                          Image.asset(weatherGifMap[_userModel!
+                                              .currentWeather!.weathercode]!),
                                           Expanded(
                                             child: Text(
                                               "${_userModel!.daily!.temperature2MMin![nextDayIndex7].round()}°C",

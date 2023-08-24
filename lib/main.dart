@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mepsan_hava_durumu/screens/homepage.dart';
+import 'package:mepsan_hava_durumu/screens/mappage.dart';
+import 'package:mepsan_hava_durumu/screens/test.dart';
 
 void main() {
   runApp(const MyApp());
