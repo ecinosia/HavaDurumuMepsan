@@ -20,9 +20,7 @@ class MyApp extends StatelessWidget {
         useMaterial3: true,
       ),
       darkTheme: ThemeData.dark(useMaterial3: true),
-      home: const HomePage(
-          //onLocationTap: (lat, long) => (0, 0),
-          ),
+      home: const HomePage(),
     );
   }
 }

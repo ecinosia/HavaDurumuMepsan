@@ -1,5 +1,6 @@
 // ignore_for_file: unnecessary_null_comparison, avoid_print
 
+import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
@@ -172,40 +173,55 @@ class _DetailsPartClassState extends State<DetailsPartClass> {
           children: [
             Padding(
               padding: const EdgeInsets.fromLTRB(8, 2, 8, 2),
-              child: Card(
-                child: Container(
-                  width: (MediaQuery.of(context).size.width / 1.1) / 2.1,
-                  height: (MediaQuery.of(context).size.width / 1.1) / 2.1,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      Text(
-                        "Gün Doğumu",
-                        textAlign: TextAlign.center,
-                        style: GoogleFonts.oswald(
-                          color: Theme.of(context).colorScheme.onSurface,
-                          fontWeight: FontWeight.w400,
-                          fontSize: 25,
+              child: GestureDetector(
+                onTap: () {
+                  // showModalBottomSheet(
+                  //     context: context,
+                  //     shape: const RoundedRectangleBorder(
+                  //       borderRadius: BorderRadius.vertical(
+                  //         top: Radius.circular(25),
+                  //       ),
+                  //     ),
+                  //     builder: (BuildContext context) {
+                  //       return LineChart();
+                  //     });
+                },
+                child: Card(
+                  child: Container(
+                    width: (MediaQuery.of(context).size.width / 1.1) / 2.1,
+                    height: (MediaQuery.of(context).size.width / 1.1) / 2.1,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        Text(
+                          "Gün Doğumu",
+                          textAlign: TextAlign.center,
+                          style: GoogleFonts.oswald(
+                            color: Theme.of(context).colorScheme.onSurface,
+                            fontWeight: FontWeight.w400,
+                            fontSize: 25,
+                          ),
                         ),
-                      ),
-                      SizedBox(
-                        height: 60,
-                        child: Image.asset("assets/gifs/gundogumu.gif",
-                            fit: BoxFit.fill),
-                      ),
-                      Text(
-                        _userModel!.daily!.sunrise![weekdayIndex].substring(11),
-                        textAlign: TextAlign.center,
-                        style: GoogleFonts.oswald(
-                          color: Theme.of(context).colorScheme.onSurface,
-                          fontWeight: FontWeight.w400,
-                          fontSize: 25,
+                        SizedBox(
+                          height: 60,
+                          child: Image.asset("assets/gifs/gundogumu.gif",
+                              fit: BoxFit.fill),
                         ),
-                      ),
-                    ],
+                        Text(
+                          _userModel!.daily!.sunrise![weekdayIndex]
+                              .substring(11),
+                          textAlign: TextAlign.center,
+                          style: GoogleFonts.oswald(
+                            color: Theme.of(context).colorScheme.onSurface,
+                            fontWeight: FontWeight.w400,
+                            fontSize: 25,
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ),

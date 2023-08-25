@@ -26,6 +26,8 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   @override
   void initState() {
+    debugPrint("girdi");
+
     super.initState();
     getData();
   }
@@ -35,6 +37,8 @@ class _HomePageState extends State<HomePage> {
   bool positionBool = false;
 
   Future<Map<String, double?>> getWeatherForTargetLoc() async {
+    debugPrint(_cityName);
+
     double? latitude;
     double? longitude;
     bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
@@ -107,7 +111,6 @@ class _HomePageState extends State<HomePage> {
 
       WeatherTest userModel = await ApiService()
           .getWeatherForTargetCoord(latitude.toString(), longitude.toString());
-
       setState(() {
         _userModel = userModel;
         weatherCodeCurrent = userModel.currentWeather?.weathercode;
@@ -384,7 +387,7 @@ class _HomePageState extends State<HomePage> {
 
     final weatherCodeMap = {
       0: "Güneşli",
-      1: "Çoğunlukla Açıklı",
+      1: "Çoğunlukla Açık",
       2: "Parçalı Bulutlu",
       3: "Kapalı",
       45: "Sisli",
