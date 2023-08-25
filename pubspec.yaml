@@ -26,6 +26,7 @@ dependencies:
   google_maps_flutter: ^2.4.0
   location: ^5.0.3
   syncfusion_flutter_maps: ^22.2.10
+  fl_chart: ^0.63.0
   
 
 dev_dependencies:

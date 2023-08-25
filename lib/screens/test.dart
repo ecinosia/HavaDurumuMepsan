@@ -1,3 +1,5 @@
+// ignore_for_file: unnecessary_null_comparison, avoid_print
+
 import "package:flutter/material.dart";
 import "package:geocoding/geocoding.dart";
 import "package:geolocator/geolocator.dart";
@@ -36,7 +38,6 @@ class _CoordTestState extends State<CoordTest> {
   }
 
   String _city = "";
-  String _additionalInfo = "";
   Future<bool> getCurrentLocationCoord() async {
     try {
       Position position = await _getCurrentLocation();
@@ -55,7 +56,6 @@ class _CoordTestState extends State<CoordTest> {
 
           setState(() {
             _city = placemark.administrativeArea ?? 'City not available';
-            _additionalInfo = placemark.subLocality ?? '';
           });
         }
         return true;
@@ -94,7 +94,7 @@ class _CoordTestState extends State<CoordTest> {
                 });
               }
             },
-            child: Text(
+            child: const Text(
               "Konum Göster",
               style: TextStyle(fontSize: 40, color: Colors.white),
             ),

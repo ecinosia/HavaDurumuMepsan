@@ -1,3 +1,5 @@
+// ignore_for_file: unused_element
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:geocoding/geocoding.dart';
@@ -47,6 +49,7 @@ class _MapPageState extends State<MapPage> {
   void initState() {
     _mapZoomPanBehavior =
         MapZoomPanBehavior(); //..focalLatLng = MapLatLng(0, 0)
+    populateCityNames();
     super.initState();
   }
 
@@ -81,6 +84,8 @@ class _MapPageState extends State<MapPage> {
     const MapLatLng(40.9862, 37.8797),
   ];
 
+  final List _cityNameList = [];
+
   Future<Position> _getCurrentLocation() async {
     bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
     if (!serviceEnabled) {
@@ -109,14 +114,18 @@ class _MapPageState extends State<MapPage> {
     if (placemarks.isNotEmpty) {
       Placemark placemark = placemarks.first;
 
-      debugPrint('Placemark: $placemark');
-
       setState(() {
         _city = placemark.administrativeArea ?? 'City not available';
-        debugPrint(_city);
       });
     }
+
     return _city;
+  }
+
+  Future<void> populateCityNames() async {
+    for (var loc in _markerLocations) {
+      _cityNameList.add(await getCityNameMap(loc.latitude, loc.longitude));
+    }
   }
 
   @override
@@ -179,10 +188,8 @@ class _MapPageState extends State<MapPage> {
         builder: (BuildContext context, AsyncSnapshot<dynamic> snapchat) {
           if (snapchat.hasData) {
             final loc.LocationData currentLocation = snapchat.data;
-            /*getCityNameMap(
-                currentLocation.latitude!, currentLocation.longitude!);*/
-            debugPrint(currentLocation.toString());
-            debugPrint("CityNameMap: $_city");
+            getCityNameMap(
+                currentLocation.latitude!, currentLocation.longitude!);
 
             _markerLocations.insert(
                 0,
@@ -205,10 +212,11 @@ class _MapPageState extends State<MapPage> {
                       size: const Size(50, 85),
                       child: Column(
                         children: [
-                          Text(
-                            _city.toString() ?? "HATA",
-                            style: TextStyle(color: Colors.amber, fontSize: 38),
-                          ),
+                          // Text(
+                          //   _city.toString() ?? "HATA",
+                          //   style: const TextStyle(
+                          //       color: Colors.amber, fontSize: 38),
+                          // ),
                           Icon(
                             Icons.location_on,
                             color: Colors.red[800],
@@ -223,6 +231,33 @@ class _MapPageState extends State<MapPage> {
           }
           return const Center(child: CircularProgressIndicator());
         },
+      ),
+      floatingActionButton: IconButton(
+        onPressed: () {
+          showModalBottomSheet(
+              context: context,
+              shape: const RoundedRectangleBorder(
+                borderRadius: BorderRadius.vertical(
+                  top: Radius.circular(25),
+                ),
+              ),
+              builder: (BuildContext context) {
+                return ListView.builder(
+                  itemCount: _cityNameList.length,
+                  itemBuilder: (context, index) {
+                    return ListTile(
+                      onTap: () {},
+                      title: Text(_cityNameList[index]),
+                    );
+                  },
+                );
+              });
+        },
+        icon: const Icon(
+          CupertinoIcons.list_bullet_indent,
+          size: 50,
+          color: Colors.deepOrange,
+        ),
       ),
     );
   }
