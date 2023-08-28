@@ -1,6 +1,5 @@
 // ignore_for_file: unnecessary_null_comparison, avoid_print
 
-import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
@@ -8,6 +7,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:mepsan_hava_durumu/components/api_service.dart';
 import 'package:mepsan_hava_durumu/components/weather_model.dart';
+import 'package:rive/rive.dart' as rive;
 
 class DetailsPartClass extends StatefulWidget {
   const DetailsPartClass({super.key});
@@ -86,7 +86,7 @@ class _DetailsPartClassState extends State<DetailsPartClass> {
     return locationData;
   }
 
-  late WeatherTest? _userModel;
+  late WeatherTest? _userModel = null;
   int? weatherCodeCurrent;
   List<int>? isDayHourly;
   List<int>? weatherCodeHourly;
@@ -166,463 +166,473 @@ class _DetailsPartClassState extends State<DetailsPartClass> {
     int currentIndex = hours
         .indexWhere((hour) => hour == DateFormat('HH').format(DateTime.now()));
 
-    return Column(
-      children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            Padding(
-              padding: const EdgeInsets.fromLTRB(8, 2, 8, 2),
-              child: GestureDetector(
-                onTap: () {
-                  // showModalBottomSheet(
-                  //     context: context,
-                  //     shape: const RoundedRectangleBorder(
-                  //       borderRadius: BorderRadius.vertical(
-                  //         top: Radius.circular(25),
-                  //       ),
-                  //     ),
-                  //     builder: (BuildContext context) {
-                  //       return LineChart();
-                  //     });
-                },
-                child: Card(
-                  child: Container(
-                    width: (MediaQuery.of(context).size.width / 1.1) / 2.1,
-                    height: (MediaQuery.of(context).size.width / 1.1) / 2.1,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        Text(
-                          "Gün Doğumu",
-                          textAlign: TextAlign.center,
-                          style: GoogleFonts.oswald(
-                            color: Theme.of(context).colorScheme.onSurface,
-                            fontWeight: FontWeight.w400,
-                            fontSize: 25,
+    return _userModel != null
+        ? Column(
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(8, 2, 8, 2),
+                    child: GestureDetector(
+                      onTap: () {
+                        // showModalBottomSheet(
+                        //     context: context,
+                        //     shape: const RoundedRectangleBorder(
+                        //       borderRadius: BorderRadius.vertical(
+                        //         top: Radius.circular(25),
+                        //       ),
+                        //     ),
+                        //     builder: (BuildContext context) {
+                        //       return LineChart();
+                        //     });
+                      },
+                      child: Card(
+                        child: Container(
+                          width:
+                              (MediaQuery.of(context).size.width / 1.1) / 2.1,
+                          height:
+                              (MediaQuery.of(context).size.width / 1.1) / 2.1,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: [
+                              Text(
+                                "Gün Doğumu",
+                                textAlign: TextAlign.center,
+                                style: GoogleFonts.oswald(
+                                  color:
+                                      Theme.of(context).colorScheme.onSurface,
+                                  fontWeight: FontWeight.w400,
+                                  fontSize: 25,
+                                ),
+                              ),
+                              SizedBox(
+                                height: 60,
+                                child: Image.asset("assets/gifs/gundogumu.gif",
+                                    fit: BoxFit.fill),
+                              ),
+                              Text(
+                                _userModel!.daily!.sunrise![weekdayIndex]
+                                    .substring(11),
+                                textAlign: TextAlign.center,
+                                style: GoogleFonts.oswald(
+                                  color:
+                                      Theme.of(context).colorScheme.onSurface,
+                                  fontWeight: FontWeight.w400,
+                                  fontSize: 25,
+                                ),
+                              ),
+                            ],
                           ),
                         ),
-                        SizedBox(
-                          height: 60,
-                          child: Image.asset("assets/gifs/gundogumu.gif",
-                              fit: BoxFit.fill),
-                        ),
-                        Text(
-                          _userModel!.daily!.sunrise![weekdayIndex]
-                              .substring(11),
-                          textAlign: TextAlign.center,
-                          style: GoogleFonts.oswald(
-                            color: Theme.of(context).colorScheme.onSurface,
-                            fontWeight: FontWeight.w400,
-                            fontSize: 25,
-                          ),
-                        ),
-                      ],
+                      ),
                     ),
                   ),
-                ),
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(8, 2, 8, 2),
+                    child: Card(
+                      child: Container(
+                        width: (MediaQuery.of(context).size.width / 1.1) / 2.1,
+                        height: (MediaQuery.of(context).size.width / 1.1) / 2.1,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            Text(
+                              "Gün Batımı",
+                              textAlign: TextAlign.center,
+                              style: GoogleFonts.oswald(
+                                color: Theme.of(context).colorScheme.onSurface,
+                                fontWeight: FontWeight.w400,
+                                fontSize: 25,
+                              ),
+                            ),
+                            SizedBox(
+                              height: 60,
+                              child: Image.asset("assets/gifs/gunbatimi.gif",
+                                  fit: BoxFit.fill),
+                            ),
+                            Text(
+                              _userModel!.daily!.sunset![weekdayIndex]
+                                  .substring(11),
+                              textAlign: TextAlign.center,
+                              style: GoogleFonts.oswald(
+                                color: Theme.of(context).colorScheme.onSurface,
+                                fontWeight: FontWeight.w400,
+                                fontSize: 25,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
               ),
-            ),
-            Padding(
-              padding: const EdgeInsets.fromLTRB(8, 2, 8, 2),
-              child: Card(
-                child: Container(
-                  width: (MediaQuery.of(context).size.width / 1.1) / 2.1,
-                  height: (MediaQuery.of(context).size.width / 1.1) / 2.1,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      Text(
-                        "Gün Batımı",
-                        textAlign: TextAlign.center,
-                        style: GoogleFonts.oswald(
-                          color: Theme.of(context).colorScheme.onSurface,
-                          fontWeight: FontWeight.w400,
-                          fontSize: 25,
+              const SizedBox(height: 25),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(8, 2, 8, 2),
+                    child: Card(
+                      child: Container(
+                        width: (MediaQuery.of(context).size.width / 1.1) / 2.1,
+                        height: (MediaQuery.of(context).size.width / 1.1) / 2.1,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            Text(
+                              "Rüzgar",
+                              textAlign: TextAlign.center,
+                              style: GoogleFonts.oswald(
+                                color: Theme.of(context).colorScheme.onSurface,
+                                fontWeight: FontWeight.w400,
+                                fontSize: 25,
+                              ),
+                            ),
+                            SizedBox(
+                              height: 60,
+                              child: Image.asset("assets/gifs/ruzgar.gif",
+                                  fit: BoxFit.fill),
+                            ),
+                            Text(
+                              "${_userModel!.hourly!.windspeed10M![currentIndex]} km/sa",
+                              textAlign: TextAlign.center,
+                              style: GoogleFonts.oswald(
+                                color: Theme.of(context).colorScheme.onSurface,
+                                fontWeight: FontWeight.w400,
+                                fontSize: 25,
+                              ),
+                            ),
+                            Text(
+                              getCardinalDirection(_userModel!
+                                  .hourly!.winddirection10M![currentIndex]),
+                              textAlign: TextAlign.center,
+                              style: GoogleFonts.oswald(
+                                color: Theme.of(context).colorScheme.onSurface,
+                                fontWeight: FontWeight.w400,
+                                fontSize: 25,
+                              ),
+                            ),
+                          ],
                         ),
                       ),
-                      SizedBox(
-                        height: 60,
-                        child: Image.asset("assets/gifs/gunbatimi.gif",
-                            fit: BoxFit.fill),
-                      ),
-                      Text(
-                        _userModel!.daily!.sunset![weekdayIndex].substring(11),
-                        textAlign: TextAlign.center,
-                        style: GoogleFonts.oswald(
-                          color: Theme.of(context).colorScheme.onSurface,
-                          fontWeight: FontWeight.w400,
-                          fontSize: 25,
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(8, 2, 8, 2),
+                    child: Card(
+                      child: Container(
+                        width: (MediaQuery.of(context).size.width / 1.1) / 2.1,
+                        height: (MediaQuery.of(context).size.width / 1.1) / 2.1,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            Text(
+                              "Nem",
+                              textAlign: TextAlign.center,
+                              style: GoogleFonts.oswald(
+                                color: Theme.of(context).colorScheme.onSurface,
+                                fontWeight: FontWeight.w400,
+                                fontSize: 25,
+                              ),
+                            ),
+                            SizedBox(
+                              height: 60,
+                              child: Image.asset("assets/gifs/nem.gif",
+                                  fit: BoxFit.fill),
+                            ),
+                            Text(
+                              "%${_userModel!.hourly!.relativehumidity2M![currentIndex]}",
+                              textAlign: TextAlign.center,
+                              style: GoogleFonts.oswald(
+                                color: Theme.of(context).colorScheme.onSurface,
+                                fontWeight: FontWeight.w400,
+                                fontSize: 25,
+                              ),
+                            ),
+                          ],
                         ),
                       ),
-                    ],
+                    ),
                   ),
-                ),
+                ],
               ),
-            ),
-          ],
-        ),
-        const SizedBox(height: 25),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            Padding(
-              padding: const EdgeInsets.fromLTRB(8, 2, 8, 2),
-              child: Card(
-                child: Container(
-                  width: (MediaQuery.of(context).size.width / 1.1) / 2.1,
-                  height: (MediaQuery.of(context).size.width / 1.1) / 2.1,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(12),
+              const SizedBox(height: 25),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(8, 2, 8, 2),
+                    child: Card(
+                      child: Container(
+                        width: (MediaQuery.of(context).size.width / 1.1) / 2.1,
+                        height: (MediaQuery.of(context).size.width / 1.1) / 2.1,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            Text(
+                              "Görüş Mesafesi",
+                              textAlign: TextAlign.center,
+                              style: GoogleFonts.oswald(
+                                color: Theme.of(context).colorScheme.onSurface,
+                                fontWeight: FontWeight.w400,
+                                fontSize: 25,
+                              ),
+                            ),
+                            SizedBox(
+                              height: 60,
+                              child: Image.asset(
+                                  "assets/gifs/gorusmesafesi.gif",
+                                  fit: BoxFit.fill),
+                            ),
+                            Text(
+                              "${_userModel!.hourly!.visibility![currentIndex].toString().substring(0, 2)} km",
+                              textAlign: TextAlign.center,
+                              style: GoogleFonts.oswald(
+                                color: Theme.of(context).colorScheme.onSurface,
+                                fontWeight: FontWeight.w400,
+                                fontSize: 25,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
                   ),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      Text(
-                        "Rüzgar",
-                        textAlign: TextAlign.center,
-                        style: GoogleFonts.oswald(
-                          color: Theme.of(context).colorScheme.onSurface,
-                          fontWeight: FontWeight.w400,
-                          fontSize: 25,
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(8, 2, 8, 2),
+                    child: Card(
+                      child: Container(
+                        width: (MediaQuery.of(context).size.width / 1.1) / 2.1,
+                        height: (MediaQuery.of(context).size.width / 1.1) / 2.1,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            Text(
+                              "Yağış",
+                              textAlign: TextAlign.center,
+                              style: GoogleFonts.oswald(
+                                color: Theme.of(context).colorScheme.onSurface,
+                                fontWeight: FontWeight.w400,
+                                fontSize: 25,
+                              ),
+                            ),
+                            SizedBox(
+                              height: 60,
+                              child: Image.asset("assets/gifs/yagmurlu.gif",
+                                  fit: BoxFit.fill),
+                            ),
+                            Text(
+                              "${_userModel!.hourly!.rain![currentIndex].toInt()} mm",
+                              textAlign: TextAlign.center,
+                              style: GoogleFonts.oswald(
+                                color: Theme.of(context).colorScheme.onSurface,
+                                fontWeight: FontWeight.w400,
+                                fontSize: 25,
+                              ),
+                            ),
+                          ],
                         ),
                       ),
-                      SizedBox(
-                        height: 60,
-                        child: Image.asset("assets/gifs/ruzgar.gif",
-                            fit: BoxFit.fill),
-                      ),
-                      Text(
-                        "${_userModel!.hourly!.windspeed10M![currentIndex]} km/sa",
-                        textAlign: TextAlign.center,
-                        style: GoogleFonts.oswald(
-                          color: Theme.of(context).colorScheme.onSurface,
-                          fontWeight: FontWeight.w400,
-                          fontSize: 25,
-                        ),
-                      ),
-                      Text(
-                        getCardinalDirection(_userModel!
-                            .hourly!.winddirection10M![currentIndex]),
-                        textAlign: TextAlign.center,
-                        style: GoogleFonts.oswald(
-                          color: Theme.of(context).colorScheme.onSurface,
-                          fontWeight: FontWeight.w400,
-                          fontSize: 25,
-                        ),
-                      ),
-                    ],
+                    ),
                   ),
-                ),
+                ],
               ),
-            ),
-            Padding(
-              padding: const EdgeInsets.fromLTRB(8, 2, 8, 2),
-              child: Card(
-                child: Container(
-                  width: (MediaQuery.of(context).size.width / 1.1) / 2.1,
-                  height: (MediaQuery.of(context).size.width / 1.1) / 2.1,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      Text(
-                        "Nem",
-                        textAlign: TextAlign.center,
-                        style: GoogleFonts.oswald(
-                          color: Theme.of(context).colorScheme.onSurface,
-                          fontWeight: FontWeight.w400,
-                          fontSize: 25,
+              const SizedBox(height: 25),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(8, 2, 8, 2),
+                    child: Card(
+                      child: Container(
+                        width: (MediaQuery.of(context).size.width / 1.1) / 2.1,
+                        height: (MediaQuery.of(context).size.width / 1.1) / 2.1,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            Text(
+                              "Hissedilen Sıcaklık",
+                              textAlign: TextAlign.center,
+                              style: GoogleFonts.oswald(
+                                color: Theme.of(context).colorScheme.onSurface,
+                                fontWeight: FontWeight.w400,
+                                fontSize: 25,
+                              ),
+                            ),
+                            SizedBox(
+                              height: 60,
+                              child: Image.asset(
+                                  "assets/gifs/hissedilensicaklik.gif",
+                                  fit: BoxFit.fill),
+                            ),
+                            Text(
+                              "${_userModel!.hourly!.apparentTemperature![currentIndex]} °C",
+                              textAlign: TextAlign.center,
+                              style: GoogleFonts.oswald(
+                                color: Theme.of(context).colorScheme.onSurface,
+                                fontWeight: FontWeight.w400,
+                                fontSize: 25,
+                              ),
+                            ),
+                          ],
                         ),
                       ),
-                      SizedBox(
-                        height: 60,
-                        child: Image.asset("assets/gifs/nem.gif",
-                            fit: BoxFit.fill),
-                      ),
-                      Text(
-                        "%${_userModel!.hourly!.relativehumidity2M![currentIndex]}",
-                        textAlign: TextAlign.center,
-                        style: GoogleFonts.oswald(
-                          color: Theme.of(context).colorScheme.onSurface,
-                          fontWeight: FontWeight.w400,
-                          fontSize: 25,
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(8, 2, 8, 2),
+                    child: Card(
+                      child: Container(
+                        width: (MediaQuery.of(context).size.width / 1.1) / 2.1,
+                        height: (MediaQuery.of(context).size.width / 1.1) / 2.1,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            Text(
+                              "Yağış Olasılığı",
+                              textAlign: TextAlign.center,
+                              style: GoogleFonts.oswald(
+                                color: Theme.of(context).colorScheme.onSurface,
+                                fontWeight: FontWeight.w400,
+                                fontSize: 25,
+                              ),
+                            ),
+                            SizedBox(
+                              height: 60,
+                              child: Image.asset("assets/gifs/yagmurlu.gif",
+                                  fit: BoxFit.fill),
+                            ),
+                            Text(
+                              "%${_userModel!.hourly!.precipitationProbability![currentIndex]}",
+                              textAlign: TextAlign.center,
+                              style: GoogleFonts.oswald(
+                                color: Theme.of(context).colorScheme.onSurface,
+                                fontWeight: FontWeight.w400,
+                                fontSize: 25,
+                              ),
+                            ),
+                          ],
                         ),
                       ),
-                    ],
+                    ),
                   ),
-                ),
+                ],
               ),
-            ),
-          ],
-        ),
-        const SizedBox(height: 25),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            Padding(
-              padding: const EdgeInsets.fromLTRB(8, 2, 8, 2),
-              child: Card(
-                child: Container(
-                  width: (MediaQuery.of(context).size.width / 1.1) / 2.1,
-                  height: (MediaQuery.of(context).size.width / 1.1) / 2.1,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      Text(
-                        "Görüş Mesafesi",
-                        textAlign: TextAlign.center,
-                        style: GoogleFonts.oswald(
-                          color: Theme.of(context).colorScheme.onSurface,
-                          fontWeight: FontWeight.w400,
-                          fontSize: 25,
+              const SizedBox(height: 25),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(8, 2, 8, 2),
+                    child: Card(
+                      child: Container(
+                        width: (MediaQuery.of(context).size.width / 1.1) / 2.1,
+                        height: (MediaQuery.of(context).size.width / 1.1) / 2.1,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            Text(
+                              "UV Endeksi",
+                              textAlign: TextAlign.center,
+                              style: GoogleFonts.oswald(
+                                color: Theme.of(context).colorScheme.onSurface,
+                                fontWeight: FontWeight.w400,
+                                fontSize: 25,
+                              ),
+                            ),
+                            SizedBox(
+                              height: 60,
+                              child: Image.asset("assets/gifs/uv.png",
+                                  fit: BoxFit.fill),
+                            ),
+                            Text(
+                              "${_userModel!.hourly!.uvIndex![currentIndex]}",
+                              textAlign: TextAlign.center,
+                              style: GoogleFonts.oswald(
+                                color: Theme.of(context).colorScheme.onSurface,
+                                fontWeight: FontWeight.w400,
+                                fontSize: 25,
+                              ),
+                            ),
+                          ],
                         ),
                       ),
-                      SizedBox(
-                        height: 60,
-                        child: Image.asset("assets/gifs/gorusmesafesi.gif",
-                            fit: BoxFit.fill),
-                      ),
-                      Text(
-                        "${_userModel!.hourly!.visibility![currentIndex].toString().substring(0, 2)} km",
-                        textAlign: TextAlign.center,
-                        style: GoogleFonts.oswald(
-                          color: Theme.of(context).colorScheme.onSurface,
-                          fontWeight: FontWeight.w400,
-                          fontSize: 25,
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(8, 2, 8, 2),
+                    child: Card(
+                      child: Container(
+                        width: (MediaQuery.of(context).size.width / 1.1) / 2.1,
+                        height: (MediaQuery.of(context).size.width / 1.1) / 2.1,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            Text(
+                              "Basınç",
+                              textAlign: TextAlign.center,
+                              style: GoogleFonts.oswald(
+                                color: Theme.of(context).colorScheme.onSurface,
+                                fontWeight: FontWeight.w400,
+                                fontSize: 25,
+                              ),
+                            ),
+                            SizedBox(
+                              height: 60,
+                              child: Image.asset("assets/images/basinc.png",
+                                  fit: BoxFit.fill),
+                            ),
+                            Text(
+                              "${_userModel!.hourly!.surfacePressure![currentIndex].toInt()} hPa",
+                              textAlign: TextAlign.center,
+                              style: GoogleFonts.oswald(
+                                color: Theme.of(context).colorScheme.onSurface,
+                                fontWeight: FontWeight.w400,
+                                fontSize: 25,
+                              ),
+                            ),
+                          ],
                         ),
                       ),
-                    ],
+                    ),
                   ),
-                ),
+                ],
               ),
-            ),
-            Padding(
-              padding: const EdgeInsets.fromLTRB(8, 2, 8, 2),
-              child: Card(
-                child: Container(
-                  width: (MediaQuery.of(context).size.width / 1.1) / 2.1,
-                  height: (MediaQuery.of(context).size.width / 1.1) / 2.1,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      Text(
-                        "Yağış",
-                        textAlign: TextAlign.center,
-                        style: GoogleFonts.oswald(
-                          color: Theme.of(context).colorScheme.onSurface,
-                          fontWeight: FontWeight.w400,
-                          fontSize: 25,
-                        ),
-                      ),
-                      SizedBox(
-                        height: 60,
-                        child: Image.asset("assets/gifs/yagmurlu.gif",
-                            fit: BoxFit.fill),
-                      ),
-                      Text(
-                        "${_userModel!.hourly!.rain![currentIndex].toInt()} mm",
-                        textAlign: TextAlign.center,
-                        style: GoogleFonts.oswald(
-                          color: Theme.of(context).colorScheme.onSurface,
-                          fontWeight: FontWeight.w400,
-                          fontSize: 25,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ),
-          ],
-        ),
-        const SizedBox(height: 25),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            Padding(
-              padding: const EdgeInsets.fromLTRB(8, 2, 8, 2),
-              child: Card(
-                child: Container(
-                  width: (MediaQuery.of(context).size.width / 1.1) / 2.1,
-                  height: (MediaQuery.of(context).size.width / 1.1) / 2.1,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      Text(
-                        "Hissedilen Sıcaklık",
-                        textAlign: TextAlign.center,
-                        style: GoogleFonts.oswald(
-                          color: Theme.of(context).colorScheme.onSurface,
-                          fontWeight: FontWeight.w400,
-                          fontSize: 25,
-                        ),
-                      ),
-                      SizedBox(
-                        height: 60,
-                        child: Image.asset("assets/gifs/hissedilensicaklik.gif",
-                            fit: BoxFit.fill),
-                      ),
-                      Text(
-                        "${_userModel!.hourly!.apparentTemperature![currentIndex]} °C",
-                        textAlign: TextAlign.center,
-                        style: GoogleFonts.oswald(
-                          color: Theme.of(context).colorScheme.onSurface,
-                          fontWeight: FontWeight.w400,
-                          fontSize: 25,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.fromLTRB(8, 2, 8, 2),
-              child: Card(
-                child: Container(
-                  width: (MediaQuery.of(context).size.width / 1.1) / 2.1,
-                  height: (MediaQuery.of(context).size.width / 1.1) / 2.1,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      Text(
-                        "Yağış Olasılığı",
-                        textAlign: TextAlign.center,
-                        style: GoogleFonts.oswald(
-                          color: Theme.of(context).colorScheme.onSurface,
-                          fontWeight: FontWeight.w400,
-                          fontSize: 25,
-                        ),
-                      ),
-                      SizedBox(
-                        height: 60,
-                        child: Image.asset("assets/gifs/yagmurlu.gif",
-                            fit: BoxFit.fill),
-                      ),
-                      Text(
-                        "%${_userModel!.hourly!.precipitationProbability![currentIndex]}",
-                        textAlign: TextAlign.center,
-                        style: GoogleFonts.oswald(
-                          color: Theme.of(context).colorScheme.onSurface,
-                          fontWeight: FontWeight.w400,
-                          fontSize: 25,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ),
-          ],
-        ),
-        const SizedBox(height: 25),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            Padding(
-              padding: const EdgeInsets.fromLTRB(8, 2, 8, 2),
-              child: Card(
-                child: Container(
-                  width: (MediaQuery.of(context).size.width / 1.1) / 2.1,
-                  height: (MediaQuery.of(context).size.width / 1.1) / 2.1,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      Text(
-                        "UV Endeksi",
-                        textAlign: TextAlign.center,
-                        style: GoogleFonts.oswald(
-                          color: Theme.of(context).colorScheme.onSurface,
-                          fontWeight: FontWeight.w400,
-                          fontSize: 25,
-                        ),
-                      ),
-                      SizedBox(
-                        height: 60,
-                        child:
-                            Image.asset("assets/gifs/uv.png", fit: BoxFit.fill),
-                      ),
-                      Text(
-                        "${_userModel!.hourly!.uvIndex![currentIndex]}",
-                        textAlign: TextAlign.center,
-                        style: GoogleFonts.oswald(
-                          color: Theme.of(context).colorScheme.onSurface,
-                          fontWeight: FontWeight.w400,
-                          fontSize: 25,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.fromLTRB(8, 2, 8, 2),
-              child: Card(
-                child: Container(
-                  width: (MediaQuery.of(context).size.width / 1.1) / 2.1,
-                  height: (MediaQuery.of(context).size.width / 1.1) / 2.1,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      Text(
-                        "Basınç",
-                        textAlign: TextAlign.center,
-                        style: GoogleFonts.oswald(
-                          color: Theme.of(context).colorScheme.onSurface,
-                          fontWeight: FontWeight.w400,
-                          fontSize: 25,
-                        ),
-                      ),
-                      SizedBox(
-                        height: 60,
-                        child: Image.asset("assets/images/basinc.png",
-                            fit: BoxFit.fill),
-                      ),
-                      Text(
-                        "${_userModel!.hourly!.surfacePressure![currentIndex].toInt()} hPa",
-                        textAlign: TextAlign.center,
-                        style: GoogleFonts.oswald(
-                          color: Theme.of(context).colorScheme.onSurface,
-                          fontWeight: FontWeight.w400,
-                          fontSize: 25,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ),
-          ],
-        ),
-      ],
-    );
+            ],
+          )
+        : const Center(
+            child: rive.RiveAnimation.asset("assets/gifs/mini_loader.riv"));
   }
 }

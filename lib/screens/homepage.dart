@@ -11,6 +11,7 @@ import 'package:intl/intl.dart';
 import 'package:mepsan_hava_durumu/components/daily_part.dart';
 import 'package:mepsan_hava_durumu/components/details_part.dart';
 import 'package:mepsan_hava_durumu/components/hourly_part.dart';
+import 'package:rive/rive.dart' as rive;
 
 import '../components/api_service.dart';
 import '../components/weather_model.dart';
@@ -97,7 +98,7 @@ class _HomePageState extends State<HomePage> {
     return locationData;
   }
 
-  late WeatherTest? _userModel;
+  late WeatherTest? _userModel = null;
   int? weatherCodeCurrent;
   List<int>? isDayHourly;
   List<int>? weatherCodeHourly;
@@ -416,103 +417,106 @@ class _HomePageState extends State<HomePage> {
     };
 
     return Scaffold(
-        body: Container(
-          width: MediaQuery.of(context).size.width,
-          height: MediaQuery.of(context).size.height,
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.topCenter,
-              end: Alignment.bottomCenter,
-              colors: colors!,
-            ),
-          ),
-          child: SingleChildScrollView(
-            child: Column(
-              children: [
-                SizedBox(
-                  height: MediaQuery.of(context).size.height / 8,
+        body: _userModel != null
+            ? Container(
+                width: MediaQuery.of(context).size.width,
+                height: MediaQuery.of(context).size.height,
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                    colors: colors!,
+                  ),
                 ),
-                //Current Weather Part
-                Column(
-                  children: [
-                    //City Name
-                    Text(
-                      _cityName,
-                      textAlign: TextAlign.center,
-                      style: GoogleFonts.oswald(
-                        color: Colors.white,
-                        fontSize: 45,
+                child: SingleChildScrollView(
+                  child: Column(
+                    children: [
+                      SizedBox(
+                        height: MediaQuery.of(context).size.height / 8,
                       ),
-                    ),
-                    //Degree
-                    Text(
-                      "${_userModel!.currentWeather!.temperature!.round()}°C",
-                      textAlign: TextAlign.center,
-                      style: GoogleFonts.oswald(
-                        color: Colors.white,
-                        fontSize: 80,
-                      ),
-                    ),
-                    //Weather Status
-                    Text(
-                      weatherCodeMap[weatherCodeCurrent]!,
-                      textAlign: TextAlign.center,
-                      style: GoogleFonts.oswald(
-                        color: Colors.white,
-                        fontSize: 35,
-                      ),
-                    ),
-                    //Apperant Temperature
-                    Text(
-                      "Hissedilen Sıcaklık: ${_userModel!.hourly!.apparentTemperature![currentIndex].round()}°C",
-                      textAlign: TextAlign.center,
-                      style: GoogleFonts.oswald(
-                        color: Colors.white,
-                        fontSize: 30,
-                      ),
-                    ),
-                    //Lowest and Highest Degree of Today
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          "En Düşük: ${_userModel!.daily!.temperature2MMin![0].round()}°C",
-                          textAlign: TextAlign.center,
-                          style: GoogleFonts.oswald(
-                            color: Colors.white,
-                            fontSize: 25,
+                      //Current Weather Part
+                      Column(
+                        children: [
+                          //City Name
+                          Text(
+                            _cityName,
+                            textAlign: TextAlign.center,
+                            style: GoogleFonts.oswald(
+                              color: Colors.white,
+                              fontSize: 45,
+                            ),
                           ),
-                        ),
-                        const SizedBox(
-                          width: 13,
-                        ),
-                        Text(
-                          "En Yüksek: ${_userModel!.daily!.temperature2MMax![0].round()}°C",
-                          textAlign: TextAlign.center,
-                          style: GoogleFonts.oswald(
-                            color: Colors.white,
-                            fontSize: 25,
+                          //Degree
+                          Text(
+                            "${_userModel!.currentWeather!.temperature!.round()}°C",
+                            textAlign: TextAlign.center,
+                            style: GoogleFonts.oswald(
+                              color: Colors.white,
+                              fontSize: 80,
+                            ),
                           ),
-                        ),
-                      ],
-                    ),
-                  ],
+                          //Weather Status
+                          Text(
+                            weatherCodeMap[weatherCodeCurrent]!,
+                            textAlign: TextAlign.center,
+                            style: GoogleFonts.oswald(
+                              color: Colors.white,
+                              fontSize: 35,
+                            ),
+                          ),
+                          //Apperant Temperature
+                          Text(
+                            "Hissedilen Sıcaklık: ${_userModel!.hourly!.apparentTemperature![currentIndex].round()}°C",
+                            textAlign: TextAlign.center,
+                            style: GoogleFonts.oswald(
+                              color: Colors.white,
+                              fontSize: 30,
+                            ),
+                          ),
+                          //Lowest and Highest Degree of Today
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(
+                                "En Düşük: ${_userModel!.daily!.temperature2MMin![0].round()}°C",
+                                textAlign: TextAlign.center,
+                                style: GoogleFonts.oswald(
+                                  color: Colors.white,
+                                  fontSize: 25,
+                                ),
+                              ),
+                              const SizedBox(
+                                width: 13,
+                              ),
+                              Text(
+                                "En Yüksek: ${_userModel!.daily!.temperature2MMax![0].round()}°C",
+                                textAlign: TextAlign.center,
+                                style: GoogleFonts.oswald(
+                                  color: Colors.white,
+                                  fontSize: 25,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                      const SizedBox(
+                        height: 35,
+                      ),
+                      const HourlyPartClass(),
+                      const SizedBox(
+                        height: 15,
+                      ),
+                      const DailyPartClass(),
+                      const SizedBox(height: 25),
+                      const DetailsPartClass(),
+                      const SizedBox(height: 25),
+                    ],
+                  ),
                 ),
-                const SizedBox(
-                  height: 35,
-                ),
-                const HourlyPartClass(),
-                const SizedBox(
-                  height: 15,
-                ),
-                const DailyPartClass(),
-                const SizedBox(height: 25),
-                const DetailsPartClass(),
-                const SizedBox(height: 25),
-              ],
-            ),
-          ),
-        ),
+              )
+            : const Center(
+                child: rive.RiveAnimation.asset("assets/gifs/loader.riv")),
         //Bottom Nav Bar
         floatingActionButton: FloatingActionButton(
           backgroundColor: Theme.of(context).colorScheme.surface,

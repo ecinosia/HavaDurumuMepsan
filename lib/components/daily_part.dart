@@ -8,6 +8,7 @@ import 'package:geolocator/geolocator.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:mepsan_hava_durumu/components/api_service.dart';
 import 'package:mepsan_hava_durumu/components/weather_model.dart';
+import 'package:rive/rive.dart' as rive;
 
 class DailyPartClass extends StatefulWidget {
   const DailyPartClass({super.key});
@@ -86,7 +87,7 @@ class _DailyPartClassState extends State<DailyPartClass> {
     return locationData;
   }
 
-  late WeatherTest? _userModel;
+  late WeatherTest? _userModel = null;
   int? weatherCodeCurrent;
   List<int>? isDayHourly;
   List<int>? weatherCodeHourly;
@@ -204,293 +205,314 @@ class _DailyPartClassState extends State<DailyPartClass> {
 
     var brightness = MediaQuery.of(context).platformBrightness;
 
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(8, 4, 8, 4),
-      child: Card(
-        child: Expanded(
-          child: Column(
-            children: [
-              const SizedBox(height: 10),
-              Padding(
-                padding: const EdgeInsets.only(left: 8.0, right: 8.0),
-                child: ExpandableNotifier(
-                  child: Column(
-                    children: [
-                      Expandable(
-                        collapsed: ExpandableButton(
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              const SizedBox(width: 5),
-                              Expanded(
-                                child: Text(
-                                  weekdayName,
-                                  style: GoogleFonts.oswald(
-                                    color:
-                                        Theme.of(context).colorScheme.onSurface,
-                                    fontWeight: FontWeight.w300,
-                                    fontSize: 30,
-                                  ),
-                                ),
-                              ),
-                              Image.asset(weatherGifMap[
-                                  _userModel!.currentWeather!.weathercode]!),
-                              Expanded(
-                                child: Text(
-                                  "${_userModel!.daily!.temperature2MMin![weekdayIndex].round()}°C",
-                                  textAlign: TextAlign.end,
-                                  style: GoogleFonts.oswald(
-                                    color:
-                                        Theme.of(context).colorScheme.onSurface,
-                                    fontWeight: FontWeight.w300,
-                                    fontSize: 30,
-                                  ),
-                                ),
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.only(
-                                    right: 12, left: 12.0),
-                                child: Container(
-                                  width: 80,
-                                  height: 5,
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(5),
-                                    gradient: const LinearGradient(colors: [
-                                      Color.fromARGB(255, 178, 254, 250),
-                                      Color.fromARGB(255, 245, 175, 25),
-                                      Color.fromARGB(255, 241, 39, 17)
-                                    ]),
-                                  ),
-                                ),
-                              ),
-                              Text(
-                                "${_userModel!.daily!.temperature2MMax![weekdayIndex].round()}°C",
-                                textAlign: TextAlign.end,
-                                style: GoogleFonts.oswald(
-                                  color:
-                                      Theme.of(context).colorScheme.onSurface,
-                                  fontWeight: FontWeight.w300,
-                                  fontSize: 30,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        expanded: Column(
+    return _userModel != null
+        ? Padding(
+            padding: const EdgeInsets.fromLTRB(8, 4, 8, 4),
+            child: Card(
+              child: Expanded(
+                child: Column(
+                  children: [
+                    const SizedBox(height: 10),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 8.0, right: 8.0),
+                      child: ExpandableNotifier(
+                        child: Column(
                           children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                const SizedBox(width: 5),
-                                Expanded(
-                                  child: Text(
-                                    weekdayName,
-                                    style: GoogleFonts.oswald(
-                                      color: Theme.of(context)
-                                          .colorScheme
-                                          .onSurface,
-                                      fontWeight: FontWeight.w300,
-                                      fontSize: 30,
+                            Expandable(
+                              collapsed: ExpandableButton(
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    const SizedBox(width: 5),
+                                    Expanded(
+                                      child: Text(
+                                        weekdayName,
+                                        style: GoogleFonts.oswald(
+                                          color: Theme.of(context)
+                                              .colorScheme
+                                              .onSurface,
+                                          fontWeight: FontWeight.w300,
+                                          fontSize: 30,
+                                        ),
+                                      ),
                                     ),
-                                  ),
-                                ),
-                                Image.asset(weatherGifMap[
-                                    _userModel!.currentWeather!.weathercode]!),
-                                Expanded(
-                                  child: Text(
-                                    "${_userModel!.daily!.temperature2MMin![weekdayIndex].round()}°C",
-                                    textAlign: TextAlign.end,
-                                    style: GoogleFonts.oswald(
-                                      color: Theme.of(context)
-                                          .colorScheme
-                                          .onSurface,
-                                      fontWeight: FontWeight.w300,
-                                      fontSize: 30,
+                                    Image.asset(weatherGifMap[_userModel!
+                                        .currentWeather!.weathercode]!),
+                                    Expanded(
+                                      child: Text(
+                                        "${_userModel!.daily!.temperature2MMin![weekdayIndex].round()}°C",
+                                        textAlign: TextAlign.end,
+                                        style: GoogleFonts.oswald(
+                                          color: Theme.of(context)
+                                              .colorScheme
+                                              .onSurface,
+                                          fontWeight: FontWeight.w300,
+                                          fontSize: 30,
+                                        ),
+                                      ),
                                     ),
-                                  ),
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.only(
-                                      right: 12, left: 12.0),
-                                  child: Container(
-                                    width: 80,
-                                    height: 5,
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(5),
-                                      gradient: const LinearGradient(colors: [
-                                        Color.fromARGB(255, 178, 254, 250),
-                                        Color.fromARGB(255, 245, 175, 25),
-                                        Color.fromARGB(255, 241, 39, 17)
-                                      ]),
+                                    Padding(
+                                      padding: const EdgeInsets.only(
+                                          right: 12, left: 12.0),
+                                      child: Container(
+                                        width: 80,
+                                        height: 5,
+                                        decoration: BoxDecoration(
+                                          borderRadius:
+                                              BorderRadius.circular(5),
+                                          gradient:
+                                              const LinearGradient(colors: [
+                                            Color.fromARGB(255, 178, 254, 250),
+                                            Color.fromARGB(255, 245, 175, 25),
+                                            Color.fromARGB(255, 241, 39, 17)
+                                          ]),
+                                        ),
+                                      ),
                                     ),
-                                  ),
+                                    Text(
+                                      "${_userModel!.daily!.temperature2MMax![weekdayIndex].round()}°C",
+                                      textAlign: TextAlign.end,
+                                      style: GoogleFonts.oswald(
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .onSurface,
+                                        fontWeight: FontWeight.w300,
+                                        fontSize: 30,
+                                      ),
+                                    ),
+                                  ],
                                 ),
-                                Text(
-                                  "${_userModel!.daily!.temperature2MMax![weekdayIndex].round()}°C",
-                                  textAlign: TextAlign.end,
-                                  style: GoogleFonts.oswald(
-                                    color:
-                                        Theme.of(context).colorScheme.onSurface,
-                                    fontWeight: FontWeight.w300,
-                                    fontSize: 30,
-                                  ),
-                                ),
-                              ],
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Column(
+                              ),
+                              expanded: Column(
                                 children: [
                                   Row(
                                     mainAxisAlignment:
                                         MainAxisAlignment.spaceBetween,
                                     children: [
-                                      Image(
-                                        image: brightness == Brightness.light
-                                            ? const AssetImage(
-                                                "assets/images/maxsicakliksiyah.png")
-                                            : const AssetImage(
-                                                "assets/images/maxsicaklikbeyaz.png"),
-                                        width: 35,
-                                        fit: BoxFit.cover,
+                                      const SizedBox(width: 5),
+                                      Expanded(
+                                        child: Text(
+                                          weekdayName,
+                                          style: GoogleFonts.oswald(
+                                            color: Theme.of(context)
+                                                .colorScheme
+                                                .onSurface,
+                                            fontWeight: FontWeight.w300,
+                                            fontSize: 30,
+                                          ),
+                                        ),
                                       ),
-                                      Text(
-                                        "Maksimum Sıcaklık:",
-                                        style: GoogleFonts.oswald(
-                                          fontSize: 17,
-                                          fontWeight: FontWeight.w500,
+                                      Image.asset(weatherGifMap[_userModel!
+                                          .currentWeather!.weathercode]!),
+                                      Expanded(
+                                        child: Text(
+                                          "${_userModel!.daily!.temperature2MMin![weekdayIndex].round()}°C",
+                                          textAlign: TextAlign.end,
+                                          style: GoogleFonts.oswald(
+                                            color: Theme.of(context)
+                                                .colorScheme
+                                                .onSurface,
+                                            fontWeight: FontWeight.w300,
+                                            fontSize: 30,
+                                          ),
+                                        ),
+                                      ),
+                                      Padding(
+                                        padding: const EdgeInsets.only(
+                                            right: 12, left: 12.0),
+                                        child: Container(
+                                          width: 80,
+                                          height: 5,
+                                          decoration: BoxDecoration(
+                                            borderRadius:
+                                                BorderRadius.circular(5),
+                                            gradient:
+                                                const LinearGradient(colors: [
+                                              Color.fromARGB(
+                                                  255, 178, 254, 250),
+                                              Color.fromARGB(255, 245, 175, 25),
+                                              Color.fromARGB(255, 241, 39, 17)
+                                            ]),
+                                          ),
                                         ),
                                       ),
                                       Text(
                                         "${_userModel!.daily!.temperature2MMax![weekdayIndex].round()}°C",
+                                        textAlign: TextAlign.end,
                                         style: GoogleFonts.oswald(
-                                          fontSize: 17,
-                                          fontWeight: FontWeight.w500,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Image(
-                                        image: brightness == Brightness.light
-                                            ? const AssetImage(
-                                                "assets/images/minsicakliksiyah.png")
-                                            : const AssetImage(
-                                                "assets/images/minsicaklikbeyaz.png"),
-                                        width: 35,
-                                        fit: BoxFit.cover,
-                                      ),
-                                      Text(
-                                        "Minimum Sıcaklık:",
-                                        style: GoogleFonts.oswald(
-                                          fontSize: 17,
-                                          fontWeight: FontWeight.w500,
-                                        ),
-                                      ),
-                                      Text(
-                                        "${_userModel!.daily!.temperature2MMin![weekdayIndex].round()}°C",
-                                        style: GoogleFonts.oswald(
-                                          fontSize: 17,
-                                          fontWeight: FontWeight.w500,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Image(
-                                        image: brightness == Brightness.light
-                                            ? const AssetImage(
-                                                "assets/images/yagisolasiligisiyah.png")
-                                            : const AssetImage(
-                                                "assets/images/yagisolasiligibeyaz.png"),
-                                        width: 35,
-                                        fit: BoxFit.cover,
-                                      ),
-                                      Text(
-                                        "Yağış Olasılığı:",
-                                        style: GoogleFonts.oswald(
-                                          fontSize: 17,
-                                          fontWeight: FontWeight.w500,
-                                        ),
-                                      ),
-                                      Text(
-                                        "%${_userModel!.daily!.precipitationProbabilityMax![weekdayIndex]}",
-                                        style: GoogleFonts.oswald(
-                                          fontSize: 17,
-                                          fontWeight: FontWeight.w500,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Image(
-                                        image: brightness == Brightness.light
-                                            ? const AssetImage(
-                                                "assets/images/ruzgarhizisiyah.png")
-                                            : const AssetImage(
-                                                "assets/images/ruzgarhizibeyaz.png"),
-                                        width: 35,
-                                        fit: BoxFit.cover,
-                                      ),
-                                      Text(
-                                        "Maksimum Rüzgar Hızı:",
-                                        style: GoogleFonts.oswald(
-                                          fontSize: 17,
-                                          fontWeight: FontWeight.w500,
-                                        ),
-                                      ),
-                                      Text(
-                                        "${_userModel!.daily!.windspeed10MMax![weekdayIndex]} km/sa",
-                                        style: GoogleFonts.oswald(
-                                          fontSize: 17,
-                                          fontWeight: FontWeight.w500,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Image(
-                                        image: brightness == Brightness.light
-                                            ? const AssetImage(
-                                                "assets/images/ruzgaryonusiyah.png")
-                                            : const AssetImage(
-                                                "assets/images/ruzgaryonubeyaz.png"),
-                                        width: 35,
-                                        fit: BoxFit.cover,
-                                      ),
-                                      Text(
-                                        "Hakim Rüzgar Yönü:",
-                                        style: GoogleFonts.oswald(
-                                          fontSize: 17,
-                                          fontWeight: FontWeight.w500,
-                                        ),
-                                      ),
-                                      Text(
-                                        "${_userModel!.daily!.winddirection10MDominant![weekdayIndex]}°",
-                                        style: GoogleFonts.oswald(
-                                          fontSize: 17,
-                                          fontWeight: FontWeight.w500,
+                                          color: Theme.of(context)
+                                              .colorScheme
+                                              .onSurface,
+                                          fontWeight: FontWeight.w300,
+                                          fontSize: 30,
                                         ),
                                       ),
                                     ],
                                   ),
                                   Padding(
-                                    padding: const EdgeInsets.only(top: 8.0),
-                                    child: ExpandableButton(
-                                      child:
-                                          const Icon(CupertinoIcons.chevron_up),
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Column(
+                                      children: [
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Image(
+                                              image: brightness ==
+                                                      Brightness.light
+                                                  ? const AssetImage(
+                                                      "assets/images/maxsicakliksiyah.png")
+                                                  : const AssetImage(
+                                                      "assets/images/maxsicaklikbeyaz.png"),
+                                              width: 35,
+                                              fit: BoxFit.cover,
+                                            ),
+                                            Text(
+                                              "Maksimum Sıcaklık:",
+                                              style: GoogleFonts.oswald(
+                                                fontSize: 17,
+                                                fontWeight: FontWeight.w500,
+                                              ),
+                                            ),
+                                            Text(
+                                              "${_userModel!.daily!.temperature2MMax![weekdayIndex].round()}°C",
+                                              style: GoogleFonts.oswald(
+                                                fontSize: 17,
+                                                fontWeight: FontWeight.w500,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Image(
+                                              image: brightness ==
+                                                      Brightness.light
+                                                  ? const AssetImage(
+                                                      "assets/images/minsicakliksiyah.png")
+                                                  : const AssetImage(
+                                                      "assets/images/minsicaklikbeyaz.png"),
+                                              width: 35,
+                                              fit: BoxFit.cover,
+                                            ),
+                                            Text(
+                                              "Minimum Sıcaklık:",
+                                              style: GoogleFonts.oswald(
+                                                fontSize: 17,
+                                                fontWeight: FontWeight.w500,
+                                              ),
+                                            ),
+                                            Text(
+                                              "${_userModel!.daily!.temperature2MMin![weekdayIndex].round()}°C",
+                                              style: GoogleFonts.oswald(
+                                                fontSize: 17,
+                                                fontWeight: FontWeight.w500,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Image(
+                                              image: brightness ==
+                                                      Brightness.light
+                                                  ? const AssetImage(
+                                                      "assets/images/yagisolasiligisiyah.png")
+                                                  : const AssetImage(
+                                                      "assets/images/yagisolasiligibeyaz.png"),
+                                              width: 35,
+                                              fit: BoxFit.cover,
+                                            ),
+                                            Text(
+                                              "Yağış Olasılığı:",
+                                              style: GoogleFonts.oswald(
+                                                fontSize: 17,
+                                                fontWeight: FontWeight.w500,
+                                              ),
+                                            ),
+                                            Text(
+                                              "%${_userModel!.daily!.precipitationProbabilityMax![weekdayIndex]}",
+                                              style: GoogleFonts.oswald(
+                                                fontSize: 17,
+                                                fontWeight: FontWeight.w500,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Image(
+                                              image: brightness ==
+                                                      Brightness.light
+                                                  ? const AssetImage(
+                                                      "assets/images/ruzgarhizisiyah.png")
+                                                  : const AssetImage(
+                                                      "assets/images/ruzgarhizibeyaz.png"),
+                                              width: 35,
+                                              fit: BoxFit.cover,
+                                            ),
+                                            Text(
+                                              "Maksimum Rüzgar Hızı:",
+                                              style: GoogleFonts.oswald(
+                                                fontSize: 17,
+                                                fontWeight: FontWeight.w500,
+                                              ),
+                                            ),
+                                            Text(
+                                              "${_userModel!.daily!.windspeed10MMax![weekdayIndex]} km/sa",
+                                              style: GoogleFonts.oswald(
+                                                fontSize: 17,
+                                                fontWeight: FontWeight.w500,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Image(
+                                              image: brightness ==
+                                                      Brightness.light
+                                                  ? const AssetImage(
+                                                      "assets/images/ruzgaryonusiyah.png")
+                                                  : const AssetImage(
+                                                      "assets/images/ruzgaryonubeyaz.png"),
+                                              width: 35,
+                                              fit: BoxFit.cover,
+                                            ),
+                                            Text(
+                                              "Hakim Rüzgar Yönü:",
+                                              style: GoogleFonts.oswald(
+                                                fontSize: 17,
+                                                fontWeight: FontWeight.w500,
+                                              ),
+                                            ),
+                                            Text(
+                                              "${_userModel!.daily!.winddirection10MDominant![weekdayIndex]}°",
+                                              style: GoogleFonts.oswald(
+                                                fontSize: 17,
+                                                fontWeight: FontWeight.w500,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                        Padding(
+                                          padding:
+                                              const EdgeInsets.only(top: 8.0),
+                                          child: ExpandableButton(
+                                            child: const Icon(
+                                                CupertinoIcons.chevron_up),
+                                          ),
+                                        ),
+                                      ],
                                     ),
                                   ),
                                 ],
@@ -499,300 +521,317 @@ class _DailyPartClassState extends State<DailyPartClass> {
                           ],
                         ),
                       ),
-                    ],
-                  ),
-                ),
-              ),
-              SizedBox(
-                  height: 10,
-                  child: Padding(
-                    padding: const EdgeInsets.only(top: 7.0),
-                    child: Divider(
-                        thickness: 1.5,
-                        color: brightness == Brightness.light
-                            ? Colors.black.withOpacity(0.4)
-                            : Colors.white.withOpacity(0.5)),
-                  )),
-              Padding(
-                padding: const EdgeInsets.only(left: 8.0, right: 8.0),
-                child: ExpandableNotifier(
-                  child: Column(
-                    children: [
-                      Expandable(
-                        collapsed: ExpandableButton(
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              const SizedBox(width: 5),
-                              Expanded(
-                                child: Text(
-                                  nextDay1,
-                                  style: GoogleFonts.oswald(
-                                    color:
-                                        Theme.of(context).colorScheme.onSurface,
-                                    fontWeight: FontWeight.w300,
-                                    fontSize: 30,
-                                  ),
-                                ),
-                              ),
-                              Image.asset(weatherGifMap[
-                                  _userModel!.currentWeather!.weathercode]!),
-                              Expanded(
-                                child: Text(
-                                  "${_userModel!.daily!.temperature2MMin![nextDayIndex1].round()}°C",
-                                  textAlign: TextAlign.end,
-                                  style: GoogleFonts.oswald(
-                                    color:
-                                        Theme.of(context).colorScheme.onSurface,
-                                    fontWeight: FontWeight.w300,
-                                    fontSize: 30,
-                                  ),
-                                ),
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.only(
-                                    right: 12, left: 12.0),
-                                child: Container(
-                                  width: 80,
-                                  height: 5,
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(5),
-                                    gradient: const LinearGradient(colors: [
-                                      Color.fromARGB(255, 178, 254, 250),
-                                      Color.fromARGB(255, 245, 175, 25),
-                                      Color.fromARGB(255, 241, 39, 17)
-                                    ]),
-                                  ),
-                                ),
-                              ),
-                              Text(
-                                "${_userModel!.daily!.temperature2MMax![nextDayIndex1].round()}°C",
-                                textAlign: TextAlign.end,
-                                style: GoogleFonts.oswald(
-                                  color:
-                                      Theme.of(context).colorScheme.onSurface,
-                                  fontWeight: FontWeight.w300,
-                                  fontSize: 30,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        expanded: Column(
+                    ),
+                    SizedBox(
+                        height: 10,
+                        child: Padding(
+                          padding: const EdgeInsets.only(top: 7.0),
+                          child: Divider(
+                              thickness: 1.5,
+                              color: brightness == Brightness.light
+                                  ? Colors.black.withOpacity(0.4)
+                                  : Colors.white.withOpacity(0.5)),
+                        )),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 8.0, right: 8.0),
+                      child: ExpandableNotifier(
+                        child: Column(
                           children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                const SizedBox(width: 5),
-                                Expanded(
-                                  child: Text(
-                                    nextDay1,
-                                    style: GoogleFonts.oswald(
-                                      color: Theme.of(context)
-                                          .colorScheme
-                                          .onSurface,
-                                      fontWeight: FontWeight.w300,
-                                      fontSize: 30,
+                            Expandable(
+                              collapsed: ExpandableButton(
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    const SizedBox(width: 5),
+                                    Expanded(
+                                      child: Text(
+                                        nextDay1,
+                                        style: GoogleFonts.oswald(
+                                          color: Theme.of(context)
+                                              .colorScheme
+                                              .onSurface,
+                                          fontWeight: FontWeight.w300,
+                                          fontSize: 30,
+                                        ),
+                                      ),
                                     ),
-                                  ),
-                                ),
-                                Image.asset(weatherGifMap[
-                                    _userModel!.currentWeather!.weathercode]!),
-                                Expanded(
-                                  child: Text(
-                                    "${_userModel!.daily!.temperature2MMin![nextDayIndex1].round()}°C",
-                                    textAlign: TextAlign.end,
-                                    style: GoogleFonts.oswald(
-                                      color: Theme.of(context)
-                                          .colorScheme
-                                          .onSurface,
-                                      fontWeight: FontWeight.w300,
-                                      fontSize: 30,
+                                    Image.asset(weatherGifMap[_userModel!
+                                        .currentWeather!.weathercode]!),
+                                    Expanded(
+                                      child: Text(
+                                        "${_userModel!.daily!.temperature2MMin![nextDayIndex1].round()}°C",
+                                        textAlign: TextAlign.end,
+                                        style: GoogleFonts.oswald(
+                                          color: Theme.of(context)
+                                              .colorScheme
+                                              .onSurface,
+                                          fontWeight: FontWeight.w300,
+                                          fontSize: 30,
+                                        ),
+                                      ),
                                     ),
-                                  ),
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.only(
-                                      right: 12, left: 12.0),
-                                  child: Container(
-                                    width: 80,
-                                    height: 5,
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(5),
-                                      gradient: const LinearGradient(colors: [
-                                        Color.fromARGB(255, 178, 254, 250),
-                                        Color.fromARGB(255, 245, 175, 25),
-                                        Color.fromARGB(255, 241, 39, 17)
-                                      ]),
+                                    Padding(
+                                      padding: const EdgeInsets.only(
+                                          right: 12, left: 12.0),
+                                      child: Container(
+                                        width: 80,
+                                        height: 5,
+                                        decoration: BoxDecoration(
+                                          borderRadius:
+                                              BorderRadius.circular(5),
+                                          gradient:
+                                              const LinearGradient(colors: [
+                                            Color.fromARGB(255, 178, 254, 250),
+                                            Color.fromARGB(255, 245, 175, 25),
+                                            Color.fromARGB(255, 241, 39, 17)
+                                          ]),
+                                        ),
+                                      ),
                                     ),
-                                  ),
+                                    Text(
+                                      "${_userModel!.daily!.temperature2MMax![nextDayIndex1].round()}°C",
+                                      textAlign: TextAlign.end,
+                                      style: GoogleFonts.oswald(
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .onSurface,
+                                        fontWeight: FontWeight.w300,
+                                        fontSize: 30,
+                                      ),
+                                    ),
+                                  ],
                                 ),
-                                Text(
-                                  "${_userModel!.daily!.temperature2MMax![nextDayIndex1].round()}°C",
-                                  textAlign: TextAlign.end,
-                                  style: GoogleFonts.oswald(
-                                    color:
-                                        Theme.of(context).colorScheme.onSurface,
-                                    fontWeight: FontWeight.w300,
-                                    fontSize: 30,
-                                  ),
-                                ),
-                              ],
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Column(
+                              ),
+                              expanded: Column(
                                 children: [
                                   Row(
                                     mainAxisAlignment:
                                         MainAxisAlignment.spaceBetween,
                                     children: [
-                                      Image(
-                                        image: brightness == Brightness.light
-                                            ? const AssetImage(
-                                                "assets/images/maxsicakliksiyah.png")
-                                            : const AssetImage(
-                                                "assets/images/maxsicaklikbeyaz.png"),
-                                        width: 35,
-                                        fit: BoxFit.cover,
+                                      const SizedBox(width: 5),
+                                      Expanded(
+                                        child: Text(
+                                          nextDay1,
+                                          style: GoogleFonts.oswald(
+                                            color: Theme.of(context)
+                                                .colorScheme
+                                                .onSurface,
+                                            fontWeight: FontWeight.w300,
+                                            fontSize: 30,
+                                          ),
+                                        ),
                                       ),
-                                      Text(
-                                        "Maksimum Sıcaklık:",
-                                        style: GoogleFonts.oswald(
-                                          fontSize: 17,
-                                          fontWeight: FontWeight.w500,
+                                      Image.asset(weatherGifMap[_userModel!
+                                          .currentWeather!.weathercode]!),
+                                      Expanded(
+                                        child: Text(
+                                          "${_userModel!.daily!.temperature2MMin![nextDayIndex1].round()}°C",
+                                          textAlign: TextAlign.end,
+                                          style: GoogleFonts.oswald(
+                                            color: Theme.of(context)
+                                                .colorScheme
+                                                .onSurface,
+                                            fontWeight: FontWeight.w300,
+                                            fontSize: 30,
+                                          ),
+                                        ),
+                                      ),
+                                      Padding(
+                                        padding: const EdgeInsets.only(
+                                            right: 12, left: 12.0),
+                                        child: Container(
+                                          width: 80,
+                                          height: 5,
+                                          decoration: BoxDecoration(
+                                            borderRadius:
+                                                BorderRadius.circular(5),
+                                            gradient:
+                                                const LinearGradient(colors: [
+                                              Color.fromARGB(
+                                                  255, 178, 254, 250),
+                                              Color.fromARGB(255, 245, 175, 25),
+                                              Color.fromARGB(255, 241, 39, 17)
+                                            ]),
+                                          ),
                                         ),
                                       ),
                                       Text(
                                         "${_userModel!.daily!.temperature2MMax![nextDayIndex1].round()}°C",
+                                        textAlign: TextAlign.end,
                                         style: GoogleFonts.oswald(
-                                          fontSize: 17,
-                                          fontWeight: FontWeight.w500,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Image(
-                                        image: brightness == Brightness.light
-                                            ? const AssetImage(
-                                                "assets/images/minsicakliksiyah.png")
-                                            : const AssetImage(
-                                                "assets/images/minsicaklikbeyaz.png"),
-                                        width: 35,
-                                        fit: BoxFit.cover,
-                                      ),
-                                      Text(
-                                        "Minimum Sıcaklık:",
-                                        style: GoogleFonts.oswald(
-                                          fontSize: 17,
-                                          fontWeight: FontWeight.w500,
-                                        ),
-                                      ),
-                                      Text(
-                                        "${_userModel!.daily!.temperature2MMin![nextDayIndex1].round()}°C",
-                                        style: GoogleFonts.oswald(
-                                          fontSize: 17,
-                                          fontWeight: FontWeight.w500,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Image(
-                                        image: brightness == Brightness.light
-                                            ? const AssetImage(
-                                                "assets/images/yagisolasiligisiyah.png")
-                                            : const AssetImage(
-                                                "assets/images/yagisolasiligibeyaz.png"),
-                                        width: 35,
-                                        fit: BoxFit.cover,
-                                      ),
-                                      Text(
-                                        "Yağış Olasılığı:",
-                                        style: GoogleFonts.oswald(
-                                          fontSize: 17,
-                                          fontWeight: FontWeight.w500,
-                                        ),
-                                      ),
-                                      Text(
-                                        "%${_userModel!.daily!.precipitationProbabilityMax![nextDayIndex1]}",
-                                        style: GoogleFonts.oswald(
-                                          fontSize: 17,
-                                          fontWeight: FontWeight.w500,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Image(
-                                        image: brightness == Brightness.light
-                                            ? const AssetImage(
-                                                "assets/images/ruzgarhizisiyah.png")
-                                            : const AssetImage(
-                                                "assets/images/ruzgarhizibeyaz.png"),
-                                        width: 35,
-                                        fit: BoxFit.cover,
-                                      ),
-                                      Text(
-                                        "Maksimum Rüzgar Hızı:",
-                                        style: GoogleFonts.oswald(
-                                          fontSize: 17,
-                                          fontWeight: FontWeight.w500,
-                                        ),
-                                      ),
-                                      Text(
-                                        "${_userModel!.daily!.windspeed10MMax![nextDayIndex1]} km/sa",
-                                        style: GoogleFonts.oswald(
-                                          fontSize: 17,
-                                          fontWeight: FontWeight.w500,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Image(
-                                        image: brightness == Brightness.light
-                                            ? const AssetImage(
-                                                "assets/images/ruzgaryonusiyah.png")
-                                            : const AssetImage(
-                                                "assets/images/ruzgaryonubeyaz.png"),
-                                        width: 35,
-                                        fit: BoxFit.cover,
-                                      ),
-                                      Text(
-                                        "Hakim Rüzgar Yönü:",
-                                        style: GoogleFonts.oswald(
-                                          fontSize: 17,
-                                          fontWeight: FontWeight.w500,
-                                        ),
-                                      ),
-                                      Text(
-                                        "${_userModel!.daily!.winddirection10MDominant![nextDayIndex1]}°",
-                                        style: GoogleFonts.oswald(
-                                          fontSize: 17,
-                                          fontWeight: FontWeight.w500,
+                                          color: Theme.of(context)
+                                              .colorScheme
+                                              .onSurface,
+                                          fontWeight: FontWeight.w300,
+                                          fontSize: 30,
                                         ),
                                       ),
                                     ],
                                   ),
                                   Padding(
-                                    padding: const EdgeInsets.only(top: 8.0),
-                                    child: ExpandableButton(
-                                      child:
-                                          const Icon(CupertinoIcons.chevron_up),
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Column(
+                                      children: [
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Image(
+                                              image: brightness ==
+                                                      Brightness.light
+                                                  ? const AssetImage(
+                                                      "assets/images/maxsicakliksiyah.png")
+                                                  : const AssetImage(
+                                                      "assets/images/maxsicaklikbeyaz.png"),
+                                              width: 35,
+                                              fit: BoxFit.cover,
+                                            ),
+                                            Text(
+                                              "Maksimum Sıcaklık:",
+                                              style: GoogleFonts.oswald(
+                                                fontSize: 17,
+                                                fontWeight: FontWeight.w500,
+                                              ),
+                                            ),
+                                            Text(
+                                              "${_userModel!.daily!.temperature2MMax![nextDayIndex1].round()}°C",
+                                              style: GoogleFonts.oswald(
+                                                fontSize: 17,
+                                                fontWeight: FontWeight.w500,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Image(
+                                              image: brightness ==
+                                                      Brightness.light
+                                                  ? const AssetImage(
+                                                      "assets/images/minsicakliksiyah.png")
+                                                  : const AssetImage(
+                                                      "assets/images/minsicaklikbeyaz.png"),
+                                              width: 35,
+                                              fit: BoxFit.cover,
+                                            ),
+                                            Text(
+                                              "Minimum Sıcaklık:",
+                                              style: GoogleFonts.oswald(
+                                                fontSize: 17,
+                                                fontWeight: FontWeight.w500,
+                                              ),
+                                            ),
+                                            Text(
+                                              "${_userModel!.daily!.temperature2MMin![nextDayIndex1].round()}°C",
+                                              style: GoogleFonts.oswald(
+                                                fontSize: 17,
+                                                fontWeight: FontWeight.w500,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Image(
+                                              image: brightness ==
+                                                      Brightness.light
+                                                  ? const AssetImage(
+                                                      "assets/images/yagisolasiligisiyah.png")
+                                                  : const AssetImage(
+                                                      "assets/images/yagisolasiligibeyaz.png"),
+                                              width: 35,
+                                              fit: BoxFit.cover,
+                                            ),
+                                            Text(
+                                              "Yağış Olasılığı:",
+                                              style: GoogleFonts.oswald(
+                                                fontSize: 17,
+                                                fontWeight: FontWeight.w500,
+                                              ),
+                                            ),
+                                            Text(
+                                              "%${_userModel!.daily!.precipitationProbabilityMax![nextDayIndex1]}",
+                                              style: GoogleFonts.oswald(
+                                                fontSize: 17,
+                                                fontWeight: FontWeight.w500,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Image(
+                                              image: brightness ==
+                                                      Brightness.light
+                                                  ? const AssetImage(
+                                                      "assets/images/ruzgarhizisiyah.png")
+                                                  : const AssetImage(
+                                                      "assets/images/ruzgarhizibeyaz.png"),
+                                              width: 35,
+                                              fit: BoxFit.cover,
+                                            ),
+                                            Text(
+                                              "Maksimum Rüzgar Hızı:",
+                                              style: GoogleFonts.oswald(
+                                                fontSize: 17,
+                                                fontWeight: FontWeight.w500,
+                                              ),
+                                            ),
+                                            Text(
+                                              "${_userModel!.daily!.windspeed10MMax![nextDayIndex1]} km/sa",
+                                              style: GoogleFonts.oswald(
+                                                fontSize: 17,
+                                                fontWeight: FontWeight.w500,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Image(
+                                              image: brightness ==
+                                                      Brightness.light
+                                                  ? const AssetImage(
+                                                      "assets/images/ruzgaryonusiyah.png")
+                                                  : const AssetImage(
+                                                      "assets/images/ruzgaryonubeyaz.png"),
+                                              width: 35,
+                                              fit: BoxFit.cover,
+                                            ),
+                                            Text(
+                                              "Hakim Rüzgar Yönü:",
+                                              style: GoogleFonts.oswald(
+                                                fontSize: 17,
+                                                fontWeight: FontWeight.w500,
+                                              ),
+                                            ),
+                                            Text(
+                                              "${_userModel!.daily!.winddirection10MDominant![nextDayIndex1]}°",
+                                              style: GoogleFonts.oswald(
+                                                fontSize: 17,
+                                                fontWeight: FontWeight.w500,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                        Padding(
+                                          padding:
+                                              const EdgeInsets.only(top: 8.0),
+                                          child: ExpandableButton(
+                                            child: const Icon(
+                                                CupertinoIcons.chevron_up),
+                                          ),
+                                        ),
+                                      ],
                                     ),
                                   ),
                                 ],
@@ -801,300 +840,317 @@ class _DailyPartClassState extends State<DailyPartClass> {
                           ],
                         ),
                       ),
-                    ],
-                  ),
-                ),
-              ),
-              SizedBox(
-                  height: 10,
-                  child: Padding(
-                    padding: const EdgeInsets.only(top: 7.0),
-                    child: Divider(
-                        thickness: 1.5,
-                        color: brightness == Brightness.light
-                            ? Colors.black.withOpacity(0.4)
-                            : Colors.white.withOpacity(0.5)),
-                  )),
-              Padding(
-                padding: const EdgeInsets.only(left: 8.0, right: 8.0),
-                child: ExpandableNotifier(
-                  child: Column(
-                    children: [
-                      Expandable(
-                        collapsed: ExpandableButton(
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              const SizedBox(width: 5),
-                              Expanded(
-                                child: Text(
-                                  nextDay2,
-                                  style: GoogleFonts.oswald(
-                                    color:
-                                        Theme.of(context).colorScheme.onSurface,
-                                    fontWeight: FontWeight.w300,
-                                    fontSize: 30,
-                                  ),
-                                ),
-                              ),
-                              Image.asset(weatherGifMap[
-                                  _userModel!.currentWeather!.weathercode]!),
-                              Expanded(
-                                child: Text(
-                                  "${_userModel!.daily!.temperature2MMin![nextDayIndex2].round()}°C",
-                                  textAlign: TextAlign.end,
-                                  style: GoogleFonts.oswald(
-                                    color:
-                                        Theme.of(context).colorScheme.onSurface,
-                                    fontWeight: FontWeight.w300,
-                                    fontSize: 30,
-                                  ),
-                                ),
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.only(
-                                    right: 12, left: 12.0),
-                                child: Container(
-                                  width: 80,
-                                  height: 5,
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(5),
-                                    gradient: const LinearGradient(colors: [
-                                      Color.fromARGB(255, 178, 254, 250),
-                                      Color.fromARGB(255, 245, 175, 25),
-                                      Color.fromARGB(255, 241, 39, 17)
-                                    ]),
-                                  ),
-                                ),
-                              ),
-                              Text(
-                                "${_userModel!.daily!.temperature2MMax![nextDayIndex2].round()}°C",
-                                textAlign: TextAlign.end,
-                                style: GoogleFonts.oswald(
-                                  color:
-                                      Theme.of(context).colorScheme.onSurface,
-                                  fontWeight: FontWeight.w300,
-                                  fontSize: 30,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        expanded: Column(
+                    ),
+                    SizedBox(
+                        height: 10,
+                        child: Padding(
+                          padding: const EdgeInsets.only(top: 7.0),
+                          child: Divider(
+                              thickness: 1.5,
+                              color: brightness == Brightness.light
+                                  ? Colors.black.withOpacity(0.4)
+                                  : Colors.white.withOpacity(0.5)),
+                        )),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 8.0, right: 8.0),
+                      child: ExpandableNotifier(
+                        child: Column(
                           children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                const SizedBox(width: 5),
-                                Expanded(
-                                  child: Text(
-                                    nextDay2,
-                                    style: GoogleFonts.oswald(
-                                      color: Theme.of(context)
-                                          .colorScheme
-                                          .onSurface,
-                                      fontWeight: FontWeight.w300,
-                                      fontSize: 30,
+                            Expandable(
+                              collapsed: ExpandableButton(
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    const SizedBox(width: 5),
+                                    Expanded(
+                                      child: Text(
+                                        nextDay2,
+                                        style: GoogleFonts.oswald(
+                                          color: Theme.of(context)
+                                              .colorScheme
+                                              .onSurface,
+                                          fontWeight: FontWeight.w300,
+                                          fontSize: 30,
+                                        ),
+                                      ),
                                     ),
-                                  ),
-                                ),
-                                Image.asset(weatherGifMap[
-                                    _userModel!.currentWeather!.weathercode]!),
-                                Expanded(
-                                  child: Text(
-                                    "${_userModel!.daily!.temperature2MMin![nextDayIndex2].round()}°C",
-                                    textAlign: TextAlign.end,
-                                    style: GoogleFonts.oswald(
-                                      color: Theme.of(context)
-                                          .colorScheme
-                                          .onSurface,
-                                      fontWeight: FontWeight.w300,
-                                      fontSize: 30,
+                                    Image.asset(weatherGifMap[_userModel!
+                                        .currentWeather!.weathercode]!),
+                                    Expanded(
+                                      child: Text(
+                                        "${_userModel!.daily!.temperature2MMin![nextDayIndex2].round()}°C",
+                                        textAlign: TextAlign.end,
+                                        style: GoogleFonts.oswald(
+                                          color: Theme.of(context)
+                                              .colorScheme
+                                              .onSurface,
+                                          fontWeight: FontWeight.w300,
+                                          fontSize: 30,
+                                        ),
+                                      ),
                                     ),
-                                  ),
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.only(
-                                      right: 12, left: 12.0),
-                                  child: Container(
-                                    width: 80,
-                                    height: 5,
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(5),
-                                      gradient: const LinearGradient(colors: [
-                                        Color.fromARGB(255, 178, 254, 250),
-                                        Color.fromARGB(255, 245, 175, 25),
-                                        Color.fromARGB(255, 241, 39, 17)
-                                      ]),
+                                    Padding(
+                                      padding: const EdgeInsets.only(
+                                          right: 12, left: 12.0),
+                                      child: Container(
+                                        width: 80,
+                                        height: 5,
+                                        decoration: BoxDecoration(
+                                          borderRadius:
+                                              BorderRadius.circular(5),
+                                          gradient:
+                                              const LinearGradient(colors: [
+                                            Color.fromARGB(255, 178, 254, 250),
+                                            Color.fromARGB(255, 245, 175, 25),
+                                            Color.fromARGB(255, 241, 39, 17)
+                                          ]),
+                                        ),
+                                      ),
                                     ),
-                                  ),
+                                    Text(
+                                      "${_userModel!.daily!.temperature2MMax![nextDayIndex2].round()}°C",
+                                      textAlign: TextAlign.end,
+                                      style: GoogleFonts.oswald(
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .onSurface,
+                                        fontWeight: FontWeight.w300,
+                                        fontSize: 30,
+                                      ),
+                                    ),
+                                  ],
                                 ),
-                                Text(
-                                  "${_userModel!.daily!.temperature2MMax![nextDayIndex2].round()}°C",
-                                  textAlign: TextAlign.end,
-                                  style: GoogleFonts.oswald(
-                                    color:
-                                        Theme.of(context).colorScheme.onSurface,
-                                    fontWeight: FontWeight.w300,
-                                    fontSize: 30,
-                                  ),
-                                ),
-                              ],
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Column(
+                              ),
+                              expanded: Column(
                                 children: [
                                   Row(
                                     mainAxisAlignment:
                                         MainAxisAlignment.spaceBetween,
                                     children: [
-                                      Image(
-                                        image: brightness == Brightness.light
-                                            ? const AssetImage(
-                                                "assets/images/maxsicakliksiyah.png")
-                                            : const AssetImage(
-                                                "assets/images/maxsicaklikbeyaz.png"),
-                                        width: 35,
-                                        fit: BoxFit.cover,
+                                      const SizedBox(width: 5),
+                                      Expanded(
+                                        child: Text(
+                                          nextDay2,
+                                          style: GoogleFonts.oswald(
+                                            color: Theme.of(context)
+                                                .colorScheme
+                                                .onSurface,
+                                            fontWeight: FontWeight.w300,
+                                            fontSize: 30,
+                                          ),
+                                        ),
                                       ),
-                                      Text(
-                                        "Maksimum Sıcaklık:",
-                                        style: GoogleFonts.oswald(
-                                          fontSize: 17,
-                                          fontWeight: FontWeight.w500,
+                                      Image.asset(weatherGifMap[_userModel!
+                                          .currentWeather!.weathercode]!),
+                                      Expanded(
+                                        child: Text(
+                                          "${_userModel!.daily!.temperature2MMin![nextDayIndex2].round()}°C",
+                                          textAlign: TextAlign.end,
+                                          style: GoogleFonts.oswald(
+                                            color: Theme.of(context)
+                                                .colorScheme
+                                                .onSurface,
+                                            fontWeight: FontWeight.w300,
+                                            fontSize: 30,
+                                          ),
+                                        ),
+                                      ),
+                                      Padding(
+                                        padding: const EdgeInsets.only(
+                                            right: 12, left: 12.0),
+                                        child: Container(
+                                          width: 80,
+                                          height: 5,
+                                          decoration: BoxDecoration(
+                                            borderRadius:
+                                                BorderRadius.circular(5),
+                                            gradient:
+                                                const LinearGradient(colors: [
+                                              Color.fromARGB(
+                                                  255, 178, 254, 250),
+                                              Color.fromARGB(255, 245, 175, 25),
+                                              Color.fromARGB(255, 241, 39, 17)
+                                            ]),
+                                          ),
                                         ),
                                       ),
                                       Text(
                                         "${_userModel!.daily!.temperature2MMax![nextDayIndex2].round()}°C",
+                                        textAlign: TextAlign.end,
                                         style: GoogleFonts.oswald(
-                                          fontSize: 17,
-                                          fontWeight: FontWeight.w500,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Image(
-                                        image: brightness == Brightness.light
-                                            ? const AssetImage(
-                                                "assets/images/minsicakliksiyah.png")
-                                            : const AssetImage(
-                                                "assets/images/minsicaklikbeyaz.png"),
-                                        width: 35,
-                                        fit: BoxFit.cover,
-                                      ),
-                                      Text(
-                                        "Minimum Sıcaklık:",
-                                        style: GoogleFonts.oswald(
-                                          fontSize: 17,
-                                          fontWeight: FontWeight.w500,
-                                        ),
-                                      ),
-                                      Text(
-                                        "${_userModel!.daily!.temperature2MMin![nextDayIndex2].round()}°C",
-                                        style: GoogleFonts.oswald(
-                                          fontSize: 17,
-                                          fontWeight: FontWeight.w500,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Image(
-                                        image: brightness == Brightness.light
-                                            ? const AssetImage(
-                                                "assets/images/yagisolasiligisiyah.png")
-                                            : const AssetImage(
-                                                "assets/images/yagisolasiligibeyaz.png"),
-                                        width: 35,
-                                        fit: BoxFit.cover,
-                                      ),
-                                      Text(
-                                        "Yağış Olasılığı:",
-                                        style: GoogleFonts.oswald(
-                                          fontSize: 17,
-                                          fontWeight: FontWeight.w500,
-                                        ),
-                                      ),
-                                      Text(
-                                        "%${_userModel!.daily!.precipitationProbabilityMax![nextDayIndex2]}",
-                                        style: GoogleFonts.oswald(
-                                          fontSize: 17,
-                                          fontWeight: FontWeight.w500,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Image(
-                                        image: brightness == Brightness.light
-                                            ? const AssetImage(
-                                                "assets/images/ruzgarhizisiyah.png")
-                                            : const AssetImage(
-                                                "assets/images/ruzgarhizibeyaz.png"),
-                                        width: 35,
-                                        fit: BoxFit.cover,
-                                      ),
-                                      Text(
-                                        "Maksimum Rüzgar Hızı:",
-                                        style: GoogleFonts.oswald(
-                                          fontSize: 17,
-                                          fontWeight: FontWeight.w500,
-                                        ),
-                                      ),
-                                      Text(
-                                        "${_userModel!.daily!.windspeed10MMax![nextDayIndex2]} km/sa",
-                                        style: GoogleFonts.oswald(
-                                          fontSize: 17,
-                                          fontWeight: FontWeight.w500,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Image(
-                                        image: brightness == Brightness.light
-                                            ? const AssetImage(
-                                                "assets/images/ruzgaryonusiyah.png")
-                                            : const AssetImage(
-                                                "assets/images/ruzgaryonubeyaz.png"),
-                                        width: 35,
-                                        fit: BoxFit.cover,
-                                      ),
-                                      Text(
-                                        "Hakim Rüzgar Yönü:",
-                                        style: GoogleFonts.oswald(
-                                          fontSize: 17,
-                                          fontWeight: FontWeight.w500,
-                                        ),
-                                      ),
-                                      Text(
-                                        "${_userModel!.daily!.winddirection10MDominant![nextDayIndex2]}°",
-                                        style: GoogleFonts.oswald(
-                                          fontSize: 17,
-                                          fontWeight: FontWeight.w500,
+                                          color: Theme.of(context)
+                                              .colorScheme
+                                              .onSurface,
+                                          fontWeight: FontWeight.w300,
+                                          fontSize: 30,
                                         ),
                                       ),
                                     ],
                                   ),
                                   Padding(
-                                    padding: const EdgeInsets.only(top: 8.0),
-                                    child: ExpandableButton(
-                                      child:
-                                          const Icon(CupertinoIcons.chevron_up),
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Column(
+                                      children: [
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Image(
+                                              image: brightness ==
+                                                      Brightness.light
+                                                  ? const AssetImage(
+                                                      "assets/images/maxsicakliksiyah.png")
+                                                  : const AssetImage(
+                                                      "assets/images/maxsicaklikbeyaz.png"),
+                                              width: 35,
+                                              fit: BoxFit.cover,
+                                            ),
+                                            Text(
+                                              "Maksimum Sıcaklık:",
+                                              style: GoogleFonts.oswald(
+                                                fontSize: 17,
+                                                fontWeight: FontWeight.w500,
+                                              ),
+                                            ),
+                                            Text(
+                                              "${_userModel!.daily!.temperature2MMax![nextDayIndex2].round()}°C",
+                                              style: GoogleFonts.oswald(
+                                                fontSize: 17,
+                                                fontWeight: FontWeight.w500,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Image(
+                                              image: brightness ==
+                                                      Brightness.light
+                                                  ? const AssetImage(
+                                                      "assets/images/minsicakliksiyah.png")
+                                                  : const AssetImage(
+                                                      "assets/images/minsicaklikbeyaz.png"),
+                                              width: 35,
+                                              fit: BoxFit.cover,
+                                            ),
+                                            Text(
+                                              "Minimum Sıcaklık:",
+                                              style: GoogleFonts.oswald(
+                                                fontSize: 17,
+                                                fontWeight: FontWeight.w500,
+                                              ),
+                                            ),
+                                            Text(
+                                              "${_userModel!.daily!.temperature2MMin![nextDayIndex2].round()}°C",
+                                              style: GoogleFonts.oswald(
+                                                fontSize: 17,
+                                                fontWeight: FontWeight.w500,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Image(
+                                              image: brightness ==
+                                                      Brightness.light
+                                                  ? const AssetImage(
+                                                      "assets/images/yagisolasiligisiyah.png")
+                                                  : const AssetImage(
+                                                      "assets/images/yagisolasiligibeyaz.png"),
+                                              width: 35,
+                                              fit: BoxFit.cover,
+                                            ),
+                                            Text(
+                                              "Yağış Olasılığı:",
+                                              style: GoogleFonts.oswald(
+                                                fontSize: 17,
+                                                fontWeight: FontWeight.w500,
+                                              ),
+                                            ),
+                                            Text(
+                                              "%${_userModel!.daily!.precipitationProbabilityMax![nextDayIndex2]}",
+                                              style: GoogleFonts.oswald(
+                                                fontSize: 17,
+                                                fontWeight: FontWeight.w500,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Image(
+                                              image: brightness ==
+                                                      Brightness.light
+                                                  ? const AssetImage(
+                                                      "assets/images/ruzgarhizisiyah.png")
+                                                  : const AssetImage(
+                                                      "assets/images/ruzgarhizibeyaz.png"),
+                                              width: 35,
+                                              fit: BoxFit.cover,
+                                            ),
+                                            Text(
+                                              "Maksimum Rüzgar Hızı:",
+                                              style: GoogleFonts.oswald(
+                                                fontSize: 17,
+                                                fontWeight: FontWeight.w500,
+                                              ),
+                                            ),
+                                            Text(
+                                              "${_userModel!.daily!.windspeed10MMax![nextDayIndex2]} km/sa",
+                                              style: GoogleFonts.oswald(
+                                                fontSize: 17,
+                                                fontWeight: FontWeight.w500,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Image(
+                                              image: brightness ==
+                                                      Brightness.light
+                                                  ? const AssetImage(
+                                                      "assets/images/ruzgaryonusiyah.png")
+                                                  : const AssetImage(
+                                                      "assets/images/ruzgaryonubeyaz.png"),
+                                              width: 35,
+                                              fit: BoxFit.cover,
+                                            ),
+                                            Text(
+                                              "Hakim Rüzgar Yönü:",
+                                              style: GoogleFonts.oswald(
+                                                fontSize: 17,
+                                                fontWeight: FontWeight.w500,
+                                              ),
+                                            ),
+                                            Text(
+                                              "${_userModel!.daily!.winddirection10MDominant![nextDayIndex2]}°",
+                                              style: GoogleFonts.oswald(
+                                                fontSize: 17,
+                                                fontWeight: FontWeight.w500,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                        Padding(
+                                          padding:
+                                              const EdgeInsets.only(top: 8.0),
+                                          child: ExpandableButton(
+                                            child: const Icon(
+                                                CupertinoIcons.chevron_up),
+                                          ),
+                                        ),
+                                      ],
                                     ),
                                   ),
                                 ],
@@ -1103,300 +1159,317 @@ class _DailyPartClassState extends State<DailyPartClass> {
                           ],
                         ),
                       ),
-                    ],
-                  ),
-                ),
-              ),
-              SizedBox(
-                  height: 10,
-                  child: Padding(
-                    padding: const EdgeInsets.only(top: 7.0),
-                    child: Divider(
-                        thickness: 1.5,
-                        color: brightness == Brightness.light
-                            ? Colors.black.withOpacity(0.4)
-                            : Colors.white.withOpacity(0.5)),
-                  )),
-              Padding(
-                padding: const EdgeInsets.only(left: 8.0, right: 8.0),
-                child: ExpandableNotifier(
-                  child: Column(
-                    children: [
-                      Expandable(
-                        collapsed: ExpandableButton(
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              const SizedBox(width: 5),
-                              Expanded(
-                                child: Text(
-                                  nextDay3,
-                                  style: GoogleFonts.oswald(
-                                    color:
-                                        Theme.of(context).colorScheme.onSurface,
-                                    fontWeight: FontWeight.w300,
-                                    fontSize: 30,
-                                  ),
-                                ),
-                              ),
-                              Image.asset(weatherGifMap[
-                                  _userModel!.currentWeather!.weathercode]!),
-                              Expanded(
-                                child: Text(
-                                  "${_userModel!.daily!.temperature2MMin![nextDayIndex3].round()}°C",
-                                  textAlign: TextAlign.end,
-                                  style: GoogleFonts.oswald(
-                                    color:
-                                        Theme.of(context).colorScheme.onSurface,
-                                    fontWeight: FontWeight.w300,
-                                    fontSize: 30,
-                                  ),
-                                ),
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.only(
-                                    right: 12, left: 12.0),
-                                child: Container(
-                                  width: 80,
-                                  height: 5,
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(5),
-                                    gradient: const LinearGradient(colors: [
-                                      Color.fromARGB(255, 178, 254, 250),
-                                      Color.fromARGB(255, 245, 175, 25),
-                                      Color.fromARGB(255, 241, 39, 17)
-                                    ]),
-                                  ),
-                                ),
-                              ),
-                              Text(
-                                "${_userModel!.daily!.temperature2MMax![nextDayIndex3].round()}°C",
-                                textAlign: TextAlign.end,
-                                style: GoogleFonts.oswald(
-                                  color:
-                                      Theme.of(context).colorScheme.onSurface,
-                                  fontWeight: FontWeight.w300,
-                                  fontSize: 30,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        expanded: Column(
+                    ),
+                    SizedBox(
+                        height: 10,
+                        child: Padding(
+                          padding: const EdgeInsets.only(top: 7.0),
+                          child: Divider(
+                              thickness: 1.5,
+                              color: brightness == Brightness.light
+                                  ? Colors.black.withOpacity(0.4)
+                                  : Colors.white.withOpacity(0.5)),
+                        )),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 8.0, right: 8.0),
+                      child: ExpandableNotifier(
+                        child: Column(
                           children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                const SizedBox(width: 5),
-                                Expanded(
-                                  child: Text(
-                                    nextDay3,
-                                    style: GoogleFonts.oswald(
-                                      color: Theme.of(context)
-                                          .colorScheme
-                                          .onSurface,
-                                      fontWeight: FontWeight.w300,
-                                      fontSize: 30,
+                            Expandable(
+                              collapsed: ExpandableButton(
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    const SizedBox(width: 5),
+                                    Expanded(
+                                      child: Text(
+                                        nextDay3,
+                                        style: GoogleFonts.oswald(
+                                          color: Theme.of(context)
+                                              .colorScheme
+                                              .onSurface,
+                                          fontWeight: FontWeight.w300,
+                                          fontSize: 30,
+                                        ),
+                                      ),
                                     ),
-                                  ),
-                                ),
-                                Image.asset(weatherGifMap[
-                                    _userModel!.currentWeather!.weathercode]!),
-                                Expanded(
-                                  child: Text(
-                                    "${_userModel!.daily!.temperature2MMin![nextDayIndex3].round()}°C",
-                                    textAlign: TextAlign.end,
-                                    style: GoogleFonts.oswald(
-                                      color: Theme.of(context)
-                                          .colorScheme
-                                          .onSurface,
-                                      fontWeight: FontWeight.w300,
-                                      fontSize: 30,
+                                    Image.asset(weatherGifMap[_userModel!
+                                        .currentWeather!.weathercode]!),
+                                    Expanded(
+                                      child: Text(
+                                        "${_userModel!.daily!.temperature2MMin![nextDayIndex3].round()}°C",
+                                        textAlign: TextAlign.end,
+                                        style: GoogleFonts.oswald(
+                                          color: Theme.of(context)
+                                              .colorScheme
+                                              .onSurface,
+                                          fontWeight: FontWeight.w300,
+                                          fontSize: 30,
+                                        ),
+                                      ),
                                     ),
-                                  ),
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.only(
-                                      right: 12, left: 12.0),
-                                  child: Container(
-                                    width: 80,
-                                    height: 5,
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(5),
-                                      gradient: const LinearGradient(colors: [
-                                        Color.fromARGB(255, 178, 254, 250),
-                                        Color.fromARGB(255, 245, 175, 25),
-                                        Color.fromARGB(255, 241, 39, 17)
-                                      ]),
+                                    Padding(
+                                      padding: const EdgeInsets.only(
+                                          right: 12, left: 12.0),
+                                      child: Container(
+                                        width: 80,
+                                        height: 5,
+                                        decoration: BoxDecoration(
+                                          borderRadius:
+                                              BorderRadius.circular(5),
+                                          gradient:
+                                              const LinearGradient(colors: [
+                                            Color.fromARGB(255, 178, 254, 250),
+                                            Color.fromARGB(255, 245, 175, 25),
+                                            Color.fromARGB(255, 241, 39, 17)
+                                          ]),
+                                        ),
+                                      ),
                                     ),
-                                  ),
+                                    Text(
+                                      "${_userModel!.daily!.temperature2MMax![nextDayIndex3].round()}°C",
+                                      textAlign: TextAlign.end,
+                                      style: GoogleFonts.oswald(
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .onSurface,
+                                        fontWeight: FontWeight.w300,
+                                        fontSize: 30,
+                                      ),
+                                    ),
+                                  ],
                                 ),
-                                Text(
-                                  "${_userModel!.daily!.temperature2MMax![nextDayIndex3].round()}°C",
-                                  textAlign: TextAlign.end,
-                                  style: GoogleFonts.oswald(
-                                    color:
-                                        Theme.of(context).colorScheme.onSurface,
-                                    fontWeight: FontWeight.w300,
-                                    fontSize: 30,
-                                  ),
-                                ),
-                              ],
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Column(
+                              ),
+                              expanded: Column(
                                 children: [
                                   Row(
                                     mainAxisAlignment:
                                         MainAxisAlignment.spaceBetween,
                                     children: [
-                                      Image(
-                                        image: brightness == Brightness.light
-                                            ? const AssetImage(
-                                                "assets/images/maxsicakliksiyah.png")
-                                            : const AssetImage(
-                                                "assets/images/maxsicaklikbeyaz.png"),
-                                        width: 35,
-                                        fit: BoxFit.cover,
+                                      const SizedBox(width: 5),
+                                      Expanded(
+                                        child: Text(
+                                          nextDay3,
+                                          style: GoogleFonts.oswald(
+                                            color: Theme.of(context)
+                                                .colorScheme
+                                                .onSurface,
+                                            fontWeight: FontWeight.w300,
+                                            fontSize: 30,
+                                          ),
+                                        ),
                                       ),
-                                      Text(
-                                        "Maksimum Sıcaklık:",
-                                        style: GoogleFonts.oswald(
-                                          fontSize: 17,
-                                          fontWeight: FontWeight.w500,
+                                      Image.asset(weatherGifMap[_userModel!
+                                          .currentWeather!.weathercode]!),
+                                      Expanded(
+                                        child: Text(
+                                          "${_userModel!.daily!.temperature2MMin![nextDayIndex3].round()}°C",
+                                          textAlign: TextAlign.end,
+                                          style: GoogleFonts.oswald(
+                                            color: Theme.of(context)
+                                                .colorScheme
+                                                .onSurface,
+                                            fontWeight: FontWeight.w300,
+                                            fontSize: 30,
+                                          ),
+                                        ),
+                                      ),
+                                      Padding(
+                                        padding: const EdgeInsets.only(
+                                            right: 12, left: 12.0),
+                                        child: Container(
+                                          width: 80,
+                                          height: 5,
+                                          decoration: BoxDecoration(
+                                            borderRadius:
+                                                BorderRadius.circular(5),
+                                            gradient:
+                                                const LinearGradient(colors: [
+                                              Color.fromARGB(
+                                                  255, 178, 254, 250),
+                                              Color.fromARGB(255, 245, 175, 25),
+                                              Color.fromARGB(255, 241, 39, 17)
+                                            ]),
+                                          ),
                                         ),
                                       ),
                                       Text(
                                         "${_userModel!.daily!.temperature2MMax![nextDayIndex3].round()}°C",
+                                        textAlign: TextAlign.end,
                                         style: GoogleFonts.oswald(
-                                          fontSize: 17,
-                                          fontWeight: FontWeight.w500,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Image(
-                                        image: brightness == Brightness.light
-                                            ? const AssetImage(
-                                                "assets/images/minsicakliksiyah.png")
-                                            : const AssetImage(
-                                                "assets/images/minsicaklikbeyaz.png"),
-                                        width: 35,
-                                        fit: BoxFit.cover,
-                                      ),
-                                      Text(
-                                        "Minimum Sıcaklık:",
-                                        style: GoogleFonts.oswald(
-                                          fontSize: 17,
-                                          fontWeight: FontWeight.w500,
-                                        ),
-                                      ),
-                                      Text(
-                                        "${_userModel!.daily!.temperature2MMin![nextDayIndex3].round()}°C",
-                                        style: GoogleFonts.oswald(
-                                          fontSize: 17,
-                                          fontWeight: FontWeight.w500,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Image(
-                                        image: brightness == Brightness.light
-                                            ? const AssetImage(
-                                                "assets/images/yagisolasiligisiyah.png")
-                                            : const AssetImage(
-                                                "assets/images/yagisolasiligibeyaz.png"),
-                                        width: 35,
-                                        fit: BoxFit.cover,
-                                      ),
-                                      Text(
-                                        "Yağış Olasılığı:",
-                                        style: GoogleFonts.oswald(
-                                          fontSize: 17,
-                                          fontWeight: FontWeight.w500,
-                                        ),
-                                      ),
-                                      Text(
-                                        "%${_userModel!.daily!.precipitationProbabilityMax![nextDayIndex3]}",
-                                        style: GoogleFonts.oswald(
-                                          fontSize: 17,
-                                          fontWeight: FontWeight.w500,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Image(
-                                        image: brightness == Brightness.light
-                                            ? const AssetImage(
-                                                "assets/images/ruzgarhizisiyah.png")
-                                            : const AssetImage(
-                                                "assets/images/ruzgarhizibeyaz.png"),
-                                        width: 35,
-                                        fit: BoxFit.cover,
-                                      ),
-                                      Text(
-                                        "Maksimum Rüzgar Hızı:",
-                                        style: GoogleFonts.oswald(
-                                          fontSize: 17,
-                                          fontWeight: FontWeight.w500,
-                                        ),
-                                      ),
-                                      Text(
-                                        "${_userModel!.daily!.windspeed10MMax![nextDayIndex3]} km/sa",
-                                        style: GoogleFonts.oswald(
-                                          fontSize: 17,
-                                          fontWeight: FontWeight.w500,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Image(
-                                        image: brightness == Brightness.light
-                                            ? const AssetImage(
-                                                "assets/images/ruzgaryonusiyah.png")
-                                            : const AssetImage(
-                                                "assets/images/ruzgaryonubeyaz.png"),
-                                        width: 35,
-                                        fit: BoxFit.cover,
-                                      ),
-                                      Text(
-                                        "Hakim Rüzgar Yönü:",
-                                        style: GoogleFonts.oswald(
-                                          fontSize: 17,
-                                          fontWeight: FontWeight.w500,
-                                        ),
-                                      ),
-                                      Text(
-                                        "${_userModel!.daily!.winddirection10MDominant![nextDayIndex3]}°",
-                                        style: GoogleFonts.oswald(
-                                          fontSize: 17,
-                                          fontWeight: FontWeight.w500,
+                                          color: Theme.of(context)
+                                              .colorScheme
+                                              .onSurface,
+                                          fontWeight: FontWeight.w300,
+                                          fontSize: 30,
                                         ),
                                       ),
                                     ],
                                   ),
                                   Padding(
-                                    padding: const EdgeInsets.only(top: 8.0),
-                                    child: ExpandableButton(
-                                      child:
-                                          const Icon(CupertinoIcons.chevron_up),
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Column(
+                                      children: [
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Image(
+                                              image: brightness ==
+                                                      Brightness.light
+                                                  ? const AssetImage(
+                                                      "assets/images/maxsicakliksiyah.png")
+                                                  : const AssetImage(
+                                                      "assets/images/maxsicaklikbeyaz.png"),
+                                              width: 35,
+                                              fit: BoxFit.cover,
+                                            ),
+                                            Text(
+                                              "Maksimum Sıcaklık:",
+                                              style: GoogleFonts.oswald(
+                                                fontSize: 17,
+                                                fontWeight: FontWeight.w500,
+                                              ),
+                                            ),
+                                            Text(
+                                              "${_userModel!.daily!.temperature2MMax![nextDayIndex3].round()}°C",
+                                              style: GoogleFonts.oswald(
+                                                fontSize: 17,
+                                                fontWeight: FontWeight.w500,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Image(
+                                              image: brightness ==
+                                                      Brightness.light
+                                                  ? const AssetImage(
+                                                      "assets/images/minsicakliksiyah.png")
+                                                  : const AssetImage(
+                                                      "assets/images/minsicaklikbeyaz.png"),
+                                              width: 35,
+                                              fit: BoxFit.cover,
+                                            ),
+                                            Text(
+                                              "Minimum Sıcaklık:",
+                                              style: GoogleFonts.oswald(
+                                                fontSize: 17,
+                                                fontWeight: FontWeight.w500,
+                                              ),
+                                            ),
+                                            Text(
+                                              "${_userModel!.daily!.temperature2MMin![nextDayIndex3].round()}°C",
+                                              style: GoogleFonts.oswald(
+                                                fontSize: 17,
+                                                fontWeight: FontWeight.w500,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Image(
+                                              image: brightness ==
+                                                      Brightness.light
+                                                  ? const AssetImage(
+                                                      "assets/images/yagisolasiligisiyah.png")
+                                                  : const AssetImage(
+                                                      "assets/images/yagisolasiligibeyaz.png"),
+                                              width: 35,
+                                              fit: BoxFit.cover,
+                                            ),
+                                            Text(
+                                              "Yağış Olasılığı:",
+                                              style: GoogleFonts.oswald(
+                                                fontSize: 17,
+                                                fontWeight: FontWeight.w500,
+                                              ),
+                                            ),
+                                            Text(
+                                              "%${_userModel!.daily!.precipitationProbabilityMax![nextDayIndex3]}",
+                                              style: GoogleFonts.oswald(
+                                                fontSize: 17,
+                                                fontWeight: FontWeight.w500,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Image(
+                                              image: brightness ==
+                                                      Brightness.light
+                                                  ? const AssetImage(
+                                                      "assets/images/ruzgarhizisiyah.png")
+                                                  : const AssetImage(
+                                                      "assets/images/ruzgarhizibeyaz.png"),
+                                              width: 35,
+                                              fit: BoxFit.cover,
+                                            ),
+                                            Text(
+                                              "Maksimum Rüzgar Hızı:",
+                                              style: GoogleFonts.oswald(
+                                                fontSize: 17,
+                                                fontWeight: FontWeight.w500,
+                                              ),
+                                            ),
+                                            Text(
+                                              "${_userModel!.daily!.windspeed10MMax![nextDayIndex3]} km/sa",
+                                              style: GoogleFonts.oswald(
+                                                fontSize: 17,
+                                                fontWeight: FontWeight.w500,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Image(
+                                              image: brightness ==
+                                                      Brightness.light
+                                                  ? const AssetImage(
+                                                      "assets/images/ruzgaryonusiyah.png")
+                                                  : const AssetImage(
+                                                      "assets/images/ruzgaryonubeyaz.png"),
+                                              width: 35,
+                                              fit: BoxFit.cover,
+                                            ),
+                                            Text(
+                                              "Hakim Rüzgar Yönü:",
+                                              style: GoogleFonts.oswald(
+                                                fontSize: 17,
+                                                fontWeight: FontWeight.w500,
+                                              ),
+                                            ),
+                                            Text(
+                                              "${_userModel!.daily!.winddirection10MDominant![nextDayIndex3]}°",
+                                              style: GoogleFonts.oswald(
+                                                fontSize: 17,
+                                                fontWeight: FontWeight.w500,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                        Padding(
+                                          padding:
+                                              const EdgeInsets.only(top: 8.0),
+                                          child: ExpandableButton(
+                                            child: const Icon(
+                                                CupertinoIcons.chevron_up),
+                                          ),
+                                        ),
+                                      ],
                                     ),
                                   ),
                                 ],
@@ -1405,300 +1478,317 @@ class _DailyPartClassState extends State<DailyPartClass> {
                           ],
                         ),
                       ),
-                    ],
-                  ),
-                ),
-              ),
-              SizedBox(
-                  height: 10,
-                  child: Padding(
-                    padding: const EdgeInsets.only(top: 7.0),
-                    child: Divider(
-                        thickness: 1.5,
-                        color: brightness == Brightness.light
-                            ? Colors.black.withOpacity(0.4)
-                            : Colors.white.withOpacity(0.5)),
-                  )),
-              Padding(
-                padding: const EdgeInsets.only(left: 8.0, right: 8.0),
-                child: ExpandableNotifier(
-                  child: Column(
-                    children: [
-                      Expandable(
-                        collapsed: ExpandableButton(
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              const SizedBox(width: 5),
-                              Expanded(
-                                child: Text(
-                                  nextDay4,
-                                  style: GoogleFonts.oswald(
-                                    color:
-                                        Theme.of(context).colorScheme.onSurface,
-                                    fontWeight: FontWeight.w300,
-                                    fontSize: 30,
-                                  ),
-                                ),
-                              ),
-                              Image.asset(weatherGifMap[
-                                  _userModel!.currentWeather!.weathercode]!),
-                              Expanded(
-                                child: Text(
-                                  "${_userModel!.daily!.temperature2MMin![nextDayIndex4].round()}°C",
-                                  textAlign: TextAlign.end,
-                                  style: GoogleFonts.oswald(
-                                    color:
-                                        Theme.of(context).colorScheme.onSurface,
-                                    fontWeight: FontWeight.w300,
-                                    fontSize: 30,
-                                  ),
-                                ),
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.only(
-                                    right: 12, left: 12.0),
-                                child: Container(
-                                  width: 80,
-                                  height: 5,
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(5),
-                                    gradient: const LinearGradient(colors: [
-                                      Color.fromARGB(255, 178, 254, 250),
-                                      Color.fromARGB(255, 245, 175, 25),
-                                      Color.fromARGB(255, 241, 39, 17)
-                                    ]),
-                                  ),
-                                ),
-                              ),
-                              Text(
-                                "${_userModel!.daily!.temperature2MMax![nextDayIndex4].round()}°C",
-                                textAlign: TextAlign.end,
-                                style: GoogleFonts.oswald(
-                                  color:
-                                      Theme.of(context).colorScheme.onSurface,
-                                  fontWeight: FontWeight.w300,
-                                  fontSize: 30,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        expanded: Column(
+                    ),
+                    SizedBox(
+                        height: 10,
+                        child: Padding(
+                          padding: const EdgeInsets.only(top: 7.0),
+                          child: Divider(
+                              thickness: 1.5,
+                              color: brightness == Brightness.light
+                                  ? Colors.black.withOpacity(0.4)
+                                  : Colors.white.withOpacity(0.5)),
+                        )),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 8.0, right: 8.0),
+                      child: ExpandableNotifier(
+                        child: Column(
                           children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                const SizedBox(width: 5),
-                                Expanded(
-                                  child: Text(
-                                    nextDay4,
-                                    style: GoogleFonts.oswald(
-                                      color: Theme.of(context)
-                                          .colorScheme
-                                          .onSurface,
-                                      fontWeight: FontWeight.w300,
-                                      fontSize: 30,
+                            Expandable(
+                              collapsed: ExpandableButton(
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    const SizedBox(width: 5),
+                                    Expanded(
+                                      child: Text(
+                                        nextDay4,
+                                        style: GoogleFonts.oswald(
+                                          color: Theme.of(context)
+                                              .colorScheme
+                                              .onSurface,
+                                          fontWeight: FontWeight.w300,
+                                          fontSize: 30,
+                                        ),
+                                      ),
                                     ),
-                                  ),
-                                ),
-                                Image.asset(weatherGifMap[
-                                    _userModel!.currentWeather!.weathercode]!),
-                                Expanded(
-                                  child: Text(
-                                    "${_userModel!.daily!.temperature2MMin![nextDayIndex4].round()}°C",
-                                    textAlign: TextAlign.end,
-                                    style: GoogleFonts.oswald(
-                                      color: Theme.of(context)
-                                          .colorScheme
-                                          .onSurface,
-                                      fontWeight: FontWeight.w300,
-                                      fontSize: 30,
+                                    Image.asset(weatherGifMap[_userModel!
+                                        .currentWeather!.weathercode]!),
+                                    Expanded(
+                                      child: Text(
+                                        "${_userModel!.daily!.temperature2MMin![nextDayIndex4].round()}°C",
+                                        textAlign: TextAlign.end,
+                                        style: GoogleFonts.oswald(
+                                          color: Theme.of(context)
+                                              .colorScheme
+                                              .onSurface,
+                                          fontWeight: FontWeight.w300,
+                                          fontSize: 30,
+                                        ),
+                                      ),
                                     ),
-                                  ),
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.only(
-                                      right: 12, left: 12.0),
-                                  child: Container(
-                                    width: 80,
-                                    height: 5,
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(5),
-                                      gradient: const LinearGradient(colors: [
-                                        Color.fromARGB(255, 178, 254, 250),
-                                        Color.fromARGB(255, 245, 175, 25),
-                                        Color.fromARGB(255, 241, 39, 17)
-                                      ]),
+                                    Padding(
+                                      padding: const EdgeInsets.only(
+                                          right: 12, left: 12.0),
+                                      child: Container(
+                                        width: 80,
+                                        height: 5,
+                                        decoration: BoxDecoration(
+                                          borderRadius:
+                                              BorderRadius.circular(5),
+                                          gradient:
+                                              const LinearGradient(colors: [
+                                            Color.fromARGB(255, 178, 254, 250),
+                                            Color.fromARGB(255, 245, 175, 25),
+                                            Color.fromARGB(255, 241, 39, 17)
+                                          ]),
+                                        ),
+                                      ),
                                     ),
-                                  ),
+                                    Text(
+                                      "${_userModel!.daily!.temperature2MMax![nextDayIndex4].round()}°C",
+                                      textAlign: TextAlign.end,
+                                      style: GoogleFonts.oswald(
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .onSurface,
+                                        fontWeight: FontWeight.w300,
+                                        fontSize: 30,
+                                      ),
+                                    ),
+                                  ],
                                 ),
-                                Text(
-                                  "${_userModel!.daily!.temperature2MMax![nextDayIndex4].round()}°C",
-                                  textAlign: TextAlign.end,
-                                  style: GoogleFonts.oswald(
-                                    color:
-                                        Theme.of(context).colorScheme.onSurface,
-                                    fontWeight: FontWeight.w300,
-                                    fontSize: 30,
-                                  ),
-                                ),
-                              ],
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Column(
+                              ),
+                              expanded: Column(
                                 children: [
                                   Row(
                                     mainAxisAlignment:
                                         MainAxisAlignment.spaceBetween,
                                     children: [
-                                      Image(
-                                        image: brightness == Brightness.light
-                                            ? const AssetImage(
-                                                "assets/images/maxsicakliksiyah.png")
-                                            : const AssetImage(
-                                                "assets/images/maxsicaklikbeyaz.png"),
-                                        width: 35,
-                                        fit: BoxFit.cover,
+                                      const SizedBox(width: 5),
+                                      Expanded(
+                                        child: Text(
+                                          nextDay4,
+                                          style: GoogleFonts.oswald(
+                                            color: Theme.of(context)
+                                                .colorScheme
+                                                .onSurface,
+                                            fontWeight: FontWeight.w300,
+                                            fontSize: 30,
+                                          ),
+                                        ),
                                       ),
-                                      Text(
-                                        "Maksimum Sıcaklık:",
-                                        style: GoogleFonts.oswald(
-                                          fontSize: 17,
-                                          fontWeight: FontWeight.w500,
+                                      Image.asset(weatherGifMap[_userModel!
+                                          .currentWeather!.weathercode]!),
+                                      Expanded(
+                                        child: Text(
+                                          "${_userModel!.daily!.temperature2MMin![nextDayIndex4].round()}°C",
+                                          textAlign: TextAlign.end,
+                                          style: GoogleFonts.oswald(
+                                            color: Theme.of(context)
+                                                .colorScheme
+                                                .onSurface,
+                                            fontWeight: FontWeight.w300,
+                                            fontSize: 30,
+                                          ),
+                                        ),
+                                      ),
+                                      Padding(
+                                        padding: const EdgeInsets.only(
+                                            right: 12, left: 12.0),
+                                        child: Container(
+                                          width: 80,
+                                          height: 5,
+                                          decoration: BoxDecoration(
+                                            borderRadius:
+                                                BorderRadius.circular(5),
+                                            gradient:
+                                                const LinearGradient(colors: [
+                                              Color.fromARGB(
+                                                  255, 178, 254, 250),
+                                              Color.fromARGB(255, 245, 175, 25),
+                                              Color.fromARGB(255, 241, 39, 17)
+                                            ]),
+                                          ),
                                         ),
                                       ),
                                       Text(
                                         "${_userModel!.daily!.temperature2MMax![nextDayIndex4].round()}°C",
+                                        textAlign: TextAlign.end,
                                         style: GoogleFonts.oswald(
-                                          fontSize: 17,
-                                          fontWeight: FontWeight.w500,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Image(
-                                        image: brightness == Brightness.light
-                                            ? const AssetImage(
-                                                "assets/images/minsicakliksiyah.png")
-                                            : const AssetImage(
-                                                "assets/images/minsicaklikbeyaz.png"),
-                                        width: 35,
-                                        fit: BoxFit.cover,
-                                      ),
-                                      Text(
-                                        "Minimum Sıcaklık:",
-                                        style: GoogleFonts.oswald(
-                                          fontSize: 17,
-                                          fontWeight: FontWeight.w500,
-                                        ),
-                                      ),
-                                      Text(
-                                        "${_userModel!.daily!.temperature2MMin![nextDayIndex4].round()}°C",
-                                        style: GoogleFonts.oswald(
-                                          fontSize: 17,
-                                          fontWeight: FontWeight.w500,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Image(
-                                        image: brightness == Brightness.light
-                                            ? const AssetImage(
-                                                "assets/images/yagisolasiligisiyah.png")
-                                            : const AssetImage(
-                                                "assets/images/yagisolasiligibeyaz.png"),
-                                        width: 35,
-                                        fit: BoxFit.cover,
-                                      ),
-                                      Text(
-                                        "Yağış Olasılığı:",
-                                        style: GoogleFonts.oswald(
-                                          fontSize: 17,
-                                          fontWeight: FontWeight.w500,
-                                        ),
-                                      ),
-                                      Text(
-                                        "%${_userModel!.daily!.precipitationProbabilityMax![nextDayIndex4]}",
-                                        style: GoogleFonts.oswald(
-                                          fontSize: 17,
-                                          fontWeight: FontWeight.w500,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Image(
-                                        image: brightness == Brightness.light
-                                            ? const AssetImage(
-                                                "assets/images/ruzgarhizisiyah.png")
-                                            : const AssetImage(
-                                                "assets/images/ruzgarhizibeyaz.png"),
-                                        width: 35,
-                                        fit: BoxFit.cover,
-                                      ),
-                                      Text(
-                                        "Maksimum Rüzgar Hızı:",
-                                        style: GoogleFonts.oswald(
-                                          fontSize: 17,
-                                          fontWeight: FontWeight.w500,
-                                        ),
-                                      ),
-                                      Text(
-                                        "${_userModel!.daily!.windspeed10MMax![nextDayIndex4]} km/sa",
-                                        style: GoogleFonts.oswald(
-                                          fontSize: 17,
-                                          fontWeight: FontWeight.w500,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Image(
-                                        image: brightness == Brightness.light
-                                            ? const AssetImage(
-                                                "assets/images/ruzgaryonusiyah.png")
-                                            : const AssetImage(
-                                                "assets/images/ruzgaryonubeyaz.png"),
-                                        width: 35,
-                                        fit: BoxFit.cover,
-                                      ),
-                                      Text(
-                                        "Hakim Rüzgar Yönü:",
-                                        style: GoogleFonts.oswald(
-                                          fontSize: 17,
-                                          fontWeight: FontWeight.w500,
-                                        ),
-                                      ),
-                                      Text(
-                                        "${_userModel!.daily!.winddirection10MDominant![nextDayIndex4]}°",
-                                        style: GoogleFonts.oswald(
-                                          fontSize: 17,
-                                          fontWeight: FontWeight.w500,
+                                          color: Theme.of(context)
+                                              .colorScheme
+                                              .onSurface,
+                                          fontWeight: FontWeight.w300,
+                                          fontSize: 30,
                                         ),
                                       ),
                                     ],
                                   ),
                                   Padding(
-                                    padding: const EdgeInsets.only(top: 8.0),
-                                    child: ExpandableButton(
-                                      child:
-                                          const Icon(CupertinoIcons.chevron_up),
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Column(
+                                      children: [
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Image(
+                                              image: brightness ==
+                                                      Brightness.light
+                                                  ? const AssetImage(
+                                                      "assets/images/maxsicakliksiyah.png")
+                                                  : const AssetImage(
+                                                      "assets/images/maxsicaklikbeyaz.png"),
+                                              width: 35,
+                                              fit: BoxFit.cover,
+                                            ),
+                                            Text(
+                                              "Maksimum Sıcaklık:",
+                                              style: GoogleFonts.oswald(
+                                                fontSize: 17,
+                                                fontWeight: FontWeight.w500,
+                                              ),
+                                            ),
+                                            Text(
+                                              "${_userModel!.daily!.temperature2MMax![nextDayIndex4].round()}°C",
+                                              style: GoogleFonts.oswald(
+                                                fontSize: 17,
+                                                fontWeight: FontWeight.w500,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Image(
+                                              image: brightness ==
+                                                      Brightness.light
+                                                  ? const AssetImage(
+                                                      "assets/images/minsicakliksiyah.png")
+                                                  : const AssetImage(
+                                                      "assets/images/minsicaklikbeyaz.png"),
+                                              width: 35,
+                                              fit: BoxFit.cover,
+                                            ),
+                                            Text(
+                                              "Minimum Sıcaklık:",
+                                              style: GoogleFonts.oswald(
+                                                fontSize: 17,
+                                                fontWeight: FontWeight.w500,
+                                              ),
+                                            ),
+                                            Text(
+                                              "${_userModel!.daily!.temperature2MMin![nextDayIndex4].round()}°C",
+                                              style: GoogleFonts.oswald(
+                                                fontSize: 17,
+                                                fontWeight: FontWeight.w500,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Image(
+                                              image: brightness ==
+                                                      Brightness.light
+                                                  ? const AssetImage(
+                                                      "assets/images/yagisolasiligisiyah.png")
+                                                  : const AssetImage(
+                                                      "assets/images/yagisolasiligibeyaz.png"),
+                                              width: 35,
+                                              fit: BoxFit.cover,
+                                            ),
+                                            Text(
+                                              "Yağış Olasılığı:",
+                                              style: GoogleFonts.oswald(
+                                                fontSize: 17,
+                                                fontWeight: FontWeight.w500,
+                                              ),
+                                            ),
+                                            Text(
+                                              "%${_userModel!.daily!.precipitationProbabilityMax![nextDayIndex4]}",
+                                              style: GoogleFonts.oswald(
+                                                fontSize: 17,
+                                                fontWeight: FontWeight.w500,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Image(
+                                              image: brightness ==
+                                                      Brightness.light
+                                                  ? const AssetImage(
+                                                      "assets/images/ruzgarhizisiyah.png")
+                                                  : const AssetImage(
+                                                      "assets/images/ruzgarhizibeyaz.png"),
+                                              width: 35,
+                                              fit: BoxFit.cover,
+                                            ),
+                                            Text(
+                                              "Maksimum Rüzgar Hızı:",
+                                              style: GoogleFonts.oswald(
+                                                fontSize: 17,
+                                                fontWeight: FontWeight.w500,
+                                              ),
+                                            ),
+                                            Text(
+                                              "${_userModel!.daily!.windspeed10MMax![nextDayIndex4]} km/sa",
+                                              style: GoogleFonts.oswald(
+                                                fontSize: 17,
+                                                fontWeight: FontWeight.w500,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Image(
+                                              image: brightness ==
+                                                      Brightness.light
+                                                  ? const AssetImage(
+                                                      "assets/images/ruzgaryonusiyah.png")
+                                                  : const AssetImage(
+                                                      "assets/images/ruzgaryonubeyaz.png"),
+                                              width: 35,
+                                              fit: BoxFit.cover,
+                                            ),
+                                            Text(
+                                              "Hakim Rüzgar Yönü:",
+                                              style: GoogleFonts.oswald(
+                                                fontSize: 17,
+                                                fontWeight: FontWeight.w500,
+                                              ),
+                                            ),
+                                            Text(
+                                              "${_userModel!.daily!.winddirection10MDominant![nextDayIndex4]}°",
+                                              style: GoogleFonts.oswald(
+                                                fontSize: 17,
+                                                fontWeight: FontWeight.w500,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                        Padding(
+                                          padding:
+                                              const EdgeInsets.only(top: 8.0),
+                                          child: ExpandableButton(
+                                            child: const Icon(
+                                                CupertinoIcons.chevron_up),
+                                          ),
+                                        ),
+                                      ],
                                     ),
                                   ),
                                 ],
@@ -1707,300 +1797,317 @@ class _DailyPartClassState extends State<DailyPartClass> {
                           ],
                         ),
                       ),
-                    ],
-                  ),
-                ),
-              ),
-              SizedBox(
-                  height: 10,
-                  child: Padding(
-                    padding: const EdgeInsets.only(top: 7.0),
-                    child: Divider(
-                        thickness: 1.5,
-                        color: brightness == Brightness.light
-                            ? Colors.black.withOpacity(0.4)
-                            : Colors.white.withOpacity(0.5)),
-                  )),
-              Padding(
-                padding: const EdgeInsets.only(left: 8.0, right: 8.0),
-                child: ExpandableNotifier(
-                  child: Column(
-                    children: [
-                      Expandable(
-                        collapsed: ExpandableButton(
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              const SizedBox(width: 5),
-                              Expanded(
-                                child: Text(
-                                  nextDay5,
-                                  style: GoogleFonts.oswald(
-                                    color:
-                                        Theme.of(context).colorScheme.onSurface,
-                                    fontWeight: FontWeight.w300,
-                                    fontSize: 30,
-                                  ),
-                                ),
-                              ),
-                              Image.asset(weatherGifMap[
-                                  _userModel!.currentWeather!.weathercode]!),
-                              Expanded(
-                                child: Text(
-                                  "${_userModel!.daily!.temperature2MMin![nextDayIndex5].round()}°C",
-                                  textAlign: TextAlign.end,
-                                  style: GoogleFonts.oswald(
-                                    color:
-                                        Theme.of(context).colorScheme.onSurface,
-                                    fontWeight: FontWeight.w300,
-                                    fontSize: 30,
-                                  ),
-                                ),
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.only(
-                                    right: 12, left: 12.0),
-                                child: Container(
-                                  width: 80,
-                                  height: 5,
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(5),
-                                    gradient: const LinearGradient(colors: [
-                                      Color.fromARGB(255, 178, 254, 250),
-                                      Color.fromARGB(255, 245, 175, 25),
-                                      Color.fromARGB(255, 241, 39, 17)
-                                    ]),
-                                  ),
-                                ),
-                              ),
-                              Text(
-                                "${_userModel!.daily!.temperature2MMax![nextDayIndex5].round()}°C",
-                                textAlign: TextAlign.end,
-                                style: GoogleFonts.oswald(
-                                  color:
-                                      Theme.of(context).colorScheme.onSurface,
-                                  fontWeight: FontWeight.w300,
-                                  fontSize: 30,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        expanded: Column(
+                    ),
+                    SizedBox(
+                        height: 10,
+                        child: Padding(
+                          padding: const EdgeInsets.only(top: 7.0),
+                          child: Divider(
+                              thickness: 1.5,
+                              color: brightness == Brightness.light
+                                  ? Colors.black.withOpacity(0.4)
+                                  : Colors.white.withOpacity(0.5)),
+                        )),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 8.0, right: 8.0),
+                      child: ExpandableNotifier(
+                        child: Column(
                           children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                const SizedBox(width: 5),
-                                Expanded(
-                                  child: Text(
-                                    nextDay5,
-                                    style: GoogleFonts.oswald(
-                                      color: Theme.of(context)
-                                          .colorScheme
-                                          .onSurface,
-                                      fontWeight: FontWeight.w300,
-                                      fontSize: 30,
+                            Expandable(
+                              collapsed: ExpandableButton(
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    const SizedBox(width: 5),
+                                    Expanded(
+                                      child: Text(
+                                        nextDay5,
+                                        style: GoogleFonts.oswald(
+                                          color: Theme.of(context)
+                                              .colorScheme
+                                              .onSurface,
+                                          fontWeight: FontWeight.w300,
+                                          fontSize: 30,
+                                        ),
+                                      ),
                                     ),
-                                  ),
-                                ),
-                                Image.asset(weatherGifMap[
-                                    _userModel!.currentWeather!.weathercode]!),
-                                Expanded(
-                                  child: Text(
-                                    "${_userModel!.daily!.temperature2MMin![nextDayIndex5].round()}°C",
-                                    textAlign: TextAlign.end,
-                                    style: GoogleFonts.oswald(
-                                      color: Theme.of(context)
-                                          .colorScheme
-                                          .onSurface,
-                                      fontWeight: FontWeight.w300,
-                                      fontSize: 30,
+                                    Image.asset(weatherGifMap[_userModel!
+                                        .currentWeather!.weathercode]!),
+                                    Expanded(
+                                      child: Text(
+                                        "${_userModel!.daily!.temperature2MMin![nextDayIndex5].round()}°C",
+                                        textAlign: TextAlign.end,
+                                        style: GoogleFonts.oswald(
+                                          color: Theme.of(context)
+                                              .colorScheme
+                                              .onSurface,
+                                          fontWeight: FontWeight.w300,
+                                          fontSize: 30,
+                                        ),
+                                      ),
                                     ),
-                                  ),
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.only(
-                                      right: 12, left: 12.0),
-                                  child: Container(
-                                    width: 80,
-                                    height: 5,
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(5),
-                                      gradient: const LinearGradient(colors: [
-                                        Color.fromARGB(255, 178, 254, 250),
-                                        Color.fromARGB(255, 245, 175, 25),
-                                        Color.fromARGB(255, 241, 39, 17)
-                                      ]),
+                                    Padding(
+                                      padding: const EdgeInsets.only(
+                                          right: 12, left: 12.0),
+                                      child: Container(
+                                        width: 80,
+                                        height: 5,
+                                        decoration: BoxDecoration(
+                                          borderRadius:
+                                              BorderRadius.circular(5),
+                                          gradient:
+                                              const LinearGradient(colors: [
+                                            Color.fromARGB(255, 178, 254, 250),
+                                            Color.fromARGB(255, 245, 175, 25),
+                                            Color.fromARGB(255, 241, 39, 17)
+                                          ]),
+                                        ),
+                                      ),
                                     ),
-                                  ),
+                                    Text(
+                                      "${_userModel!.daily!.temperature2MMax![nextDayIndex5].round()}°C",
+                                      textAlign: TextAlign.end,
+                                      style: GoogleFonts.oswald(
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .onSurface,
+                                        fontWeight: FontWeight.w300,
+                                        fontSize: 30,
+                                      ),
+                                    ),
+                                  ],
                                 ),
-                                Text(
-                                  "${_userModel!.daily!.temperature2MMax![nextDayIndex5].round()}°C",
-                                  textAlign: TextAlign.end,
-                                  style: GoogleFonts.oswald(
-                                    color:
-                                        Theme.of(context).colorScheme.onSurface,
-                                    fontWeight: FontWeight.w300,
-                                    fontSize: 30,
-                                  ),
-                                ),
-                              ],
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Column(
+                              ),
+                              expanded: Column(
                                 children: [
                                   Row(
                                     mainAxisAlignment:
                                         MainAxisAlignment.spaceBetween,
                                     children: [
-                                      Image(
-                                        image: brightness == Brightness.light
-                                            ? const AssetImage(
-                                                "assets/images/maxsicakliksiyah.png")
-                                            : const AssetImage(
-                                                "assets/images/maxsicaklikbeyaz.png"),
-                                        width: 35,
-                                        fit: BoxFit.cover,
+                                      const SizedBox(width: 5),
+                                      Expanded(
+                                        child: Text(
+                                          nextDay5,
+                                          style: GoogleFonts.oswald(
+                                            color: Theme.of(context)
+                                                .colorScheme
+                                                .onSurface,
+                                            fontWeight: FontWeight.w300,
+                                            fontSize: 30,
+                                          ),
+                                        ),
                                       ),
-                                      Text(
-                                        "Maksimum Sıcaklık:",
-                                        style: GoogleFonts.oswald(
-                                          fontSize: 17,
-                                          fontWeight: FontWeight.w500,
+                                      Image.asset(weatherGifMap[_userModel!
+                                          .currentWeather!.weathercode]!),
+                                      Expanded(
+                                        child: Text(
+                                          "${_userModel!.daily!.temperature2MMin![nextDayIndex5].round()}°C",
+                                          textAlign: TextAlign.end,
+                                          style: GoogleFonts.oswald(
+                                            color: Theme.of(context)
+                                                .colorScheme
+                                                .onSurface,
+                                            fontWeight: FontWeight.w300,
+                                            fontSize: 30,
+                                          ),
+                                        ),
+                                      ),
+                                      Padding(
+                                        padding: const EdgeInsets.only(
+                                            right: 12, left: 12.0),
+                                        child: Container(
+                                          width: 80,
+                                          height: 5,
+                                          decoration: BoxDecoration(
+                                            borderRadius:
+                                                BorderRadius.circular(5),
+                                            gradient:
+                                                const LinearGradient(colors: [
+                                              Color.fromARGB(
+                                                  255, 178, 254, 250),
+                                              Color.fromARGB(255, 245, 175, 25),
+                                              Color.fromARGB(255, 241, 39, 17)
+                                            ]),
+                                          ),
                                         ),
                                       ),
                                       Text(
                                         "${_userModel!.daily!.temperature2MMax![nextDayIndex5].round()}°C",
+                                        textAlign: TextAlign.end,
                                         style: GoogleFonts.oswald(
-                                          fontSize: 17,
-                                          fontWeight: FontWeight.w500,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Image(
-                                        image: brightness == Brightness.light
-                                            ? const AssetImage(
-                                                "assets/images/minsicakliksiyah.png")
-                                            : const AssetImage(
-                                                "assets/images/minsicaklikbeyaz.png"),
-                                        width: 35,
-                                        fit: BoxFit.cover,
-                                      ),
-                                      Text(
-                                        "Minimum Sıcaklık:",
-                                        style: GoogleFonts.oswald(
-                                          fontSize: 17,
-                                          fontWeight: FontWeight.w500,
-                                        ),
-                                      ),
-                                      Text(
-                                        "${_userModel!.daily!.temperature2MMin![nextDayIndex5].round()}°C",
-                                        style: GoogleFonts.oswald(
-                                          fontSize: 17,
-                                          fontWeight: FontWeight.w500,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Image(
-                                        image: brightness == Brightness.light
-                                            ? const AssetImage(
-                                                "assets/images/yagisolasiligisiyah.png")
-                                            : const AssetImage(
-                                                "assets/images/yagisolasiligibeyaz.png"),
-                                        width: 35,
-                                        fit: BoxFit.cover,
-                                      ),
-                                      Text(
-                                        "Yağış Olasılığı:",
-                                        style: GoogleFonts.oswald(
-                                          fontSize: 17,
-                                          fontWeight: FontWeight.w500,
-                                        ),
-                                      ),
-                                      Text(
-                                        "%${_userModel!.daily!.precipitationProbabilityMax![nextDayIndex5]}",
-                                        style: GoogleFonts.oswald(
-                                          fontSize: 17,
-                                          fontWeight: FontWeight.w500,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Image(
-                                        image: brightness == Brightness.light
-                                            ? const AssetImage(
-                                                "assets/images/ruzgarhizisiyah.png")
-                                            : const AssetImage(
-                                                "assets/images/ruzgarhizibeyaz.png"),
-                                        width: 35,
-                                        fit: BoxFit.cover,
-                                      ),
-                                      Text(
-                                        "Maksimum Rüzgar Hızı:",
-                                        style: GoogleFonts.oswald(
-                                          fontSize: 17,
-                                          fontWeight: FontWeight.w500,
-                                        ),
-                                      ),
-                                      Text(
-                                        "${_userModel!.daily!.windspeed10MMax![nextDayIndex5]} km/sa",
-                                        style: GoogleFonts.oswald(
-                                          fontSize: 17,
-                                          fontWeight: FontWeight.w500,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Image(
-                                        image: brightness == Brightness.light
-                                            ? const AssetImage(
-                                                "assets/images/ruzgaryonusiyah.png")
-                                            : const AssetImage(
-                                                "assets/images/ruzgaryonubeyaz.png"),
-                                        width: 35,
-                                        fit: BoxFit.cover,
-                                      ),
-                                      Text(
-                                        "Hakim Rüzgar Yönü:",
-                                        style: GoogleFonts.oswald(
-                                          fontSize: 17,
-                                          fontWeight: FontWeight.w500,
-                                        ),
-                                      ),
-                                      Text(
-                                        "${_userModel!.daily!.winddirection10MDominant![nextDayIndex5]}°",
-                                        style: GoogleFonts.oswald(
-                                          fontSize: 17,
-                                          fontWeight: FontWeight.w500,
+                                          color: Theme.of(context)
+                                              .colorScheme
+                                              .onSurface,
+                                          fontWeight: FontWeight.w300,
+                                          fontSize: 30,
                                         ),
                                       ),
                                     ],
                                   ),
                                   Padding(
-                                    padding: const EdgeInsets.only(top: 8.0),
-                                    child: ExpandableButton(
-                                      child:
-                                          const Icon(CupertinoIcons.chevron_up),
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Column(
+                                      children: [
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Image(
+                                              image: brightness ==
+                                                      Brightness.light
+                                                  ? const AssetImage(
+                                                      "assets/images/maxsicakliksiyah.png")
+                                                  : const AssetImage(
+                                                      "assets/images/maxsicaklikbeyaz.png"),
+                                              width: 35,
+                                              fit: BoxFit.cover,
+                                            ),
+                                            Text(
+                                              "Maksimum Sıcaklık:",
+                                              style: GoogleFonts.oswald(
+                                                fontSize: 17,
+                                                fontWeight: FontWeight.w500,
+                                              ),
+                                            ),
+                                            Text(
+                                              "${_userModel!.daily!.temperature2MMax![nextDayIndex5].round()}°C",
+                                              style: GoogleFonts.oswald(
+                                                fontSize: 17,
+                                                fontWeight: FontWeight.w500,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Image(
+                                              image: brightness ==
+                                                      Brightness.light
+                                                  ? const AssetImage(
+                                                      "assets/images/minsicakliksiyah.png")
+                                                  : const AssetImage(
+                                                      "assets/images/minsicaklikbeyaz.png"),
+                                              width: 35,
+                                              fit: BoxFit.cover,
+                                            ),
+                                            Text(
+                                              "Minimum Sıcaklık:",
+                                              style: GoogleFonts.oswald(
+                                                fontSize: 17,
+                                                fontWeight: FontWeight.w500,
+                                              ),
+                                            ),
+                                            Text(
+                                              "${_userModel!.daily!.temperature2MMin![nextDayIndex5].round()}°C",
+                                              style: GoogleFonts.oswald(
+                                                fontSize: 17,
+                                                fontWeight: FontWeight.w500,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Image(
+                                              image: brightness ==
+                                                      Brightness.light
+                                                  ? const AssetImage(
+                                                      "assets/images/yagisolasiligisiyah.png")
+                                                  : const AssetImage(
+                                                      "assets/images/yagisolasiligibeyaz.png"),
+                                              width: 35,
+                                              fit: BoxFit.cover,
+                                            ),
+                                            Text(
+                                              "Yağış Olasılığı:",
+                                              style: GoogleFonts.oswald(
+                                                fontSize: 17,
+                                                fontWeight: FontWeight.w500,
+                                              ),
+                                            ),
+                                            Text(
+                                              "%${_userModel!.daily!.precipitationProbabilityMax![nextDayIndex5]}",
+                                              style: GoogleFonts.oswald(
+                                                fontSize: 17,
+                                                fontWeight: FontWeight.w500,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Image(
+                                              image: brightness ==
+                                                      Brightness.light
+                                                  ? const AssetImage(
+                                                      "assets/images/ruzgarhizisiyah.png")
+                                                  : const AssetImage(
+                                                      "assets/images/ruzgarhizibeyaz.png"),
+                                              width: 35,
+                                              fit: BoxFit.cover,
+                                            ),
+                                            Text(
+                                              "Maksimum Rüzgar Hızı:",
+                                              style: GoogleFonts.oswald(
+                                                fontSize: 17,
+                                                fontWeight: FontWeight.w500,
+                                              ),
+                                            ),
+                                            Text(
+                                              "${_userModel!.daily!.windspeed10MMax![nextDayIndex5]} km/sa",
+                                              style: GoogleFonts.oswald(
+                                                fontSize: 17,
+                                                fontWeight: FontWeight.w500,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Image(
+                                              image: brightness ==
+                                                      Brightness.light
+                                                  ? const AssetImage(
+                                                      "assets/images/ruzgaryonusiyah.png")
+                                                  : const AssetImage(
+                                                      "assets/images/ruzgaryonubeyaz.png"),
+                                              width: 35,
+                                              fit: BoxFit.cover,
+                                            ),
+                                            Text(
+                                              "Hakim Rüzgar Yönü:",
+                                              style: GoogleFonts.oswald(
+                                                fontSize: 17,
+                                                fontWeight: FontWeight.w500,
+                                              ),
+                                            ),
+                                            Text(
+                                              "${_userModel!.daily!.winddirection10MDominant![nextDayIndex5]}°",
+                                              style: GoogleFonts.oswald(
+                                                fontSize: 17,
+                                                fontWeight: FontWeight.w500,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                        Padding(
+                                          padding:
+                                              const EdgeInsets.only(top: 8.0),
+                                          child: ExpandableButton(
+                                            child: const Icon(
+                                                CupertinoIcons.chevron_up),
+                                          ),
+                                        ),
+                                      ],
                                     ),
                                   ),
                                 ],
@@ -2009,300 +2116,317 @@ class _DailyPartClassState extends State<DailyPartClass> {
                           ],
                         ),
                       ),
-                    ],
-                  ),
-                ),
-              ),
-              SizedBox(
-                  height: 10,
-                  child: Padding(
-                    padding: const EdgeInsets.only(top: 7.0),
-                    child: Divider(
-                        thickness: 1.5,
-                        color: brightness == Brightness.light
-                            ? Colors.black.withOpacity(0.4)
-                            : Colors.white.withOpacity(0.5)),
-                  )),
-              Padding(
-                padding: const EdgeInsets.only(left: 8.0, right: 8.0),
-                child: ExpandableNotifier(
-                  child: Column(
-                    children: [
-                      Expandable(
-                        collapsed: ExpandableButton(
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              const SizedBox(width: 5),
-                              Expanded(
-                                child: Text(
-                                  nextDay6,
-                                  style: GoogleFonts.oswald(
-                                    color:
-                                        Theme.of(context).colorScheme.onSurface,
-                                    fontWeight: FontWeight.w300,
-                                    fontSize: 30,
-                                  ),
-                                ),
-                              ),
-                              Image.asset(weatherGifMap[
-                                  _userModel!.currentWeather!.weathercode]!),
-                              Expanded(
-                                child: Text(
-                                  "${_userModel!.daily!.temperature2MMin![nextDayIndex6].round()}°C",
-                                  textAlign: TextAlign.end,
-                                  style: GoogleFonts.oswald(
-                                    color:
-                                        Theme.of(context).colorScheme.onSurface,
-                                    fontWeight: FontWeight.w300,
-                                    fontSize: 30,
-                                  ),
-                                ),
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.only(
-                                    right: 12, left: 12.0),
-                                child: Container(
-                                  width: 80,
-                                  height: 5,
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(5),
-                                    gradient: const LinearGradient(colors: [
-                                      Color.fromARGB(255, 178, 254, 250),
-                                      Color.fromARGB(255, 245, 175, 25),
-                                      Color.fromARGB(255, 241, 39, 17)
-                                    ]),
-                                  ),
-                                ),
-                              ),
-                              Text(
-                                "${_userModel!.daily!.temperature2MMax![nextDayIndex6].round()}°C",
-                                textAlign: TextAlign.end,
-                                style: GoogleFonts.oswald(
-                                  color:
-                                      Theme.of(context).colorScheme.onSurface,
-                                  fontWeight: FontWeight.w300,
-                                  fontSize: 30,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        expanded: Column(
+                    ),
+                    SizedBox(
+                        height: 10,
+                        child: Padding(
+                          padding: const EdgeInsets.only(top: 7.0),
+                          child: Divider(
+                              thickness: 1.5,
+                              color: brightness == Brightness.light
+                                  ? Colors.black.withOpacity(0.4)
+                                  : Colors.white.withOpacity(0.5)),
+                        )),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 8.0, right: 8.0),
+                      child: ExpandableNotifier(
+                        child: Column(
                           children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                const SizedBox(width: 5),
-                                Expanded(
-                                  child: Text(
-                                    nextDay6,
-                                    style: GoogleFonts.oswald(
-                                      color: Theme.of(context)
-                                          .colorScheme
-                                          .onSurface,
-                                      fontWeight: FontWeight.w300,
-                                      fontSize: 30,
+                            Expandable(
+                              collapsed: ExpandableButton(
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    const SizedBox(width: 5),
+                                    Expanded(
+                                      child: Text(
+                                        nextDay6,
+                                        style: GoogleFonts.oswald(
+                                          color: Theme.of(context)
+                                              .colorScheme
+                                              .onSurface,
+                                          fontWeight: FontWeight.w300,
+                                          fontSize: 30,
+                                        ),
+                                      ),
                                     ),
-                                  ),
-                                ),
-                                Image.asset(weatherGifMap[
-                                    _userModel!.currentWeather!.weathercode]!),
-                                Expanded(
-                                  child: Text(
-                                    "${_userModel!.daily!.temperature2MMin![nextDayIndex6].round()}°C",
-                                    textAlign: TextAlign.end,
-                                    style: GoogleFonts.oswald(
-                                      color: Theme.of(context)
-                                          .colorScheme
-                                          .onSurface,
-                                      fontWeight: FontWeight.w300,
-                                      fontSize: 30,
+                                    Image.asset(weatherGifMap[_userModel!
+                                        .currentWeather!.weathercode]!),
+                                    Expanded(
+                                      child: Text(
+                                        "${_userModel!.daily!.temperature2MMin![nextDayIndex6].round()}°C",
+                                        textAlign: TextAlign.end,
+                                        style: GoogleFonts.oswald(
+                                          color: Theme.of(context)
+                                              .colorScheme
+                                              .onSurface,
+                                          fontWeight: FontWeight.w300,
+                                          fontSize: 30,
+                                        ),
+                                      ),
                                     ),
-                                  ),
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.only(
-                                      right: 12, left: 12.0),
-                                  child: Container(
-                                    width: 80,
-                                    height: 5,
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(5),
-                                      gradient: const LinearGradient(colors: [
-                                        Color.fromARGB(255, 178, 254, 250),
-                                        Color.fromARGB(255, 245, 175, 25),
-                                        Color.fromARGB(255, 241, 39, 17)
-                                      ]),
+                                    Padding(
+                                      padding: const EdgeInsets.only(
+                                          right: 12, left: 12.0),
+                                      child: Container(
+                                        width: 80,
+                                        height: 5,
+                                        decoration: BoxDecoration(
+                                          borderRadius:
+                                              BorderRadius.circular(5),
+                                          gradient:
+                                              const LinearGradient(colors: [
+                                            Color.fromARGB(255, 178, 254, 250),
+                                            Color.fromARGB(255, 245, 175, 25),
+                                            Color.fromARGB(255, 241, 39, 17)
+                                          ]),
+                                        ),
+                                      ),
                                     ),
-                                  ),
+                                    Text(
+                                      "${_userModel!.daily!.temperature2MMax![nextDayIndex6].round()}°C",
+                                      textAlign: TextAlign.end,
+                                      style: GoogleFonts.oswald(
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .onSurface,
+                                        fontWeight: FontWeight.w300,
+                                        fontSize: 30,
+                                      ),
+                                    ),
+                                  ],
                                 ),
-                                Text(
-                                  "${_userModel!.daily!.temperature2MMax![nextDayIndex6].round()}°C",
-                                  textAlign: TextAlign.end,
-                                  style: GoogleFonts.oswald(
-                                    color:
-                                        Theme.of(context).colorScheme.onSurface,
-                                    fontWeight: FontWeight.w300,
-                                    fontSize: 30,
-                                  ),
-                                ),
-                              ],
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Column(
+                              ),
+                              expanded: Column(
                                 children: [
                                   Row(
                                     mainAxisAlignment:
                                         MainAxisAlignment.spaceBetween,
                                     children: [
-                                      Image(
-                                        image: brightness == Brightness.light
-                                            ? const AssetImage(
-                                                "assets/images/maxsicakliksiyah.png")
-                                            : const AssetImage(
-                                                "assets/images/maxsicaklikbeyaz.png"),
-                                        width: 35,
-                                        fit: BoxFit.cover,
+                                      const SizedBox(width: 5),
+                                      Expanded(
+                                        child: Text(
+                                          nextDay6,
+                                          style: GoogleFonts.oswald(
+                                            color: Theme.of(context)
+                                                .colorScheme
+                                                .onSurface,
+                                            fontWeight: FontWeight.w300,
+                                            fontSize: 30,
+                                          ),
+                                        ),
                                       ),
-                                      Text(
-                                        "Maksimum Sıcaklık:",
-                                        style: GoogleFonts.oswald(
-                                          fontSize: 17,
-                                          fontWeight: FontWeight.w500,
+                                      Image.asset(weatherGifMap[_userModel!
+                                          .currentWeather!.weathercode]!),
+                                      Expanded(
+                                        child: Text(
+                                          "${_userModel!.daily!.temperature2MMin![nextDayIndex6].round()}°C",
+                                          textAlign: TextAlign.end,
+                                          style: GoogleFonts.oswald(
+                                            color: Theme.of(context)
+                                                .colorScheme
+                                                .onSurface,
+                                            fontWeight: FontWeight.w300,
+                                            fontSize: 30,
+                                          ),
+                                        ),
+                                      ),
+                                      Padding(
+                                        padding: const EdgeInsets.only(
+                                            right: 12, left: 12.0),
+                                        child: Container(
+                                          width: 80,
+                                          height: 5,
+                                          decoration: BoxDecoration(
+                                            borderRadius:
+                                                BorderRadius.circular(5),
+                                            gradient:
+                                                const LinearGradient(colors: [
+                                              Color.fromARGB(
+                                                  255, 178, 254, 250),
+                                              Color.fromARGB(255, 245, 175, 25),
+                                              Color.fromARGB(255, 241, 39, 17)
+                                            ]),
+                                          ),
                                         ),
                                       ),
                                       Text(
                                         "${_userModel!.daily!.temperature2MMax![nextDayIndex6].round()}°C",
+                                        textAlign: TextAlign.end,
                                         style: GoogleFonts.oswald(
-                                          fontSize: 17,
-                                          fontWeight: FontWeight.w500,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Image(
-                                        image: brightness == Brightness.light
-                                            ? const AssetImage(
-                                                "assets/images/minsicakliksiyah.png")
-                                            : const AssetImage(
-                                                "assets/images/minsicaklikbeyaz.png"),
-                                        width: 35,
-                                        fit: BoxFit.cover,
-                                      ),
-                                      Text(
-                                        "Minimum Sıcaklık:",
-                                        style: GoogleFonts.oswald(
-                                          fontSize: 17,
-                                          fontWeight: FontWeight.w500,
-                                        ),
-                                      ),
-                                      Text(
-                                        "${_userModel!.daily!.temperature2MMin![nextDayIndex6].round()}°C",
-                                        style: GoogleFonts.oswald(
-                                          fontSize: 17,
-                                          fontWeight: FontWeight.w500,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Image(
-                                        image: brightness == Brightness.light
-                                            ? const AssetImage(
-                                                "assets/images/yagisolasiligisiyah.png")
-                                            : const AssetImage(
-                                                "assets/images/yagisolasiligibeyaz.png"),
-                                        width: 35,
-                                        fit: BoxFit.cover,
-                                      ),
-                                      Text(
-                                        "Yağış Olasılığı:",
-                                        style: GoogleFonts.oswald(
-                                          fontSize: 17,
-                                          fontWeight: FontWeight.w500,
-                                        ),
-                                      ),
-                                      Text(
-                                        "%${_userModel!.daily!.precipitationProbabilityMax![nextDayIndex6]}",
-                                        style: GoogleFonts.oswald(
-                                          fontSize: 17,
-                                          fontWeight: FontWeight.w500,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Image(
-                                        image: brightness == Brightness.light
-                                            ? const AssetImage(
-                                                "assets/images/ruzgarhizisiyah.png")
-                                            : const AssetImage(
-                                                "assets/images/ruzgarhizibeyaz.png"),
-                                        width: 35,
-                                        fit: BoxFit.cover,
-                                      ),
-                                      Text(
-                                        "Maksimum Rüzgar Hızı:",
-                                        style: GoogleFonts.oswald(
-                                          fontSize: 17,
-                                          fontWeight: FontWeight.w500,
-                                        ),
-                                      ),
-                                      Text(
-                                        "${_userModel!.daily!.windspeed10MMax![nextDayIndex6]} km/sa",
-                                        style: GoogleFonts.oswald(
-                                          fontSize: 17,
-                                          fontWeight: FontWeight.w500,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Image(
-                                        image: brightness == Brightness.light
-                                            ? const AssetImage(
-                                                "assets/images/ruzgaryonusiyah.png")
-                                            : const AssetImage(
-                                                "assets/images/ruzgaryonubeyaz.png"),
-                                        width: 35,
-                                        fit: BoxFit.cover,
-                                      ),
-                                      Text(
-                                        "Hakim Rüzgar Yönü:",
-                                        style: GoogleFonts.oswald(
-                                          fontSize: 17,
-                                          fontWeight: FontWeight.w500,
-                                        ),
-                                      ),
-                                      Text(
-                                        "${_userModel!.daily!.winddirection10MDominant![nextDayIndex6]}°",
-                                        style: GoogleFonts.oswald(
-                                          fontSize: 17,
-                                          fontWeight: FontWeight.w500,
+                                          color: Theme.of(context)
+                                              .colorScheme
+                                              .onSurface,
+                                          fontWeight: FontWeight.w300,
+                                          fontSize: 30,
                                         ),
                                       ),
                                     ],
                                   ),
                                   Padding(
-                                    padding: const EdgeInsets.only(top: 8.0),
-                                    child: ExpandableButton(
-                                      child:
-                                          const Icon(CupertinoIcons.chevron_up),
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Column(
+                                      children: [
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Image(
+                                              image: brightness ==
+                                                      Brightness.light
+                                                  ? const AssetImage(
+                                                      "assets/images/maxsicakliksiyah.png")
+                                                  : const AssetImage(
+                                                      "assets/images/maxsicaklikbeyaz.png"),
+                                              width: 35,
+                                              fit: BoxFit.cover,
+                                            ),
+                                            Text(
+                                              "Maksimum Sıcaklık:",
+                                              style: GoogleFonts.oswald(
+                                                fontSize: 17,
+                                                fontWeight: FontWeight.w500,
+                                              ),
+                                            ),
+                                            Text(
+                                              "${_userModel!.daily!.temperature2MMax![nextDayIndex6].round()}°C",
+                                              style: GoogleFonts.oswald(
+                                                fontSize: 17,
+                                                fontWeight: FontWeight.w500,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Image(
+                                              image: brightness ==
+                                                      Brightness.light
+                                                  ? const AssetImage(
+                                                      "assets/images/minsicakliksiyah.png")
+                                                  : const AssetImage(
+                                                      "assets/images/minsicaklikbeyaz.png"),
+                                              width: 35,
+                                              fit: BoxFit.cover,
+                                            ),
+                                            Text(
+                                              "Minimum Sıcaklık:",
+                                              style: GoogleFonts.oswald(
+                                                fontSize: 17,
+                                                fontWeight: FontWeight.w500,
+                                              ),
+                                            ),
+                                            Text(
+                                              "${_userModel!.daily!.temperature2MMin![nextDayIndex6].round()}°C",
+                                              style: GoogleFonts.oswald(
+                                                fontSize: 17,
+                                                fontWeight: FontWeight.w500,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Image(
+                                              image: brightness ==
+                                                      Brightness.light
+                                                  ? const AssetImage(
+                                                      "assets/images/yagisolasiligisiyah.png")
+                                                  : const AssetImage(
+                                                      "assets/images/yagisolasiligibeyaz.png"),
+                                              width: 35,
+                                              fit: BoxFit.cover,
+                                            ),
+                                            Text(
+                                              "Yağış Olasılığı:",
+                                              style: GoogleFonts.oswald(
+                                                fontSize: 17,
+                                                fontWeight: FontWeight.w500,
+                                              ),
+                                            ),
+                                            Text(
+                                              "%${_userModel!.daily!.precipitationProbabilityMax![nextDayIndex6]}",
+                                              style: GoogleFonts.oswald(
+                                                fontSize: 17,
+                                                fontWeight: FontWeight.w500,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Image(
+                                              image: brightness ==
+                                                      Brightness.light
+                                                  ? const AssetImage(
+                                                      "assets/images/ruzgarhizisiyah.png")
+                                                  : const AssetImage(
+                                                      "assets/images/ruzgarhizibeyaz.png"),
+                                              width: 35,
+                                              fit: BoxFit.cover,
+                                            ),
+                                            Text(
+                                              "Maksimum Rüzgar Hızı:",
+                                              style: GoogleFonts.oswald(
+                                                fontSize: 17,
+                                                fontWeight: FontWeight.w500,
+                                              ),
+                                            ),
+                                            Text(
+                                              "${_userModel!.daily!.windspeed10MMax![nextDayIndex6]} km/sa",
+                                              style: GoogleFonts.oswald(
+                                                fontSize: 17,
+                                                fontWeight: FontWeight.w500,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Image(
+                                              image: brightness ==
+                                                      Brightness.light
+                                                  ? const AssetImage(
+                                                      "assets/images/ruzgaryonusiyah.png")
+                                                  : const AssetImage(
+                                                      "assets/images/ruzgaryonubeyaz.png"),
+                                              width: 35,
+                                              fit: BoxFit.cover,
+                                            ),
+                                            Text(
+                                              "Hakim Rüzgar Yönü:",
+                                              style: GoogleFonts.oswald(
+                                                fontSize: 17,
+                                                fontWeight: FontWeight.w500,
+                                              ),
+                                            ),
+                                            Text(
+                                              "${_userModel!.daily!.winddirection10MDominant![nextDayIndex6]}°",
+                                              style: GoogleFonts.oswald(
+                                                fontSize: 17,
+                                                fontWeight: FontWeight.w500,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                        Padding(
+                                          padding:
+                                              const EdgeInsets.only(top: 8.0),
+                                          child: ExpandableButton(
+                                            child: const Icon(
+                                                CupertinoIcons.chevron_up),
+                                          ),
+                                        ),
+                                      ],
                                     ),
                                   ),
                                 ],
@@ -2311,300 +2435,317 @@ class _DailyPartClassState extends State<DailyPartClass> {
                           ],
                         ),
                       ),
-                    ],
-                  ),
-                ),
-              ),
-              SizedBox(
-                  height: 10,
-                  child: Padding(
-                    padding: const EdgeInsets.only(top: 7.0),
-                    child: Divider(
-                        thickness: 1.5,
-                        color: brightness == Brightness.light
-                            ? Colors.black.withOpacity(0.4)
-                            : Colors.white.withOpacity(0.5)),
-                  )),
-              Padding(
-                padding: const EdgeInsets.only(left: 8.0, right: 8.0),
-                child: ExpandableNotifier(
-                  child: Column(
-                    children: [
-                      Expandable(
-                        collapsed: ExpandableButton(
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              const SizedBox(width: 5),
-                              Expanded(
-                                child: Text(
-                                  nextDay7,
-                                  style: GoogleFonts.oswald(
-                                    color:
-                                        Theme.of(context).colorScheme.onSurface,
-                                    fontWeight: FontWeight.w300,
-                                    fontSize: 30,
-                                  ),
-                                ),
-                              ),
-                              Image.asset(weatherGifMap[
-                                  _userModel!.currentWeather!.weathercode]!),
-                              Expanded(
-                                child: Text(
-                                  "${_userModel!.daily!.temperature2MMin![nextDayIndex7].round()}°C",
-                                  textAlign: TextAlign.end,
-                                  style: GoogleFonts.oswald(
-                                    color:
-                                        Theme.of(context).colorScheme.onSurface,
-                                    fontWeight: FontWeight.w300,
-                                    fontSize: 30,
-                                  ),
-                                ),
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.only(
-                                    right: 12, left: 12.0),
-                                child: Container(
-                                  width: 80,
-                                  height: 5,
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(5),
-                                    gradient: const LinearGradient(colors: [
-                                      Color.fromARGB(255, 178, 254, 250),
-                                      Color.fromARGB(255, 245, 175, 25),
-                                      Color.fromARGB(255, 241, 39, 17)
-                                    ]),
-                                  ),
-                                ),
-                              ),
-                              Text(
-                                "${_userModel!.daily!.temperature2MMax![nextDayIndex7].round()}°C",
-                                textAlign: TextAlign.end,
-                                style: GoogleFonts.oswald(
-                                  color:
-                                      Theme.of(context).colorScheme.onSurface,
-                                  fontWeight: FontWeight.w300,
-                                  fontSize: 30,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        expanded: Column(
+                    ),
+                    SizedBox(
+                        height: 10,
+                        child: Padding(
+                          padding: const EdgeInsets.only(top: 7.0),
+                          child: Divider(
+                              thickness: 1.5,
+                              color: brightness == Brightness.light
+                                  ? Colors.black.withOpacity(0.4)
+                                  : Colors.white.withOpacity(0.5)),
+                        )),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 8.0, right: 8.0),
+                      child: ExpandableNotifier(
+                        child: Column(
                           children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                const SizedBox(width: 5),
-                                Expanded(
-                                  child: Text(
-                                    nextDay7,
-                                    style: GoogleFonts.oswald(
-                                      color: Theme.of(context)
-                                          .colorScheme
-                                          .onSurface,
-                                      fontWeight: FontWeight.w300,
-                                      fontSize: 30,
+                            Expandable(
+                              collapsed: ExpandableButton(
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    const SizedBox(width: 5),
+                                    Expanded(
+                                      child: Text(
+                                        nextDay7,
+                                        style: GoogleFonts.oswald(
+                                          color: Theme.of(context)
+                                              .colorScheme
+                                              .onSurface,
+                                          fontWeight: FontWeight.w300,
+                                          fontSize: 30,
+                                        ),
+                                      ),
                                     ),
-                                  ),
-                                ),
-                                Image.asset(weatherGifMap[
-                                    _userModel!.currentWeather!.weathercode]!),
-                                Expanded(
-                                  child: Text(
-                                    "${_userModel!.daily!.temperature2MMin![nextDayIndex7].round()}°C",
-                                    textAlign: TextAlign.end,
-                                    style: GoogleFonts.oswald(
-                                      color: Theme.of(context)
-                                          .colorScheme
-                                          .onSurface,
-                                      fontWeight: FontWeight.w300,
-                                      fontSize: 30,
+                                    Image.asset(weatherGifMap[_userModel!
+                                        .currentWeather!.weathercode]!),
+                                    Expanded(
+                                      child: Text(
+                                        "${_userModel!.daily!.temperature2MMin![nextDayIndex7].round()}°C",
+                                        textAlign: TextAlign.end,
+                                        style: GoogleFonts.oswald(
+                                          color: Theme.of(context)
+                                              .colorScheme
+                                              .onSurface,
+                                          fontWeight: FontWeight.w300,
+                                          fontSize: 30,
+                                        ),
+                                      ),
                                     ),
-                                  ),
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.only(
-                                      right: 12, left: 12.0),
-                                  child: Container(
-                                    width: 80,
-                                    height: 5,
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(5),
-                                      gradient: const LinearGradient(colors: [
-                                        Color.fromARGB(255, 178, 254, 250),
-                                        Color.fromARGB(255, 245, 175, 25),
-                                        Color.fromARGB(255, 241, 39, 17)
-                                      ]),
+                                    Padding(
+                                      padding: const EdgeInsets.only(
+                                          right: 12, left: 12.0),
+                                      child: Container(
+                                        width: 80,
+                                        height: 5,
+                                        decoration: BoxDecoration(
+                                          borderRadius:
+                                              BorderRadius.circular(5),
+                                          gradient:
+                                              const LinearGradient(colors: [
+                                            Color.fromARGB(255, 178, 254, 250),
+                                            Color.fromARGB(255, 245, 175, 25),
+                                            Color.fromARGB(255, 241, 39, 17)
+                                          ]),
+                                        ),
+                                      ),
                                     ),
-                                  ),
+                                    Text(
+                                      "${_userModel!.daily!.temperature2MMax![nextDayIndex7].round()}°C",
+                                      textAlign: TextAlign.end,
+                                      style: GoogleFonts.oswald(
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .onSurface,
+                                        fontWeight: FontWeight.w300,
+                                        fontSize: 30,
+                                      ),
+                                    ),
+                                  ],
                                 ),
-                                Text(
-                                  "${_userModel!.daily!.temperature2MMax![nextDayIndex7].round()}°C",
-                                  textAlign: TextAlign.end,
-                                  style: GoogleFonts.oswald(
-                                    color:
-                                        Theme.of(context).colorScheme.onSurface,
-                                    fontWeight: FontWeight.w300,
-                                    fontSize: 30,
-                                  ),
-                                ),
-                              ],
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Column(
+                              ),
+                              expanded: Column(
                                 children: [
                                   Row(
                                     mainAxisAlignment:
                                         MainAxisAlignment.spaceBetween,
                                     children: [
-                                      Image(
-                                        image: brightness == Brightness.light
-                                            ? const AssetImage(
-                                                "assets/images/maxsicakliksiyah.png")
-                                            : const AssetImage(
-                                                "assets/images/maxsicaklikbeyaz.png"),
-                                        width: 35,
-                                        fit: BoxFit.cover,
+                                      const SizedBox(width: 5),
+                                      Expanded(
+                                        child: Text(
+                                          nextDay7,
+                                          style: GoogleFonts.oswald(
+                                            color: Theme.of(context)
+                                                .colorScheme
+                                                .onSurface,
+                                            fontWeight: FontWeight.w300,
+                                            fontSize: 30,
+                                          ),
+                                        ),
                                       ),
-                                      Text(
-                                        "Maksimum Sıcaklık:",
-                                        style: GoogleFonts.oswald(
-                                          fontSize: 17,
-                                          fontWeight: FontWeight.w500,
+                                      Image.asset(weatherGifMap[_userModel!
+                                          .currentWeather!.weathercode]!),
+                                      Expanded(
+                                        child: Text(
+                                          "${_userModel!.daily!.temperature2MMin![nextDayIndex7].round()}°C",
+                                          textAlign: TextAlign.end,
+                                          style: GoogleFonts.oswald(
+                                            color: Theme.of(context)
+                                                .colorScheme
+                                                .onSurface,
+                                            fontWeight: FontWeight.w300,
+                                            fontSize: 30,
+                                          ),
+                                        ),
+                                      ),
+                                      Padding(
+                                        padding: const EdgeInsets.only(
+                                            right: 12, left: 12.0),
+                                        child: Container(
+                                          width: 80,
+                                          height: 5,
+                                          decoration: BoxDecoration(
+                                            borderRadius:
+                                                BorderRadius.circular(5),
+                                            gradient:
+                                                const LinearGradient(colors: [
+                                              Color.fromARGB(
+                                                  255, 178, 254, 250),
+                                              Color.fromARGB(255, 245, 175, 25),
+                                              Color.fromARGB(255, 241, 39, 17)
+                                            ]),
+                                          ),
                                         ),
                                       ),
                                       Text(
                                         "${_userModel!.daily!.temperature2MMax![nextDayIndex7].round()}°C",
+                                        textAlign: TextAlign.end,
                                         style: GoogleFonts.oswald(
-                                          fontSize: 17,
-                                          fontWeight: FontWeight.w500,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Image(
-                                        image: brightness == Brightness.light
-                                            ? const AssetImage(
-                                                "assets/images/minsicakliksiyah.png")
-                                            : const AssetImage(
-                                                "assets/images/minsicaklikbeyaz.png"),
-                                        width: 35,
-                                        fit: BoxFit.cover,
-                                      ),
-                                      Text(
-                                        "Minimum Sıcaklık:",
-                                        style: GoogleFonts.oswald(
-                                          fontSize: 17,
-                                          fontWeight: FontWeight.w500,
-                                        ),
-                                      ),
-                                      Text(
-                                        "${_userModel!.daily!.temperature2MMin![nextDayIndex7].round()}°C",
-                                        style: GoogleFonts.oswald(
-                                          fontSize: 17,
-                                          fontWeight: FontWeight.w500,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Image(
-                                        image: brightness == Brightness.light
-                                            ? const AssetImage(
-                                                "assets/images/yagisolasiligisiyah.png")
-                                            : const AssetImage(
-                                                "assets/images/yagisolasiligibeyaz.png"),
-                                        width: 35,
-                                        fit: BoxFit.cover,
-                                      ),
-                                      Text(
-                                        "Yağış Olasılığı:",
-                                        style: GoogleFonts.oswald(
-                                          fontSize: 17,
-                                          fontWeight: FontWeight.w500,
-                                        ),
-                                      ),
-                                      Text(
-                                        "%${_userModel!.daily!.precipitationProbabilityMax![nextDayIndex7]}",
-                                        style: GoogleFonts.oswald(
-                                          fontSize: 17,
-                                          fontWeight: FontWeight.w500,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Image(
-                                        image: brightness == Brightness.light
-                                            ? const AssetImage(
-                                                "assets/images/ruzgarhizisiyah.png")
-                                            : const AssetImage(
-                                                "assets/images/ruzgarhizibeyaz.png"),
-                                        width: 35,
-                                        fit: BoxFit.cover,
-                                      ),
-                                      Text(
-                                        "Maksimum Rüzgar Hızı:",
-                                        style: GoogleFonts.oswald(
-                                          fontSize: 17,
-                                          fontWeight: FontWeight.w500,
-                                        ),
-                                      ),
-                                      Text(
-                                        "${_userModel!.daily!.windspeed10MMax![nextDayIndex7]} km/sa",
-                                        style: GoogleFonts.oswald(
-                                          fontSize: 17,
-                                          fontWeight: FontWeight.w500,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Image(
-                                        image: brightness == Brightness.light
-                                            ? const AssetImage(
-                                                "assets/images/ruzgaryonusiyah.png")
-                                            : const AssetImage(
-                                                "assets/images/ruzgaryonubeyaz.png"),
-                                        width: 35,
-                                        fit: BoxFit.cover,
-                                      ),
-                                      Text(
-                                        "Hakim Rüzgar Yönü:",
-                                        style: GoogleFonts.oswald(
-                                          fontSize: 17,
-                                          fontWeight: FontWeight.w500,
-                                        ),
-                                      ),
-                                      Text(
-                                        "${_userModel!.daily!.winddirection10MDominant![nextDayIndex7]}°",
-                                        style: GoogleFonts.oswald(
-                                          fontSize: 17,
-                                          fontWeight: FontWeight.w500,
+                                          color: Theme.of(context)
+                                              .colorScheme
+                                              .onSurface,
+                                          fontWeight: FontWeight.w300,
+                                          fontSize: 30,
                                         ),
                                       ),
                                     ],
                                   ),
                                   Padding(
-                                    padding: const EdgeInsets.only(top: 8.0),
-                                    child: ExpandableButton(
-                                      child:
-                                          const Icon(CupertinoIcons.chevron_up),
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Column(
+                                      children: [
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Image(
+                                              image: brightness ==
+                                                      Brightness.light
+                                                  ? const AssetImage(
+                                                      "assets/images/maxsicakliksiyah.png")
+                                                  : const AssetImage(
+                                                      "assets/images/maxsicaklikbeyaz.png"),
+                                              width: 35,
+                                              fit: BoxFit.cover,
+                                            ),
+                                            Text(
+                                              "Maksimum Sıcaklık:",
+                                              style: GoogleFonts.oswald(
+                                                fontSize: 17,
+                                                fontWeight: FontWeight.w500,
+                                              ),
+                                            ),
+                                            Text(
+                                              "${_userModel!.daily!.temperature2MMax![nextDayIndex7].round()}°C",
+                                              style: GoogleFonts.oswald(
+                                                fontSize: 17,
+                                                fontWeight: FontWeight.w500,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Image(
+                                              image: brightness ==
+                                                      Brightness.light
+                                                  ? const AssetImage(
+                                                      "assets/images/minsicakliksiyah.png")
+                                                  : const AssetImage(
+                                                      "assets/images/minsicaklikbeyaz.png"),
+                                              width: 35,
+                                              fit: BoxFit.cover,
+                                            ),
+                                            Text(
+                                              "Minimum Sıcaklık:",
+                                              style: GoogleFonts.oswald(
+                                                fontSize: 17,
+                                                fontWeight: FontWeight.w500,
+                                              ),
+                                            ),
+                                            Text(
+                                              "${_userModel!.daily!.temperature2MMin![nextDayIndex7].round()}°C",
+                                              style: GoogleFonts.oswald(
+                                                fontSize: 17,
+                                                fontWeight: FontWeight.w500,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Image(
+                                              image: brightness ==
+                                                      Brightness.light
+                                                  ? const AssetImage(
+                                                      "assets/images/yagisolasiligisiyah.png")
+                                                  : const AssetImage(
+                                                      "assets/images/yagisolasiligibeyaz.png"),
+                                              width: 35,
+                                              fit: BoxFit.cover,
+                                            ),
+                                            Text(
+                                              "Yağış Olasılığı:",
+                                              style: GoogleFonts.oswald(
+                                                fontSize: 17,
+                                                fontWeight: FontWeight.w500,
+                                              ),
+                                            ),
+                                            Text(
+                                              "%${_userModel!.daily!.precipitationProbabilityMax![nextDayIndex7]}",
+                                              style: GoogleFonts.oswald(
+                                                fontSize: 17,
+                                                fontWeight: FontWeight.w500,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Image(
+                                              image: brightness ==
+                                                      Brightness.light
+                                                  ? const AssetImage(
+                                                      "assets/images/ruzgarhizisiyah.png")
+                                                  : const AssetImage(
+                                                      "assets/images/ruzgarhizibeyaz.png"),
+                                              width: 35,
+                                              fit: BoxFit.cover,
+                                            ),
+                                            Text(
+                                              "Maksimum Rüzgar Hızı:",
+                                              style: GoogleFonts.oswald(
+                                                fontSize: 17,
+                                                fontWeight: FontWeight.w500,
+                                              ),
+                                            ),
+                                            Text(
+                                              "${_userModel!.daily!.windspeed10MMax![nextDayIndex7]} km/sa",
+                                              style: GoogleFonts.oswald(
+                                                fontSize: 17,
+                                                fontWeight: FontWeight.w500,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Image(
+                                              image: brightness ==
+                                                      Brightness.light
+                                                  ? const AssetImage(
+                                                      "assets/images/ruzgaryonusiyah.png")
+                                                  : const AssetImage(
+                                                      "assets/images/ruzgaryonubeyaz.png"),
+                                              width: 35,
+                                              fit: BoxFit.cover,
+                                            ),
+                                            Text(
+                                              "Hakim Rüzgar Yönü:",
+                                              style: GoogleFonts.oswald(
+                                                fontSize: 17,
+                                                fontWeight: FontWeight.w500,
+                                              ),
+                                            ),
+                                            Text(
+                                              "${_userModel!.daily!.winddirection10MDominant![nextDayIndex7]}°",
+                                              style: GoogleFonts.oswald(
+                                                fontSize: 17,
+                                                fontWeight: FontWeight.w500,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                        Padding(
+                                          padding:
+                                              const EdgeInsets.only(top: 8.0),
+                                          child: ExpandableButton(
+                                            child: const Icon(
+                                                CupertinoIcons.chevron_up),
+                                          ),
+                                        ),
+                                      ],
                                     ),
                                   ),
                                 ],
@@ -2613,14 +2754,16 @@ class _DailyPartClassState extends State<DailyPartClass> {
                           ],
                         ),
                       ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
               ),
-            ],
-          ),
-        ),
-      ),
-    );
+            ),
+          )
+        : const Center(
+            child: rive.RiveAnimation.asset(
+            "assets/gifs/loader.riv",
+            fit: BoxFit.fitWidth,
+          ));
   }
 }
