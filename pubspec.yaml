@@ -28,6 +28,9 @@ dependencies:
   syncfusion_flutter_maps: ^22.2.10
   fl_chart: ^0.63.0
   rive: ^0.11.14
+  hive: ^2.2.3
+  hive_flutter: ^1.1.0
+  path_provider: ^2.1.0
   
 
 dev_dependencies:
@@ -35,6 +38,8 @@ dev_dependencies:
     sdk: flutter
 
   flutter_lints: ^2.0.0
+  hive_generator: ^2.0.1
+  build_runner: ^2.4.6
 
 
 flutter:
